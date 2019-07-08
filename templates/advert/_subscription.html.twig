@@ -1,0 +1,37 @@
+<div class="card mb-4">
+
+    <div class="card body">
+
+        <h3 class="card-title">
+
+            {{ subscription.title }}
+
+        </h3>
+
+        <p class="card-text">{{ subscription.description | nl2br }}</p>
+        <p class="card-text">Validité : {{ subscription.duration }} mois</p>
+
+        {% if vat %}
+
+            <p class="card-text">Prix : {{ subscription.price + (subscription.price * (vat.vat / 100)) }} € TTC</p>
+            
+        {% else %}            
+
+            <p class="card-text">Prix : {{ subscription.price }} €</p>
+            
+        {% endif %}
+
+        
+
+        <form method = "post" action="{{ path('advert.subscription.set', { 'id': advert.id }) }}">
+
+            <input type="hidden"  name="_method" value="UPDATE">
+            <input type="hidden"  name="_token" value="{{ csrf_token('update' ~ subscription.id ) }}">
+            <input type="hidden"  name="subscriptionId" value="{{ subscription.id }}">
+            <button class="btn btn-success">Choisir cet abonnement</button>
+
+        </form>
+        
+    </div>
+
+</div>

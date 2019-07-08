@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les abonnements{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>Créer un nouvel abonnement</h1>
+
+        {{ include('backend/subscription/_form.html.twig', { button: 'Créer' }) }}
+
+    </div>
+
+{% endblock %}

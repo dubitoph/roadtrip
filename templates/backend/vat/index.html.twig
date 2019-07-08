@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les TVA {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les TVA</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Pays</th>
+                    <th>Abréviation</th>
+                    <th>TVA</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for VAT in allVAT %}
+
+                    <tr>
+
+                        <td>{{ VAT.state }}</td>
+                        <td>{{ VAT.abbreviation }}</td>
+                        <td>{{ VAT.VAT }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.VAT.edit', { 'id': VAT.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.VAT.delete', { 'id': VAT.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ VAT.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.VAT.create') }}" class="btn btn-primary">Créer une nouvelle TVA</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexVAT') }}
+        
+    {% endblock %}
+
+{% endblock %}

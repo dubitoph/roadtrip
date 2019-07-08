@@ -1,0 +1,17 @@
+## Build generated
+/public/build/
+/node_modules/
+/var/
+
+## Various settings
+.env
+npm-debug.log
+<<<<<<< HEAD
+yarn-error.log
+=======
+yarn-error.log
+>>>>>>> a63aed2891c458d326f317fa72b749727dfe57ce
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###

@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Evaluation de l'annonce n°{{ rating.advert.id }} : {{rating.advert.title}} {% endblock %}
+
+{% block body %}
+
+    {% if form is defined %}
+
+        {{ include('_messages.html.twig', {'form', form}) }}
+
+    {% endif %}
+
+        {{ include('_form_errors.html.twig') }}
+        
+    {% endif %}
+
+    <div class="jumbotron">
+
+        <h2>Evaluation de l'annonce n°{{ rating.advert.id }} : {{rating.advert.title}}</h2>
+
+        <div class="container">
+
+            <div class='row'>
+
+                <div class='col-md-4'> 
+
+                    Locataire :
+        
+                </div>
+        
+                <div class='col-md-8'>
+        
+                    {{rating.user.userName}}
+        
+                </div>
+        
+            </div>
+
+            <div class='row'>
+
+                <div class='col-md-4'> 
+
+                    Date de début de la location :
+        
+                </div>
+        
+                <div class='col-md-8'>
+        
+                    {{ rating.rentalBeginning | date('d/m/Y') }}
+        
+                </div>
+        
+            </div>
+
+            <div class='row'>
+
+                <div class='col-md-4'> 
+
+                    Date de fin de la location :
+        
+                </div>
+        
+                <div class='col-md-8'>
+        
+                    {{ rating.rentalEnd | date('d/m/Y') }}
+        
+                </div>
+        
+            </div>
+
+            <div class='row'>
+    
+                <div class='col-md-4'> 
+    
+                    Score attribué :
+            
+                </div>
+            
+                <div class='col-md-8'>
+            
+                    {{ rating.score }}
+            
+                </div>
+        
+            </div>
+
+            <div class='row'>
+    
+                <div class='col-md-4'> 
+    
+                    Commentaire :
+            
+                </div>
+            
+                <div class='col-md-8'>
+            
+                    {{ rating.comment }}
+            
+                </div>
+        
+            </div>
+
+            {% if form is defined %}
+
+                {{ form_start(form) }}
+
+                    {{ form_rest(form) }}
+
+                    <button class="btn btn-primary">{{ button | default('Enregistrer') }}</button>
+                    
+                {{ form_end(form) }}
+                
+            {% else %}
+
+                <div class='row'>
+
+                    <div class='col-md-4'> 
+
+                        Réponse de {{ rating.user.userName }} :
+                
+                    </div>
+                
+                    <div class='col-md-8'>
+                
+                        {{ rating.response }}
+                
+                    </div>
+            
+                </div>
+                
+            {% endif %}
+
+        </div>
+
+    </div>
+        
+
+{% endblock %}

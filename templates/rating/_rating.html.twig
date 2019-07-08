@@ -1,0 +1,25 @@
+<div class="card mb-4">
+
+    <div class="card body">
+
+        <h5 class="card-title">
+
+            <a href="{{ path('advert.show', { slug: rating.advert.slug, id: rating.advert.id } ) }}">
+
+                {{ rating.advert.title }}
+
+            </a>
+
+        </h5>
+
+        <p class="card-text">Evaluation : {{ rating.score }}</p>
+        
+        {% if rating.comment %}
+
+            <p class="card-text">Commentaire :{{ rating.comment | nl2br }}</p>
+
+        {% endif %}
+
+    </div>
+
+</div>

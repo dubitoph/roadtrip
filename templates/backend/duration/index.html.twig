@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les types de durée {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig', { 'form': form }) }}
+
+        <h1>Gérer les types de durée</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Durée</th>
+                    <th>Nombre de jours</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for duration in durations %}
+
+                    <tr>
+
+                        <td>{{ duration.duration }}</td>
+                        <td>{{ duration.daysNumber }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.duration.edit', { 'id': duration.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.duration.delete', { 'id': duration.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ duration.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.duration.create') }}" class="btn btn-primary">Créer un nouveau type de durée</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexDuration') }}
+        
+    {% endblock %}
+
+{% endblock %}

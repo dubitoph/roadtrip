@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <a href="{{ path('admin.booking.new', { 'id': 1 }) }}">Create new booking</a>
+
+    {% include '@Calendar/calendar.html' %}
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('showCalendar') }}
+    
+    {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les équipements{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Editer l'équipement</h1>
+
+        {{ include('Bbckend/equipment/_form.html.twig', { button: 'Editer' }) }}
+        
+    </div>
+
+{% endblock %}

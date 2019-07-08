@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les types de véhicule {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les types de véhicule</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Type</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for sort in sorts %}
+
+                    <tr>
+
+                        <td>{{ sort.sort }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.sort.edit', { 'id': sort.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.sort.delete', { 'id': sort.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ sort.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.sort.create') }}" class="btn btn-primary">Créer un nouveau type de véhicule</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexSort') }}
+        
+    {% endblock %}
+
+{% endblock %}

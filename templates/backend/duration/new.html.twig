@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les types de durée{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>Créer un nouveau type de durée</h1>
+
+        {{ include('backend/season/_form.html.twig', { button: 'Créer' }) }}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ include('_messages.html.twig', { 'form': form }) }}
+
+    <h1>Registration</h1>
+
+    {{ form_start(form) }}
+
+        {{ form_row ( form.firstname, { 'label': 'Firstname', 'attr': { 'placeholder' : 'Firstname...' } } ) }}
+        {{ form_row ( form.name, { 'label': 'Name', 'attr': { 'placeholder' : 'Name...' } } ) }}
+        {{ form_row ( form.phoneNumber, { 'label': 'Phone', 'attr': { 'placeholder' : 'Phone...' } } ) }}
+        {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
+        {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
+        {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
+        {{ form_row ( form.confirmedPassword, { 'label': 'Password confirmation', 'attr': { 'placeholder' : 'Repeat your password...' } } ) }}
+
+        {% if is_granted('ROLE_ADMIN') %}                   
+
+            {{ form_row ( form.roles ) }}
+
+        {% else %}                   
+
+            {{ form_row ( form.termsAccepted ) }}
+
+        {% endif %}
+        
+        <button type="submit" class="btn btn-success">Registration</button>
+
+    {{ form_end(form) }}
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+        
+        {{ encore_entry_script_tags('registration') }}
+        
+    {% endblock %}
+
+{% endblock %}  

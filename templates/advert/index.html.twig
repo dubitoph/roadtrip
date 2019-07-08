@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block body %}
+
+    <div class="jumbotron">
+
+        <div class="container">
+
+            {{ form_start(form) }}
+
+                <div class="form-row align-items-end">
+
+                    <div class="col">
+
+                        {{ form_row(form.minimumBedsNumber) }}
+
+                    </div>
+
+                    <div class="col">
+
+                        {{ form_row(form.maximumPrice) }}
+
+                    </div>
+
+                    <div class="col">
+
+                        {{ form_row(form.cellEquipments) }}
+
+                    </div>
+
+                    <div class="col">
+
+                        {{ form_row(form.carrierEquipments) }}
+
+                    </div>
+
+                    <div class="col">
+
+                        {{ form_row(form.distance) }}
+
+                    </div>
+
+                </div>
+
+                <div class="form-row">                    
+
+                    <div class="col">
+        
+                        {{ form_row(form.address, {'id': 'search_address'}) }}
+        
+                    </div>
+
+                </div>
+
+                {{ form_row(form.city) }}
+
+                <div class="form-row">                    
+
+                    <div class="col">
+        
+                        {{ form_row(form.sorting) }}
+        
+                    </div>
+
+                </div>
+
+                <div class="form-row" style="display: none">                    
+
+                    <div class="col">
+        
+                        <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+        
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="col">
+
+                        <div class="form-group">
+
+                            <button class="btn btn-primary">Rechercher</button>
+
+                        </div>
+
+                    </div>
+                    
+                </div>
+                
+            {{ form_end(form) }}
+
+        </div>
+
+    </div>
+
+    <div class='container mt-4'>
+
+        <h1>Tous les motorhomes</h1>
+
+        {% set i = 0 %}
+
+        <div class="row">
+
+            {% for advert in adverts %}
+            
+                <div class="col-md-4">
+
+                        {% if distances[advert.id] is defined %}    
+                        
+                            {% set distance = distances[advert.id] %}
+
+                        {% else %}
+
+                            {% set distance = null %}
+    
+                        {% endif %}
+
+                        {% if minPrices[advert.id] is defined %}    
+                        
+                            {% set minPrice = minPrices[advert.id] %}
+
+                            {% else %}
+    
+                                {% set minPrice = null %}
+    
+                        {% endif %}
+
+                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'userCity': userCity}) }}
+
+                </div>
+
+                {% set i = i + 1 %}
+                
+            {% endfor %}
+            
+        </div>
+{#
+        <div class="row">
+
+            {% for advert in adverts %}
+            
+                <div class="col-md-4">
+
+                    {% if distances[advert.id] is defined %}
+
+                        
+                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distances[advert.id]}) }}
+
+                    {% else %}
+
+                        
+                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert }) }}
+                        
+                    {% endif %}
+
+                </div>
+
+                {% set i = i + 1 %}
+                
+            {% endfor %}
+            
+        </div>
+#}
+        <div class="pagination">
+
+            {{ knp_pagination_render(adverts) }}
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('advertsSearch') }}
+        
+    {% endblock %}
+
+{% endblock %}

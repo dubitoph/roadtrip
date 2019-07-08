@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les réservations {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les réservations</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Titre</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for booking in bookings %}
+
+                    <tr>
+
+                        <td>{{ booking.title }}</td>
+                        <td>{{ booking.beginAt ? booking.beginAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ booking.endAt ? booking.endAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>
+                            
+                            <a href="{{ path('owner.booking.edit', { 'id': booking.id }) }}" class="btn btn-secondary">Editer</a>
+                            
+                            <form method = "post" action="{{ path('owner.booking.delete', { 'id': booking.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ booking.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexBooking') }}
+        
+    {% endblock %}
+
+{% endblock %}

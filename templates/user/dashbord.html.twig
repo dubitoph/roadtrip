@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Your Raodtrip dashbord {% endblock %}
+
+{% block body %}
+
+    <h1>Your Raodtrip dashbord</h1>
+
+    <div class="container mt4" style="float: left">
+
+        <div class="col-md-4">
+
+            {{ include('_messages.html.twig') }}
+
+            <div class="vertical-navbar">
+        
+                <ul class="navbar-nav mr-auto">
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('user.user.edit') }}">Edit my profile</a>
+
+                    </li>
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">Reset my password</a>
+
+                    </li>
+
+                    {% if user.owner %}
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="#last_adverts">Edit my owner contact informations</a>
+
+                        </li>
+                        
+                    {% endif %}
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('user.favorites') }}">My favorites</a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="#subscriptions">My opened bookings</a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="#last_ratings">My messages</a>
+                        
+                    </li>
+    
+                </ul>
+    
+            </div>
+
+        </div>
+        
+    </div>    
+
+    <div class="container mt-4">
+    
+        <div class="row">
+ 
+            <div class="col-md-4">
+
+                Username :
+
+            </div>
+
+            <div class="col-md-4">
+
+                {{ user.username }}
+
+            </div>
+
+        </div>
+    
+        <div class="row">
+
+            <div class="col-md-4">
+
+                Firstname :
+
+            </div>
+
+            <div class="col-md-4">
+
+                {{ user.firstname }}
+
+            </div>
+
+        </div>
+    
+        <div class="row">
+
+            <div class="col-md-4">
+
+                Name :
+
+            </div>
+
+            <div class="col-md-4">
+
+                {{ user.name }}
+
+            </div>
+
+        </div>
+    
+        <div class="row">
+
+            <div class="col-md-4">
+
+                Phone :
+
+            </div>
+
+            <div class="col-md-4">
+
+                {{ user.phoneNumber }}
+
+            </div>
+
+        </div>
+
+        {% if user.owner %}
+    
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    Company name :
+
+                </div>
+
+                <div class="col-md-4">
+
+                    {{ user.owner.companyName }}
+
+                </div>
+
+            </div>
+    
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    Company number :
+
+                </div>
+
+                <div class="col-md-4">
+
+                    {{ user.owner.companyNumber }}
+
+                </div>
+
+            </div>
+    
+            <div class="row">
+                
+
+                <div class="col-md-4">
+
+                    Billing address :
+
+                </div>
+
+                <div class="col-md-4">
+
+                    {{ user.owner.billingAddress.street }}, {{ user.owner.billingAddress.number }}  {% if user.owner.billingAddress.box %}/{{ user.owner.billingAddress.box }}{% endif %},
+                    {{ user.owner.billingAddress.zipCode }}  {{ user.owner.billingAddress.city }}, {{ user.owner.billingAddress.country }} 
+                    {% if user.owner.billingAddress.state %}({{ user.owner.billingAddress.state }}{% endif %})
+
+                </div>
+
+            </div>
+            
+        {% endif %}
+
+    </div>
+
+{% endblock %}

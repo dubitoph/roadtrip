@@ -1,0 +1,294 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{advert.title}} {% endblock %}
+
+{% block body %}
+
+    <div class="jumbotron">
+
+        <div class="container">
+
+            {{ include('_messages.html.twig', { 'form': form }) }}
+                
+            {% endif %}
+
+            <div class='row'>
+
+                <div class='col-md-8'> 
+
+                    <div data-slider>
+
+                        {% if advert.photos is empty %}
+                            
+                            <img id="no_photo_{{ advert.id }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('medium') }}" alt="card-img-default" style="width: 100%; height:auto;"/>
+        
+                        {% else %}
+        
+                            {% for photo in advert.photos %}
+        
+                                <img id="photo_{{ photo.id }}" src="{{ vich_uploader_asset(photo, 'file') | imagine_filter('medium') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
+                                    
+                            {% endfor %}
+        
+                        {% endif %}
+
+                    </div>
+        
+                </div>
+        
+                <div class='col-md-4'>
+        
+                    <h1>{{advert.title}}</h1>
+
+                    {% if  advert.vehicle %}
+
+                        <h2>{{advert.vehicle.bedsNumber}} couchages - {{advert.vehicle.seatsNumber}} places assises</h2>
+
+                    {% endif %}
+
+                    {% if  minPrice %}
+
+                        <div class="text-primary" style"font-size: 4rem; font-weight: bold">{{ minPrice.formattedPrice }} €</div>
+
+                    {% endif %}
+                    
+                    <a href="#" class="btn btn-primary" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contacter le propriétaire</a>
+                    <div id="contactForm" class="mt-4"{% if not form.vars.submitted %} style="display: none;"{% endif %}>
+
+                        {{ form_start(form) }}
+
+                            <div class="row">
+
+                                <div class="col">{{ form_row( form.firstName ) }}</div>
+                                <div class="col">{{ form_row( form.lastName ) }}</div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col">{{ form_row( form.phone ) }}</div>
+                                <div class="col">{{ form_row( form.email ) }}</div>
+
+                            </div>
+
+                            {{ form_rest(form) }}
+
+                            <div class="form-group">
+
+                                <button class="btn btn-primary">Envoyer</button>
+
+                            </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+        
+                </div>
+        
+            </div>
+
+        </div>
+
+    </div>
+        
+    <div class="container mt-4">
+
+        <p>
+
+            {{ advert.description | nl2br }}
+
+        </p>
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                Description générale
+                <table class="table table-striped">
+
+                    <tr>
+
+                        <h2>Caractéristiques</h2>
+                            
+                        {% if  advert.vehicle %}
+                        
+                            <td>Type</td>
+                            <td>{{ advert.vehicle.sort.sort }}</td>
+                            <td>Marque</td>
+                            <td>{{ advert.vehicle.mark.mark }}</td>
+                            <td>Carburant</td>
+                            <td>{{ advert.vehicle.fuel.fuel }}</td>
+                            <td>Date de construction</td>
+                            <td>{{ advert.vehicle.getFormattedManufactureDate }}</td>
+                            <td>Puissance</td>
+                            <td>{{ advert.vehicle.power }} cv</td>
+                            <td>Boîte de vitesse</td>
+                            <td>{{advert.vehicle.gearBox}}</td>
+                            <td>Nombre de couchages</td>
+                            <td>{{ advert.vehicle.bedsNumber }}</td>
+                            <td>Nombre de sièges</td>
+                            <td>{{ advert.vehicle.seatsNumber }}</td>
+
+                        {% endif %}
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <span id="vehicleId" style="display: none;">{{ advert.vehicle.id }}</span>
+
+        </div>
+
+        <div class="row">
+
+            <h2>Equipement</h2>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <h3>Cellule</h3>
+                <ul class="list-group">
+
+                    {% for cellEquipment in cellEquipments %}
+
+                        <li class="list-group-item">{{ cellEquipment.equipment }}</li>
+                        
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <h3>Porteur</h3>
+                <ul class="list-group">
+
+                    {% for carrierEquipment in carrierEquipments %}
+
+                        <li class="list-group-item">{{ carrierEquipment.equipment }}</li>
+                        
+                    {% endfor %}
+
+                </ul>
+                    
+            </div>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <h2>Disponibilités</h2>
+
+                </div>
+
+                <div class="row">
+                
+                    {% include '@Calendar/calendar.html' %}
+
+                </div>
+
+            </div>
+
+            <section id="comments">
+
+                {% set ratingsNumber = advert.ratings | length %}
+
+                {% if ratingsNumber > 0 %}
+                
+                    {% if ratingsNumber == 1 %} 
+
+                        <h1>1 évaluation :</h1>
+
+                    {% else %}
+
+                        <h1>{{ ratingsNumber }} évaluations :</h1>
+
+                    {% endif %}
+
+                    {% for rating in advert.ratings %}
+
+                        <div class="comment">
+
+                                <div class="row">
+            
+            
+                                    <div class="col">
+            
+                                        {% if rating.score %}
+
+                                            {% for i in 1.. rating.score %}
+
+                                                <img src="{{ asset('images/star.png') | imagine_filter('medium') }}" alt="score_star" style="width: 100%; height:auto;"/>
+                                                    
+                                            {% endfor %}
+                                                
+                                        {% endif %}
+                                            
+                                        ({{ rating.score }}/5)
+            
+                                    </div>
+
+                                </div>
+
+                            <div class="row">
+
+
+                                <div class="col-3">
+
+                                    {{ rating.user.userName }} (<small>{{ rating.createdAt | date('d/m/Y à H:i') }})</small>
+
+                                </div>
+
+                                <div class="col">
+
+                                    {{ rating.comment | raw }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                            
+                    {% endfor %}
+                    
+                {% endif %}
+
+                {% if app.user %}
+
+                    <a href="{{ path('rating.advert.create', { 'id': advert.id }) }}">Proposez votre évaluation</a>
+                    
+                {% else %}
+
+                    <a href="{{ path('security.login') }}">Connectez-vous pour proposer votre évaluation</a>
+                    
+                {% endif %}
+
+            </section>
+
+        </div>
+{#
+        <div id="map" style="width: 100; height: 400px;" data-latitude="{{ advert.vehicle.situation.latitude }}" data-longitude="{{ advert.vehicle.situation.longitude }}"></div>
+#}
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('showAdvert') }}
+        
+        <script src="https://fullcalendar.io/releases/core/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/interaction/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/daygrid/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/timegrid/4.0.1/main.min.js"></script>
+    
+    {% endblock %}
+        
+
+{% endblock %}

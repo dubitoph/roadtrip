@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Administrer l'annonce {% endblock %}
+
+{% block body %}
+
+    <div class='container mt-4'>
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Choisissez votre type d'abonnement</h1>
+
+        <div class="row">
+
+            {% for subscription in subscriptions %}
+            
+                <div class="col-md-4">
+
+                        {{ include('advert/_subscription.html.twig', { 'subscription': subscription, 'vat': vat }) }}
+
+                </div>
+                
+            {% endfor %}
+            
+        </div>
+
+    </div>
+    
+{% endblock %}

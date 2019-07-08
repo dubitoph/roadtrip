@@ -1,0 +1,75 @@
+<div class="card mb-4">
+
+    {% if mainPhotos[advert.id] is defined %}
+    
+        <img id="photo_{{ mainPhotos[advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[advert.id], 'file') | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height:auto;">
+
+    {% else %}
+
+        <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
+                
+    {% endif %}
+
+    <div class="card body">
+
+        <h5 class="card-title">
+
+            <a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">
+
+                {{ advert.title }}
+
+            </a>
+
+        </h5>
+
+        <p class="card-text">{{ advert.description | nl2br }}</p>
+
+        {% if advert.vehicle.situation is defined  %}
+
+            <p class="card-text">{{ advert.vehicle.situation.country }}</p>
+
+            {% if advert.vehicle.situation.state %}
+
+                <p class="card-text">{{ advert.vehicle.situation.state }}</p>
+                
+            {% endif %}
+
+            <p class="card-text">{{ advert.vehicle.situation.city }} ({{ advert.vehicle.situation.zipCode }})</p>  
+
+            {% if homepage is defined %}
+
+                Insertion date : {{ advert.getFormattedCreatedAt }}
+
+            {% else %}
+            
+                {% if distance %}
+
+                    {{ distance }} km from {{ userCity }}
+
+                {% else %}
+
+                    - km
+
+                {% endif %}
+                
+            {% endif %}
+            
+        {% endif %}
+
+        <div class="text-primary" style="font-size: 2rem; font-weight: bold">
+
+            {% if minPrice %}
+
+                {{ minPrice }} €
+
+            {% else %}
+
+                - €
+
+            {% endif %}
+
+        </div>
+        
+    </div>
+
+</div>

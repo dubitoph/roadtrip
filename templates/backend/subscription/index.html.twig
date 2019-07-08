@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les abonnements {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les abonnements</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Durée</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for subscription in subscriptions %}
+
+                    <tr>
+
+                        <td>{{ subscription.title }}</td>
+                        <td>{{ subscription.description }}</td>
+                        <td>{{ subscription.duration }}</td>
+                        <td>{{ subscription.price }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.subscription.edit', { 'id': subscription.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.subscription.delete', { 'id': subscription.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ subscription.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.subscription.create') }}" class="btn btn-primary">Créer un nouvel abonnement</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexSubscription') }}
+        
+    {% endblock %}
+
+{% endblock %}

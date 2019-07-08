@@ -1,0 +1,25 @@
+Bonjour {{ rating.user.userName }}!
+
+Ce mail concerne l'évaluation que vous désiriez émettre suite à la location qui aurait été effectuée du {{ rating.rentalBeginning | date("d/m/Y") }} au {{ rating.rentalEnd | date("d/m/Y") }}.
+
+{% if rating.type == 'Advert' %}
+
+    Le propriétaire a indiqué que cette location n'avait pas eu lieu.
+    
+{% else %}
+
+    {{ rating.tenant.username }} a indiqué que cette location n'avait pas eu lieu.
+    
+{% endif %}
+
+N'ayant pas la possibilité de vérifier le contraire, nous ne pouvons malheureusement pas approuver la publication de votre évaluation.
+
+Cependant, si vous nous fournissez une copie du contrat de location via l'adresse mail {{ contestationEmail }}, nous pourrions être amnenés à réévaluer ce suivi.
+
+Afin de pouvoir faire le lien sans ambiguité entre votre mail et l'évaluation en question, il est impératif d'y indiquer la référence suivante : "Rating n° {{ rating.id }}".
+
+Merci d'avance pour votre compréhension.
+
+{# Makes an absolute URL to the /images/logo.png file 
+<img src="{{ absolute_url(asset('images/logo.png')) }}">
+#}

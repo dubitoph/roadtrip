@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://bootswatch.com/4/flatly/bootstrap.min.css">        
+
+        {% block stylesheets %} 
+
+             {# 'app' must match the first argument to addEntry() in webpack.config.js #} 
+             {{ encore_entry_link_tags ( 'app' ) }} 
+
+            <!-- Renders a link tag (if your module requires any CSS)
+                 <link rel="stylesheet" href="/build/app.css"> 
+            <link rel = "stylesheet" href = "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css"> -->
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet" type="text/css" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" type="text/css" />
+
+         {% endblock %}
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" href="{{ path('home') }}">Roadtrip</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+              
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="{{ path('advert.index') }}">All adverts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('advert.create') }}">List your motorhome</a>
+                    </li>
+                    <li class="nav-item">
+
+                        {% if app.user %}
+
+                            <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
+
+                        {% else %}
+
+                            <a href="{{ path('security.login') }}" class="nav-link">Login</a>
+                    
+                        {% endif %}
+
+                    </li>
+
+                    {% if not app.user %}
+
+                        <li class="nav-item">
+
+                            <a href="{{ path('security.registration') }}" class="nav-link">Sign up</a>
+
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+                
+            </div>
+
+        </nav>
+
+        <div class="container">
+
+            <script src="https://js.stripe.com/v3/"></script>
+
+            {% block body %}
+            {% endblock %}
+
+        </div>
+
+        <div class="footer">
+
+            <center>
+                Use of this site implies acceptance of the terms and conditions of use and the privacy policy. 
+                Copyright © 2019 ‐ 2029 Roadtrip ‐ All rights reserved ‐ Last site update : June 20, 2019
+            </center>
+
+        </div>
+
+        {% block javascripts %}              
+        
+            {{ encore_entry_script_tags ( 'app' ) }}
+
+        {% endblock %}
+
+    </body>
+
+</html>

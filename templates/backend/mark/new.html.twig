@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les marques de véhicule{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>Créer une nouvelle marque de véhicule</h1>
+
+        {{ include('backend/mark/_form.html.twig', { button: 'Créer' }) }}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les annonces{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Editer l'annonce</h1>
+
+        {{ include('advert/_form.html.twig', { button: 'Enregistrer' }) }}
+        
+    </div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+## Build generated
+/public/build/
+/node_modules/
+
+## Various settings
+.env
+npm-debug.log
+yarn-error.lo

@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block stylesheets %} 
+
+     {{ parent () }} 
+     <link rel = "stylesheet" href = "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css"> 
+
+ {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig', { 'form': form }) }}
+
+        {% if editMode %}
+
+            <h1>Modification des périodes</h1>
+
+        {% else %}
+
+            <h1>Création des périodes</h1>
+
+        {% endif %}
+
+        {{ form_start(form) }}
+                
+        <h4>Périodes</h4>
+                
+        <ul class= "periods" data-prototype= " {{ form_widget ( form.periods.vars.prototype )| e ( 'html_attr' ) }} " >
+
+            {# iterate over each existing period #}
+            {% for period in form.periods %}
+                <li> 
+                                
+                    {{ form_row(period.start) }}
+                    {{ form_row( period.end ) }}
+                    {{ form_row( period.season ) }}
+                
+                </li>
+            {% endfor %}
+
+        </ul> 
+            
+        <button class="btn btn-primary">{{ button | default('Enregistrer') }}</button>
+            
+        {{ form_end(form) }}
+
+    </div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('periodsManagement') }}
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+
+    {% endblock %}
+   
+{% endblock body %}

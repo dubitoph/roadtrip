@@ -1,0 +1,72 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %} 
+
+     {{ parent () }} 
+
+ {% endblock %}
+
+ 
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <label for="subscription-informations">Récapitulatif du type d'abonnement</label>
+
+        <div  id="subscription-informations" class="form-group">
+
+            <div>{{ advert.subscription.title }}</div>
+            <div>{{ advert.subscription.description }}</div>
+            <div>Validité : {{ advert.subscription.duration }} mois</div>
+
+            {% if europeanCountry %}
+
+                <div>Prix : {{ intent.amount }} € TTC</div>
+                
+            {% else %}
+
+                <div>Prix : {{ intent.amount }} € </div>
+                
+            {% endif %}            
+
+        </div>
+
+        <form>
+
+            <label for="holer-informations">Données le titulaire de la carte</label>
+
+            <div  id="holer-informations" class="form-group">
+
+                <label for="holder-name">Titulaire</label>
+                <input id="holder-name" type="text" class="form-control" value="{{ advert.owner.user.firstname ~ ' ' ~  advert.owner.user.name }}">
+
+                <label for="holder-email">Email</label>
+                <input id="holder-email" type="email" class="form-control" value="{{ advert.owner.user.email }}">
+
+            </div>
+
+            <label for="card-element">Données concernant la carte</label>
+
+            <div id="card-element" class="form-group"></div>
+
+            <button id="card-button" data-client="{{ intent.client_secret }}" class="btn btn-primary">Effectuer le paiement</button>
+
+            <div id="stripe-response" class="help-block" role="alert"></div>
+
+            <div style="display: none"><input id="stripe_public_key" type="text" value="{{ stripe_public_key }}"></div>
+
+        </form>
+
+    </div>
+    
+    {% block javascripts %}
+
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('payment') }}
+
+    {% endblock %}
+   
+{% endblock body %}

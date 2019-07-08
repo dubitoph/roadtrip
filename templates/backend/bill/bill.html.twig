@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <meta charset="UTF-8">
+        <title>Facture</title>
+
+    </head>
+
+    <body>
+        
+        <div class="bill_head">
+    
+            <table class="table table-bordered">
+            
+                <tr>
+    
+                    <td>Roadtrip</td>
+                    <td style="text-align: right;">FACTURE</td>
+    
+                </tr>
+            
+                <tr>
+    
+                    <td>
+
+                        <div>
+
+                            Rue de Mont, 63
+
+                        </div>
+
+                        <div>
+
+                            5530 Godinne
+
+                        </div>
+
+                        <div>
+
+                            Belgique
+
+                        </div>
+
+                        <div>
+
+                            http://roadtrip.be
+
+                        </div>
+
+                    </td>
+                    <td></td>
+    
+                </tr>
+    
+            </table>
+    
+        </div>
+        
+        <div class="bill_client">
+    
+            <table class="table table-bordered">
+            
+                <tr>
+    
+                    <td></td>
+                    <td>
+
+                        {% if advert.owner.companyName %}
+
+                            {{ advert.owner.companyName }}
+                            
+                        {% else %}
+
+                            {{ advert.owner.user.firstName }} {{ advert.owner.user.name }}
+                            
+                        {% endif %}
+
+                    </td>
+    
+                </tr>
+            
+                <tr>
+    
+                    <td>
+
+                        <div>
+
+                            Référence : 
+
+                        </div>
+
+                        <div>
+
+                            Date : {{ "now"|date("d/m/Y") }}
+
+                        </div>
+
+                        <div>
+
+                            N° client : {{ advert.owner.user.id }}
+
+                        </div>
+
+                    </td>
+                    <td>
+                        
+                        {{ advert.owner.billingAddress.street }}
+
+                    </td>
+    
+                </tr>
+    
+            </table>
+    
+        </div>
+
+        <div class="bill_title">
+
+            <h4>Facture d'un abonnement sur RoadTrip.be</h4>
+
+        </div>
+        
+        <div>
+
+            <table class="table table-bordered">
+    
+                <tr>
+    
+                    <th>Type d'abonnement</th>
+                    <th>Durée</th>
+                    <th>Période</th>
+                    <th>Montant</th>
+    
+                </tr>
+        
+                <tr>
+
+                    <td>{{ subscription.title }}</td>
+                    <td>{{ subscription.duration }} mois</td>
+                    <td>{{ "now"|date("d/m/Y") }} - {{ advert.expiresAt |date("d/m/Y") }}</td>
+                    <td>{{ subscription.price }} €</td>
+
+                </tr>
+        
+                <tr>
+
+                    <td></td>
+                    <td></td>
+                    <td>
+                        
+                        {% if vat %}
+
+                            TVA ({{ vat.vat }} %)
+                            
+                        {% else %}
+
+                            TVA
+                            
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        
+                        {% if vat %}
+    
+                            {{ vatAmount }} €
+                                
+                        {% else %}
+    
+                            -
+                                
+                        {% endif %}
+                        
+                    </td>
+
+                </tr>
+        
+                <tr>
+
+                    <td></td>
+                    <td></td>
+                    <td>Total TTC</td>
+                    <td>
+                        
+                        {% if vat %}
+    
+                            {{ includingTaxesAmount }} €
+                                
+                        {% else %}
+    
+                            {{ subscription.price }} €
+                                
+                        {% endif %}</td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+    </body>
+
+</html>

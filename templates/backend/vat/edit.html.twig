@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les TVA {% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Editer la TVA</h1>
+
+        {{ include('backend/vat/_form.html.twig', { button: 'Editer' }) }}
+        
+    </div>
+
+{% endblock %}

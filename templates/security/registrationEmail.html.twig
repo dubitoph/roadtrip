@@ -1,0 +1,7 @@
+Hello {{ user.firstname }}
+
+One more step before your are joined the first free spirit trip community!
+
+Press the button below to confirm your registration
+
+<a href="{{ url('security.confirmation', { 'id': user.id }) }}" class="btn btn-primary">CONFIRM REGISTRATION</a>

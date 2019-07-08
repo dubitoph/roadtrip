@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les évaluations {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les évaluations</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Auteur</th>
+                    <th>Annonce</th>
+                    <th>Commentaire</th>
+                    <th>Score</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for rating in ratings %}
+
+                    <tr>
+
+                        <td>{{ rating.user.userName }}</td>
+                        <td>N°{{ rating.advert.id }} : {{ rating.advert.title }}</td>
+                        <td>N°{{ rating.comment }}</td>
+                        <td>N°{{ rating.score }}</td>
+                        <td>
+                            
+                            <a href="{{ path('rating.edit', { 'id': rating.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('rating.delete', { 'id': rating.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ rating.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexRating') }}
+        
+    {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les équipements {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig', { 'form': form }) }}
+
+        <h1>Gérer les équipements</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Equipement</th>
+                    <th>Appartenance</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for equipment in equipments %}
+
+                    <tr>
+
+                        <td>{{ equipment.equipment }}</td>
+                        <td>{{ equipment.belonging }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.equipment.edit', { 'id': equipment.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.equipment.delete', { 'id': equipment.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ equipment.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.equipment.create') }}" class="btn btn-primary">Créer un nouvel équipement</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexEquipment') }}
+        
+    {% endblock %}
+
+{% endblock %}

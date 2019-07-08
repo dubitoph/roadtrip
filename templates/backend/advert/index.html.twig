@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les annonces {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les annonces</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Titre</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for advert in adverts %}
+
+                    <tr>
+
+                        <td>{{ advert.title }}</td>
+                        <td>
+                            
+                            <a href="{{ path('advert.edit', {id: advert.id}) }}" class="btn btn-secondary">Editer</a>
+                            
+                            <form method = "post" action="{{ path('advert.delete', { 'id': advert.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ advert.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('advert.create') }}" class="btn btn-primary">Créer une nouvelle annonce</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexAdvert') }}
+        
+    {% endblock %}
+
+{% endblock %}

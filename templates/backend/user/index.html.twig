@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les utilisateurs {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig', { 'form': form } }}
+
+        <h1>Gérer les utilisateurs</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Nom d'utlisateur</th>
+                    <th>Email</th>                    
+                    <th>Compte actif</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for user in users %}
+
+                    <tr>
+
+                        <td>{{ user.userName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+
+                            {% if user.isActive %}
+
+                                Oui
+                                
+                            {% else %}
+
+                                Non
+                                
+                            {% endif %}
+
+                        </td>
+                        <td>
+                            
+                            <a href="{{ path('user.user.edit', { 'id': user.id }) }}" class="btn btn-secondary">Editer</a>
+
+                            <form method = "post" action="{{ path('user.user.delete', { 'id': user.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ user.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexUser') }}
+        
+    {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les types de saison {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Gérer les types de saison</h1>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Saison</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for season in seasons %}
+
+                    <tr>
+
+                        <td>{{ season.season }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.season.edit', { 'id': season.id }) }}" class="btn btn-secondary">Editer</a>
+                            <form method = "post" action="{{ path('backend.season.delete', { 'id': season.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ season.id ) }}">
+                                <button class="btn btn-danger">Supprimer</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.season.create') }}" class="btn btn-primary">Créer un nouveau type de saison</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexSeason') }}
+        
+    {% endblock %}
+
+{% endblock %}

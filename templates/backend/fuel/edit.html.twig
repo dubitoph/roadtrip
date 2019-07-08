@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les types de carburant{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Editer le type de carburant</h1>
+
+        {{ include('backend/fuel/_form.html.twig', { button: 'Editer' }) }}
+        
+    </div>
+
+{% endblock %}

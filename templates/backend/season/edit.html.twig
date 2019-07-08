@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gérer les types de saison {% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Editer le type de saison</h1>
+
+        {{ include('backend/season/_form.html.twig', { button: 'Editer' }) }}
+        
+    </div>
+
+{% endblock %}

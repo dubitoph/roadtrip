@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My favorites{% endblock %}
+
+{% block body %}
+
+    <div class='container mt-4'>
+
+        <h1>My favorites</h1>
+
+        {% set i = 0 %}
+
+        <div class="row">
+
+            {% for advert in adverts %}
+            
+                <div class="col-md-4">
+
+                        {% if distances[advert.id] is defined %}    
+                        
+                            {% set distance = distances[advert.id] %}
+
+                        {% else %}
+
+                            {% set distance = null %}
+    
+                        {% endif %}
+
+                        {% if minPrices[advert.id] is defined %}    
+                        
+                            {% set minPrice = minPrices[advert.id] %}
+
+                            {% else %}
+    
+                                {% set minPrice = null %}
+    
+                        {% endif %}
+
+                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice}) }}
+
+                </div>
+
+                {% set i = i + 1 %}
+                
+            {% endfor %}
+            
+        </div>
+
+    </div>
+
+{% endblock %}

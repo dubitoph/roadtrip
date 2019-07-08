@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Evaluation n°{{ rating.id }} {% endblock %}
+
+{% block body %}
+
+    <div class="jumbotron">
+
+        <h2>Location infirmée</h2>
+
+        <div class="container">
+
+            {% if rating.type == 'Advert' %}
+
+                Etant donné que vous avez indiqué que {{ rating.user.username }} n'a pas réalisé une location auprès de vous du {{ rating.rentalBeginning | date("d/m/Y") }} au 
+                {{ rating.rentalEnd | date("d/m/Y") }}, son évaluation ne sera pas publiée. 
+                
+            {% else %}
+
+                Etant donné que vous avez indiqué ne pas avoir effectué de location auprès de {{ rating.advert.owner.firstname }} {{ rating.advert.owner.name }} du 
+                {{ rating.rentalBeginning | date("m/d/Yd/m/Y") }} au {{ rating.rentalEnd | date("d/m/Y") }}, son évaluation ne sera pas publiée.
+                
+            {% endif %}
+
+        </div>            
+
+    </div>
+        
+
+{% endblock %}
