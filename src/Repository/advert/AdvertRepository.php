@@ -100,6 +100,7 @@ class AdvertRepository extends ServiceEntityRepository
                     ->leftJoin('p.duration', 'd')
                     ->andWhere('a.expiresAt IS NOT NULL')
                     ->andWhere('a.expiresAt >= :today')
+                    ->groupBy('a.createdAt')
                     ->orderBy('a.createdAt', 'DESC')
                     ->setParameter('today', date("Y-m-d"))
                     ->setMaxResults(10)

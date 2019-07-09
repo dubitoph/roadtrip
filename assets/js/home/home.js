@@ -6,11 +6,8 @@ jQuery( document ).ready( function( $ ) {
   var userLatitude = localStorage.getItem("userLatitude");
   var userLongitude = localStorage.getItem("userLongitude");
   var userCity = localStorage.getItem("userCity");
-  var existsSearchAddress = $('#search_address').val();
-
-  console.log(userCity);
     
-  if (userAddress === null || userLatitude === null || userLongitude === null || userCity === null) 
+  if (userAddress == null || userLatitude == null || userLongitude == null || userCity == null) 
   { 
 
     if(navigator.geolocation)
@@ -40,8 +37,8 @@ jQuery( document ).ready( function( $ ) {
     $('#city').val(localStorage.getItem("userCity"));
 
   }
-  
-  if (existsSearchAddress.trim() == '')
+
+  if (! sessionStorage.getItem("phpSessionVariablesExist") && userAddress)
   {
     
     setSessionLocation($('#search_address').val());
@@ -76,7 +73,7 @@ function geocode(query)
                             $('#search_address').val(address);
                             $('#city').val(response.results[0].components.village);
 
-                            console.log($('#city').val());
+                            setSessionLocation($('#search_address').val());
 
                           },
                      402: function()

@@ -98,7 +98,8 @@ class UserUserController extends AbstractController
         $user = $this->getUser();  
         
         return $this->render('user/dashbord.html.twig', [
-                                                            'user' => $user
+                                                            'user' => $user,
+                                                            'current_menu' => 'dashbord'
                                                         ]
                             )
         ; 
@@ -123,7 +124,7 @@ class UserUserController extends AbstractController
             $this->container->get('session')->set('userAddress', $userAddress);
              
             $response = new JsonResponse();
-            $response->setData(array('userCity'=> $request->request->get('userCity'))); 
+            $response->setData(array('success'=> 'Session variables created')); 
 
             return $response;
         }

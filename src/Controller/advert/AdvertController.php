@@ -154,6 +154,7 @@ class AdvertController extends AbstractController
      
         return $this->render('advert/new.html.twig', [
                                                         'advert' => $advert,
+                                                        'current_menu' => 'add_advert',
                                                         'form' => $form->createView(),
                                                      ]
                             )

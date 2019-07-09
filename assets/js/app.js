@@ -92,13 +92,20 @@ export function setSessionLocation(address)
         success: function(response) 
                 {  
 
-                  console.log(response)
+                  console.log(response);
+
+                  localStorage.setItem('userLatitude',  $('#latitude').val());
+                  localStorage.setItem('userLongitude',  $('#longitude').val());
+                  localStorage.setItem('userCity',  $('#city').val());
+                  localStorage.setItem('userAddress',  address);
+
+                  sessionStorage.setItem('phpSessionVariablesExist', '1');
                   
                 },  
         error : function(response) 
                 {  
 
-                  console.log('Error from Ajax call')
+                  console.log('Error from Ajax call');
                   
                 }, 
 

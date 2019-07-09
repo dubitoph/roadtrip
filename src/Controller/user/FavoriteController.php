@@ -32,6 +32,8 @@ class FavoriteController extends AbstractController
 
         $userLatitude = $this->container->get('session')->get('userLatitude');
         $userLongitude = $this->container->get('session')->get('userLongitude');
+
+        dump($userLatitude);
         
         if ($userLatitude && $userLongitude) 
         {
@@ -92,8 +94,6 @@ class FavoriteController extends AbstractController
 
         }
 
-        dump($this->container->get('session')->get('userCity'));
-    
         return $this->render('user/favorites.html.twig', [
                                                             'adverts' => $adverts,
                                                             'distances' => $distances,
