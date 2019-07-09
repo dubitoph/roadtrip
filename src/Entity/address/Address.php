@@ -123,7 +123,7 @@ class Address
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Advert\Vehicle", mappedBy="situation")
+     * @ORM\OneToMany(targetEntity="App\Entity\advert\Vehicle", mappedBy="situation")
      */
     private $vehicles;
 

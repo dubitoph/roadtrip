@@ -28,7 +28,7 @@
 
                     </li>
 
-                    {% if user.owner %}
+                    {% if user.owner is not null %}
     
                         <li class="nav-item">
 
@@ -130,7 +130,7 @@
 
         </div>
 
-        {% if user.owner %}
+        {% if user.owner is not null %}
     
             <div class="row">
 
