@@ -7,22 +7,23 @@ parameters:
     locale: 'fr'
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
     home_page_images_directory: 'images/home_page'
-    advert_active_duration : '1 year' 
-    limit_creation_periods : '2 years'
-    minimum_creation_periods : '1 year'
+    advert_active_duration: '1 year' 
+    limit_creation_periods: '2 years'
+    minimum_creation_periods: '1 year'
     rental_automatically_confirmation: '15 days'
-    periods_durations : [ "Week-end", "Long week-end", "Semaine" ]
-    administrateur_email : 'administrateur@roadtrip.com'    
-    contestation_email : "contestation@roadtrip.com"    
-    backend_admin_user : "backendAdminUser"
-    administrateur_firstname : 'Administrator'
-    administrateur_name : 'Roadtrip'
-    registration_email_subject : 'Welcome to Roadtrip'
-    password_Resetting_email_subject : 'Renew password on Roadtrip'
-    rating_email_subject : "Waiting for lease approval"
-    rating_approval_subject : "New assessment pending approval"
-    rating_not_confirmed_rental_email_subject : "Rent related to your unconfirmed evaluation"
-    succeed_payment_email_subject : 'Accepted payment'
+    periods_durations: [ "Week-end", "Long week-end", "Semaine" ]
+    administrateur_email: 'administrateur@roadtrip.com'    
+    contestation_email: "contestation@roadtrip.com"    
+    backend_admin_user: "backendAdminUser"
+    administrateur_firstname: 'Administrator'
+    administrateur_name: 'Roadtrip'
+    registration_email_subject: 'Welcome to Roadtrip'
+    contact_owner_subject: 'Contact about your advert on Raodtrip'
+    password_Resetting_email_subject: 'Renew password on Roadtrip'
+    rating_email_subject: "Waiting for lease approval"
+    rating_approval_subject: "New assessment pending approval"
+    rating_not_confirmed_rental_email_subject: "Rent related to your unconfirmed evaluation"
+    succeed_payment_email_subject: 'Accepted payment'
     stripe_account: acct_1EbuOxJ448Kc3t3S
     stripe_public_key: pk_test_lFbnmMuNBNktwcox9MhvdFnA00txD1vT93
     stripe_secret_key: sk_test_A04LvA0jEAUKuBZnez1afI4t00OrQwUAgN

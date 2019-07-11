@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -8,14 +10,19 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190603080307 extends AbstractMigration
+final class Version20190711083838 extends AbstractMigration
 {
+    public function getDescription() : string
+    {
+        return '';
+    }
+
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE rating ADD approved TINYINT(1) DEFAULT NULL');
+        $this->addSql('ALTER TABLE mail ADD conversation BIGINT NOT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -23,6 +30,6 @@ final class Version20190603080307 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE rating DROP approved');
+        $this->addSql('ALTER TABLE mail DROP conversation');
     }
 }

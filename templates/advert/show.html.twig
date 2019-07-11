@@ -40,7 +40,7 @@
 
                     {% if  advert.vehicle %}
 
-                        <h2>{{advert.vehicle.bedsNumber}} couchages - {{advert.vehicle.seatsNumber}} places assises</h2>
+                        <h2>{{advert.vehicle.bedsNumber}} sleeps - {{advert.vehicle.seatsNumber}} seats</h2>
 
                     {% endif %}
 
@@ -50,32 +50,23 @@
 
                     {% endif %}
                     
-                    <a href="#" class="btn btn-primary" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contacter le propriétaire</a>
+                    <a href="#" class="btn btn-primary" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contact the owner</a>
+                    
                     <div id="contactForm" class="mt-4"{% if not form.vars.submitted %} style="display: none;"{% endif %}>
 
                         {{ form_start(form) }}
+                        
+                        <div>
 
-                            <div class="row">
-
-                                <div class="col">{{ form_row( form.firstName ) }}</div>
-                                <div class="col">{{ form_row( form.lastName ) }}</div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col">{{ form_row( form.phone ) }}</div>
-                                <div class="col">{{ form_row( form.email ) }}</div>
-
-                            </div>
-
-                            {{ form_rest(form) }}
-
-                            <div class="form-group">
-
-                                <button class="btn btn-primary">Envoyer</button>
-
-                            </div>
+                            {{ form_row( form.message ) }} 
+                            
+                        </div>
+                        
+                        <div>
+        
+                            <button class="btn btn-primary">{{ button | default('Send') }}</button>
+                            
+                        </div>
 
                         {{ form_end(form) }}
 
@@ -101,7 +92,7 @@
 
             <div class="col-md-8">
 
-                Description générale
+                General description
                 <table class="table table-striped">
 
                     <tr>
@@ -112,19 +103,19 @@
                         
                             <td>Type</td>
                             <td>{{ advert.vehicle.sort.sort }}</td>
-                            <td>Marque</td>
+                            <td>Mark</td>
                             <td>{{ advert.vehicle.mark.mark }}</td>
-                            <td>Carburant</td>
+                            <td>Fuel</td>
                             <td>{{ advert.vehicle.fuel.fuel }}</td>
-                            <td>Date de construction</td>
+                            <td>Building date</td>
                             <td>{{ advert.vehicle.getFormattedManufactureDate }}</td>
-                            <td>Puissance</td>
+                            <td>Power</td>
                             <td>{{ advert.vehicle.power }} cv</td>
-                            <td>Boîte de vitesse</td>
+                            <td>Gearbox</td>
                             <td>{{advert.vehicle.gearBox}}</td>
-                            <td>Nombre de couchages</td>
+                            <td>Sleeps</td>
                             <td>{{ advert.vehicle.bedsNumber }}</td>
-                            <td>Nombre de sièges</td>
+                            <td>Seats</td>
                             <td>{{ advert.vehicle.seatsNumber }}</td>
 
                         {% endif %}
@@ -141,7 +132,7 @@
 
         <div class="row">
 
-            <h2>Equipement</h2>
+            <h2>Equipment</h2>
 
         </div>
 
@@ -149,7 +140,7 @@
 
             <div class="col-md-4">
 
-                <h3>Cellule</h3>
+                <h3>Cell</h3>
                 <ul class="list-group">
 
                     {% for cellEquipment in cellEquipments %}
@@ -164,7 +155,7 @@
 
             <div class="col-md-4">
 
-                <h3>Porteur</h3>
+                <h3>Carrier</h3>
                 <ul class="list-group">
 
                     {% for carrierEquipment in carrierEquipments %}
@@ -181,7 +172,7 @@
 
                 <div class="row">
 
-                    <h2>Disponibilités</h2>
+                    <h2>Disponibilities</h2>
 
                 </div>
 
@@ -201,11 +192,11 @@
                 
                     {% if ratingsNumber == 1 %} 
 
-                        <h1>1 évaluation :</h1>
+                        <h1>1 rating :</h1>
 
                     {% else %}
 
-                        <h1>{{ ratingsNumber }} évaluations :</h1>
+                        <h1>{{ ratingsNumber }} ratings :</h1>
 
                     {% endif %}
 
@@ -259,11 +250,11 @@
 
                 {% if app.user %}
 
-                    <a href="{{ path('rating.advert.create', { 'id': advert.id }) }}">Proposez votre évaluation</a>
+                    <a href="{{ path('rating.advert.create', { 'id': advert.id }) }}">Propose your rating</a>
                     
                 {% else %}
 
-                    <a href="{{ path('security.login') }}">Connectez-vous pour proposer votre évaluation</a>
+                    <a href="{{ path('security.login') }}">Login to propose your rating</a>
                     
                 {% endif %}
 

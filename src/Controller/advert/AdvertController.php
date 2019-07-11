@@ -5,23 +5,22 @@ namespace App\Controller\advert;
 use App\Entity\backend\VAT;
 use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
-use App\Entity\advert\Contact;
 use App\Entity\advert\Vehicle;
 use App\Form\advert\CostsType;
 use App\Form\advert\AdvertType;
 use App\Entity\advert\Insurance;
 use App\Entity\backend\Duration;
-use App\Form\advert\ContactType;
 use App\Form\advert\VehicleType;
+use App\Entity\communication\Mail;
 use App\Entity\advert\AdvertSearch;
 use App\Entity\backend\Subscription;
+use App\Form\communication\MailType;
 use App\Entity\advert\InsurancePrice;
 use App\Form\advert\AdvertSearchType;
 use App\Form\advert\PricesAdvertType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
-use App\Notification\ContactNotification;
 use App\Repository\advert\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -809,9 +808,11 @@ class AdvertController extends AbstractController
     /**
      * @Route("/advert/show/{slug}-{id}", name="advert.show", requirements = {"slug": "[a-z0-9\-]*"})
      */
-    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, Request $request, ContactNotification $notification): Response 
+    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response 
     {
         
+        $user = $this->getUser();
+        $receiver = $advert->getOwner()->getUser();
         $advertSlug = $advert->getSlug();
         
         if ($advertSlug !== $slug) 
@@ -826,8 +827,14 @@ class AdvertController extends AbstractController
 
         }
         
-        $contact = new Contact();
-        $contact->setAdvert($advert);
+        $mail = new Mail();
+
+        $mail->setSender($user)
+             ->setReceiver($receiver)
+             ->setSubject($this->getParameter('contact_owner_subject'))
+             ->setAdvert($advert)
+             ->setConversation(time() + $user->getId())
+             ->setTemplate('communication/contactAboutAdvert.html.twig');
 
         $minPrice = $this->getMinPrice($advert);
         $mainPhoto = $photoRepository->findOneBy(array('advert' => $advert, 'mainPhoto' => true));
@@ -853,23 +860,44 @@ class AdvertController extends AbstractController
 
         }
 
-        $form = $this->createForm(ContactType::class, $contact);
+        $form = $this->createForm(MailType::class, $mail);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 
         {
-
-            $notification->notify($contact);
             
-            $this->addFlash('success', 'Votre message a été envoyé avec succès.');
-/*
+            $mail->setMessage($this->renderView(
+                                                $mail->getTemplate(), 
+                                                [
+                                                    'mail' => $mail
+                                                ]
+                                               )
+                             )
+            ;
+
+            if ($mail->sendEmail($mailer))
+            {                
+
+                $manager->persist($mail);
+                $manager->flush();
+
+                $this->addFlash('success', "Your message was successfully send.");
+
+            }
+            else
+            {
+
+                $this->addFlash('error', "Your message couldn't be sent");
+
+            }
+
             return $this->redirectToRoute('advert.show', [
                                                             'id' => $advert->getId(),
                                                             'slug' => $advertSlug,
                                                          ]
                                          )
             ;
-*/
+
         }
         
         return $this->render('advert/show.html.twig', [

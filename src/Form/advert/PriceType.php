@@ -7,13 +7,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class PriceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('price')
+            ->add('price', NumberType::class)
             ->add('duration', EntityType::class, array(
                                                         'class' => 'App\Entity\backend\Duration', 
                                                         'attr' => array ('readonly' => true),

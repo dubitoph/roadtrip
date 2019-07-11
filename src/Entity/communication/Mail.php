@@ -21,40 +21,7 @@ class Mail
 
     /**
      * @ORM\Column(type="string", length=100)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
-     */
-    private $firstname;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *  pattern="/[0-9]{10}/"
-     * )
-     */
-    private $phone;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     */
-    private $emailFrom;
-
-    /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\NotBlank()
      */
@@ -62,37 +29,61 @@ class Mail
 
     /**
      * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\NotBlank()
-     *  @Assert\Length(min=10)
+     * @Assert\Length(min=10)
      */
     private $message;
 
     /**
+     * @var User
      * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="sentMails")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
      */
     private $sender;
 
     /**
+     * @var User
      * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="receivedMails")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
      */
     private $receiver;
 
     /**
+     * @var Advert|null
+     * 
      * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="mails")
      */
     private $advert;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
      */
     private $subject;
 
     /**
      * @ORM\Column(type="datetime")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
      */
     private $createdAt;
+
+    /**
+     * @var int|null
+     * 
+     * @ORM\Column(type="bigint")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $conversation;
 
     public function __construct() 
 	{
@@ -102,54 +93,7 @@ class Mail
     public function getId(): ?int
     {
         return $this->id;
-    }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(?string $phone): self
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getEmailFrom(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmailFrom(string $emailFrom): self
-    {
-        $this->emailFrom = $emailFrom;
-
-        return $this;
     }
 
     public function getTemplate(): ?string
@@ -234,6 +178,18 @@ class Mail
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function getConversation(): ?int
+    {
+        return $this->conversation;
+    }
+
+    public function setConversation(int $conversation): self
+    {
+        $this->conversation = $conversation;
+
+        return $this;
     }   
 
     public function sendEmail(\Swift_Mailer $mailer)
@@ -241,24 +197,12 @@ class Mail
         
         $email = (new \Swift_Message($this->subject));
 
-        if(is_null($this->sender))
-        {
-
-            $email->setFrom([$this->emailFrom => $this->firstname . ' ' . $this->name]);
-
-        }
-        else
-        {
-            $email->setFrom([$this->sender->getEmail => $this->sender->getUserName]);
-
-        }
-                        
-        $email
-                ->setTo($this->receiver->getEmail())
-                ->setBody(
+        $email->setFrom([$this->sender->getEmail() => $this->sender->getUserName()])
+              ->setTo($this->receiver->getEmail())
+              ->setBody(
                             $this->message,
                             'text/html'
-                         )
+                       )
         ;
 
         $result = $mailer->send($email);

@@ -1,0 +1,9 @@
+Hello {{ mail.receiver.firstname }}! 
+
+{{ mail.sender.firstname }} is contacting you about your advert "{{ mail.advert.title }}"" having number {{ mail.advert.id }}. This is the message :
+
+{{ mail.message }}
+
+{# Makes an absolute URL to the /images/logo.png file 
+<img src="{{ absolute_url(asset('images/logo.png')) }}">
+#}

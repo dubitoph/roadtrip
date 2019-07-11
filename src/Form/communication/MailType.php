@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Form\backend;
+namespace App\Form\communication;
 
-use App\Entity\backend\Sort;
+use App\Entity\communication\Mail;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-class SortType extends AbstractType
+class MailType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('sort', TextType::class)
-        ;
+        $builder->add('message', TextareaType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Sort::class,
-            'translation_domain' => 'forms',
-        ]);
+                                'data_class' => Mail::class,
+                               ]);
     }
 }

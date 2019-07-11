@@ -32,8 +32,6 @@ class FavoriteController extends AbstractController
 
         $userLatitude = $this->container->get('session')->get('userLatitude');
         $userLongitude = $this->container->get('session')->get('userLongitude');
-
-        dump($userLatitude);
         
         if ($userLatitude && $userLongitude) 
         {

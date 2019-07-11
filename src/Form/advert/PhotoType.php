@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class PhotoType extends AbstractType
 {
@@ -20,7 +21,7 @@ class PhotoType extends AbstractType
                                                     'constraints' => array(new File(),),
                                                      )
                       )
-                 ->add('mainPhoto')
+                 ->add('mainPhoto', CheckboxType::class)
                  ->add('name', HiddenType::class)  
         ;
 

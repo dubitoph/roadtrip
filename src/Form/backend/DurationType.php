@@ -7,13 +7,14 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class DurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('duration')
+            ->add('duration', TextType::class)
             ->add('daysNumber', ChoiceType::class, array('choices'  => array('2' => 2, 
                                                                              '3' => 3,
                                                                              '4' => 4,

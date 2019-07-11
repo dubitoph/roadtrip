@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class AdvertSearchType extends AbstractType
 {
@@ -76,8 +77,7 @@ class AdvertSearchType extends AbstractType
                                                                          )
                                                       )
                  )
-            ->add('address', null, array('required' => false)
-                 )
+            ->add('address', TextType::class, array('required' => false))
             ->add('city', HiddenType::class)
             ->add('sorting', ChoiceType::class, array(
                                                       'required' => false,

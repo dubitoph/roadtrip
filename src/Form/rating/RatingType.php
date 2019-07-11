@@ -8,13 +8,14 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class RatingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('comment')
+            ->add('comment', TextareaType::class)
             ->add('score', ChoiceType::class, array('choices' => array('0' => 0, 
                                                                        '1' => 1, 
                                                                        '2' => 2, 

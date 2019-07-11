@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UserType extends AbstractType
 {
@@ -19,8 +20,8 @@ class UserType extends AbstractType
     {
 
         $builder
-                ->add('firstname')
-                ->add('name')
+                ->add('firstname', TextType::class)
+                ->add('name', TextType::class)
                 ->add('phoneNumber', TelType::class, array(
                                                             'required' => false,
                                                             'empty_data' => ''
@@ -29,7 +30,7 @@ class UserType extends AbstractType
                 ->add('password', PasswordType::class)
                 ->add('confirmedPassword', PasswordType::class)
                 ->add('email', EmailType::class)
-                ->add('username')
+                ->add('username', TextType::class)
         ;
             
 

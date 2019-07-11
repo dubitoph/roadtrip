@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class BookingType extends AbstractType
 {
@@ -25,7 +26,7 @@ class BookingType extends AbstractType
                                                     'attr' => ['class' => 'js-datepicker-date'],
                                                  )
                  )
-            ->add('title')
+            ->add('title', TextType::class)
         ;
     }
 
