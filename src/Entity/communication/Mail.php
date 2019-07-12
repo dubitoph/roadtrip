@@ -210,4 +210,11 @@ class Mail
         return $result;
 
     }
+
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y');
+
+    }
 }

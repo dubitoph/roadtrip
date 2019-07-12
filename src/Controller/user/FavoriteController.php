@@ -13,7 +13,6 @@ class FavoriteController extends AbstractController
     
     /**
      * @Route("/user/favorites", name="user.favorites")
-     * @param FavoriteRepository $favoriteRepository
      * @return Response
      */
     public function index(AdvertRepository $advertRepository, PhotoRepository $photoRepository): Response
