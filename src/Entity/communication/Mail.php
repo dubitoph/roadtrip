@@ -2,7 +2,6 @@
 
 namespace App\Entity\communication;
 
-use App\Entity\advert\Advert;
 use App\Entity\user\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,14 +19,6 @@ class Mail
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
-     */
-    private $template;
-
-    /**
      * @ORM\Column(type="text")
      * @ORM\JoinColumn(nullable=false)
      * 
@@ -35,6 +26,14 @@ class Mail
      * @Assert\Length(min=10)
      */
     private $message;
+
+    /**
+     * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
+     */
+    private $body;
 
     /**
      * @var User
@@ -55,13 +54,6 @@ class Mail
     private $receiver;
 
     /**
-     * @var Advert|null
-     * 
-     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="mails")
-     */
-    private $advert;
-
-    /**
      * @ORM\Column(type="string", length=50)
      * @ORM\JoinColumn(nullable=false)
      * 
@@ -78,12 +70,9 @@ class Mail
     private $createdAt;
 
     /**
-     * @var int|null
-     * 
-     * @ORM\Column(type="bigint")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\communication\Thread", inversedBy="mails")
      */
-    private $conversation;
+    private $thread;
 
     public function __construct() 
 	{
@@ -96,18 +85,6 @@ class Mail
 
     }
 
-    public function getTemplate(): ?string
-    {
-        return $this->template;
-    }
-
-    public function setTemplate(string $template): self
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
     public function getMessage(): ?string
     {
         return $this->message;
@@ -116,6 +93,18 @@ class Mail
     public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
 
         return $this;
     }
@@ -142,18 +131,6 @@ class Mail
         $this->receiver = $receiver;
 
         return $this;
-    }
-
-    public function getAdvert(): ?Advert
-    {
-        return $this->advert;
-    }
-
-    public function setAdvert(?Advert $advert): self
-    {
-        $this->advert = $advert;
-
-        return $this;
     } 
 
     public function getSubject(): ?string
@@ -178,18 +155,6 @@ class Mail
         $this->createdAt = $createdAt;
 
         return $this;
-    }
-
-    public function getConversation(): ?int
-    {
-        return $this->conversation;
-    }
-
-    public function setConversation(int $conversation): self
-    {
-        $this->conversation = $conversation;
-
-        return $this;
     }   
 
     public function sendEmail(\Swift_Mailer $mailer)
@@ -200,7 +165,7 @@ class Mail
         $email->setFrom([$this->sender->getEmail() => $this->sender->getUserName()])
               ->setTo($this->receiver->getEmail())
               ->setBody(
-                            $this->message,
+                            $this->body,
                             'text/html'
                        )
         ;
@@ -216,5 +181,17 @@ class Mail
 
         return $this->createdAt->format('d-m-Y');
 
+    }
+
+    public function getThread(): ?Thread
+    {
+        return $this->thread;
+    }
+
+    public function setThread(?Thread $thread): self
+    {
+        $this->thread = $thread;
+
+        return $this;
     }
 }

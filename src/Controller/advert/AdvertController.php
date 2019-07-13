@@ -21,6 +21,7 @@ use App\Form\advert\PricesAdvertType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
+use App\Entity\communication\Thread;
 use App\Repository\advert\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -827,14 +828,19 @@ class AdvertController extends AbstractController
 
         }
         
+        $thread = new Thread();
+
+        $thread->setAdvert($advert)
+               ->setCreator($user)
+        ;        
+
         $mail = new Mail();
 
         $mail->setSender($user)
              ->setReceiver($receiver)
              ->setSubject($this->getParameter('contact_owner_subject'))
-             ->setAdvert($advert)
-             ->setConversation(time() + $user->getId())
-             ->setTemplate('communication/contactAboutAdvert.html.twig');
+             ->setThread($thread)
+             ->setBody('The body');
 
         $minPrice = $this->getMinPrice($advert);
         $mainPhoto = $photoRepository->findOneBy(array('advert' => $advert, 'mainPhoto' => true));
@@ -866,18 +872,19 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
             
-            $mail->setMessage($this->renderView(
-                                                $mail->getTemplate(), 
+            $mail->setBody($this->renderView(
+                                                'communication/threadFollow-Up.html.twig', 
                                                 [
                                                     'mail' => $mail
                                                 ]
-                                               )
-                             )
+                                            )
+                          )
             ;
 
             if ($mail->sendEmail($mailer))
             {                
 
+                $manager->persist($thread);
                 $manager->persist($mail);
                 $manager->flush();
 

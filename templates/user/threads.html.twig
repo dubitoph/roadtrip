@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My messages{% endblock %}
+
+{% block body %}
+
+    {{ include('_messages.html.twig') }}
+
+    {% for thread in user.threads %}
+
+        <div class="row">
+            
+            <div class="col-md-4">
+            
+                {{ thread.getFormattedCreatedAt }}
+            
+            </div>
+            
+            <div class="col-md-4">
+        
+                {{ thread.advert.title }}
+        
+            </div>
+            
+            <div class="col-md-4">
+        
+                {{ thread.advert.owner.user.firstname }} {{ thread.advert.owner.user.name }}
+        
+            </div>
+
+        </div>
+
+        {% for mail in thread.mails %}
+    
+            <div class="row">
+            
+                <div class="col-md-2">
+
+                    {{ mail.sender.firstname }}
+
+                </div>
+            
+                <div class="col-md-10">
+
+                    {{ mail.message }}
+
+                </div>
+
+            </div>
+                
+        {% endfor %}
+    
+        <div class="row">
+        
+            <div class="col-md-12">
+
+                <form method = "post" action="{{ path('communication.create', { 'id': thread.id }) }}">
+
+                    <textarea id="response_thread_{{ thread.id }}" name="response_thread_{{ thread.id }}" rows="10" cols="33"></textarea>
+                    <button class="btn btn-primary">{{ button | default('Send') }}</button>
+
+                </form>
+
+            </div>
+
+        </div>
+                
+    {% endfor %}
+
+{% endblock %}

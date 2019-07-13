@@ -19,6 +19,7 @@ parameters:
     administrateur_name: 'Roadtrip'
     registration_email_subject: 'Welcome to Roadtrip'
     contact_owner_subject: 'Contact about your advert on Raodtrip'
+    thread_subject: 'New message in your thread on Roadtrip'
     password_Resetting_email_subject: 'Renew password on Roadtrip'
     rating_email_subject: "Waiting for lease approval"
     rating_approval_subject: "New assessment pending approval"

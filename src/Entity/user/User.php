@@ -2,13 +2,15 @@
 
 namespace App\Entity\user;
 
-use App\Entity\rating\Rating;
-use App\Entity\communication\Mail;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\rating\Rating;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
+use App\Entity\communication\Mail;
+use App\Entity\communication\Thread;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity ;
@@ -144,28 +146,39 @@ class User implements UserInterface
 
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\communication\Mail", mappedBy="sender")
+      * @OrderBy({"createdAt" = "DESC"})
       */
      private $sentMails;
 
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\communication\Mail", mappedBy="receiver")
+      * @OrderBy({"createdAt" = "DESC"})
       */
      private $receivedMails;
 
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="user")
+      * @OrderBy({"createdAt" = "DESC"})
       */
      private $sentRatings;
 
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="tenant")
+      * @OrderBy({"createdAt" = "DESC"})
       */
      private $receivedRatings;
 
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\user\Favorite", mappedBy="user", orphanRemoval=true)
+      * @OrderBy({"createdAt" = "DESC"})
       */
      private $favorites;
+
+     /**
+      * @ORM\OneToMany(targetEntity="App\Entity\communication\Thread", mappedBy="creator", orphanRemoval=true)
+      * @OrderBy({"createdAt" = "DESC"})
+      */
+     private $threads;
 
      public function __construct()
      {
@@ -173,7 +186,8 @@ class User implements UserInterface
          $this->receivedMails = new ArrayCollection();
          $this->sentRatings = new ArrayCollection();
          $this->receivedRatings = new ArrayCollection();
-         $this->favorites = new ArrayCollection(); 
+         $this->favorites = new ArrayCollection();
+         $this->threads = new ArrayCollection(); 
      }
 
     public function getId(): ?int
@@ -600,6 +614,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($favorite->getUser() === $this) {
                 $favorite->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Thread[]
+     */
+    public function getThreads(): Collection
+    {
+        return $this->threads;
+    }
+
+    public function addThread(Thread $thread): self
+    {
+        if (!$this->threads->contains($thread)) {
+            $this->threads[] = $thread;
+            $thread->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeThread(Thread $thread): self
+    {
+        if ($this->threads->contains($thread)) {
+            $this->threads->removeElement($thread);
+            // set the owning side to null (unless already changed)
+            if ($thread->getCreator() === $this) {
+                $thread->setCreator(null);
             }
         }
 

@@ -85,7 +85,7 @@ class SecurityController extends AbstractController
                     $manager->persist($mail);
                     $manager->flush();
 
-                    $this->addFlash('success', "An email was sended to the completed email address to activate your account.");
+                    $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
 
                 }
                 else

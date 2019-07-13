@@ -2,6 +2,7 @@
 
 namespace App\Entity\advert;
 
+use App\Entity\communication\Thread;
 use App\Entity\user\Favorite;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
@@ -13,7 +14,6 @@ use App\Entity\rating\Rating;
 use App\Entity\advert\Vehicle;
 use App\Entity\advert\Insurance;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\communication\Mail;
 use App\Entity\backend\Subscription;
 use App\Entity\advert\IncludedMileage;
 use Doctrine\Common\Collections\Collection;
@@ -141,11 +141,6 @@ class Advert
     private $owner;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\communication\Mail", mappedBy="advert")
-     */
-    private $mails;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\backend\Subscription", inversedBy="adverts")
      * @ORM\JoinColumn(nullable=true)
      * 
@@ -174,6 +169,11 @@ class Advert
      */
     private $favorites;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\communication\Thread", mappedBy="advert", orphanRemoval=true)
+     */
+    private $threads;
+
     public function __construct() 
 	{
         $this->createdAt = new \DateTime();
@@ -185,6 +185,7 @@ class Advert
         $this->bills = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->discussions = new ArrayCollection();
 	}    
 
     public function getId(): ?int
@@ -246,11 +247,11 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
     }
 
 	public function setExpiresAt(?\DateTimeInterface $expiresAt): self
-                                                                                        {
-                                                                                            $this->expiresAt = $expiresAt;
-                                                                                                                                                                                                         
-                                                                                            return $this;
-                                                                                        }
+                                                                                                          {
+                                                                                                              $this->expiresAt = $expiresAt;
+                                                                                                                                                                                                                           
+                                                                                                              return $this;
+                                                                                                          }
 
     public function getVehicle(): ?Vehicle
     {
@@ -520,37 +521,6 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         return $this;
     }
 
-    /**
-     * @return Collection|Mail[]
-     */
-    public function getMails(): Collection
-    {
-        return $this->mails;
-    }
-
-    public function addMail(Mail $mail): self
-    {
-        if (!$this->mails->contains($mail)) {
-            $this->mails[] = $mail;
-            $mail->setAdvert($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMail(Mail $mail): self
-    {
-        if ($this->mails->contains($mail)) {
-            $this->mails->removeElement($mail);
-            // set the owning side to null (unless already changed)
-            if ($mail->getAdvert() === $this) {
-                $mail->setAdvert(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getSubscription(): ?Subscription
     {
         return $this->subscription;
@@ -669,6 +639,37 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
             // set the owning side to null (unless already changed)
             if ($favorite->getAdvert() === $this) {
                 $favorite->setAdvert(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Thread[]
+     */
+    public function getThreads(): Collection
+    {
+        return $this->threads;
+    }
+
+    public function addThread(Thread $thread): self
+    {
+        if (!$this->threads->contains($thread)) {
+            $this->threads[] = $thread;
+            $thread->setAdvert($this);
+        }
+
+        return $this;
+    }
+
+    public function removeThread(Thread $thread): self
+    {
+        if ($this->threads->contains($thread)) {
+            $this->threads->removeElement($thread);
+            // set the owning side to null (unless already changed)
+            if ($thread->getAdvert() === $this) {
+                $thread->setAdvert(null);
             }
         }
 
