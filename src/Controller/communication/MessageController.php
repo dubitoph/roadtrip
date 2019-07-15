@@ -28,14 +28,24 @@ class MessageController extends AbstractController
         
         $notReadUserMessages = $mailRepository->notReadMessages($user, null);
         $notReadOwnerMessages = $mailRepository->notReadMessages(null, $owner);
+        
+        $otherMails = $mailRepository->findBy(
+                                                array(
+                                                        'receiver'=> $user, 
+                                                        'thread' => null
+                                                     ),
+                                                array('createdAt' => 'desc')
+                                             )
+        ;
 
         return $this->render('user/threads.html.twig', [
                                                             'user' => $user,
                                                             'notReadUserMessages' => $notReadUserMessages,
-                                                            'notReadOwnerMessages' => $notReadOwnerMessages
+                                                            'notReadOwnerMessages' => $notReadOwnerMessages,
+                                                            'otherMails' => $otherMails
                                                        ]
                             )
-        ;  
+        ;
         
     }
 

@@ -54,6 +54,34 @@
         
     {% endif %}
 
+    {% if otherMails|length > 0 %}
+
+        <div>
+
+            <div> 
+
+                From Roadtrip
+
+            </div>
+
+            <div>
+
+                {% for mail in otherMails %}
+
+                    <pre>    
+                        {{ mail.getFormattedCreatedAt }} - {{ mail.sender.firstname }}
+
+                        {{ mail.message | nl2br }}
+                    </pre>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
     <div id="ajaxUrlDiv" style="display: none" data-url="{{ path('communication.mail.update.read') }}"></div>
     
     {% block javascripts %}
