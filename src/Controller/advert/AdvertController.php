@@ -831,7 +831,8 @@ class AdvertController extends AbstractController
         $thread = new Thread();
 
         $thread->setAdvert($advert)
-               ->setCreator($user)
+               ->setUser($user)
+               ->setOwner($advert->getOwner())
         ;        
 
         $mail = new Mail();
@@ -840,7 +841,14 @@ class AdvertController extends AbstractController
              ->setReceiver($receiver)
              ->setSubject($this->getParameter('contact_owner_subject'))
              ->setThread($thread)
-             ->setBody('The body');
+             ->setBody($this->renderView(
+                                         'communication/contactAboutAdvert.html.twig', 
+                                         [
+                                            'mail' => $mail
+                                         ]
+                                        )
+                      )
+        ;
 
         $minPrice = $this->getMinPrice($advert);
         $mainPhoto = $photoRepository->findOneBy(array('advert' => $advert, 'mainPhoto' => true));
@@ -872,15 +880,6 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
             
-            $mail->setBody($this->renderView(
-                                                'communication/threadFollow-Up.html.twig', 
-                                                [
-                                                    'mail' => $mail
-                                                ]
-                                            )
-                          )
-            ;
-
             if ($mail->sendEmail($mailer))
             {                
 

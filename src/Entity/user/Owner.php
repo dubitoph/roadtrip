@@ -6,6 +6,8 @@ use App\Entity\user\User;
 use App\Entity\advert\Advert;
 use App\Entity\address\Address;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
+use App\Entity\communication\Thread;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity ;
@@ -51,10 +53,17 @@ class Owner
      */
     private $adverts;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\communication\Thread", mappedBy="owner", orphanRemoval=true)
+     * @OrderBy({"createdAt" = "DESC"})
+     */
+    private $threads;
+
     public function __construct()
     {
 
         $this->adverts = new ArrayCollection();
+        $this->threads = new ArrayCollection(); 
 
     }
 
@@ -136,6 +145,37 @@ class Owner
             // set the owning side to null (unless already changed)
             if ($advert->getOwner() === $this) {
                 $advert->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Thread[]
+     */
+    public function getThreads(): Collection
+    {
+        return $this->threads;
+    }
+
+    public function addThread(Thread $thread): self
+    {
+        if (!$this->threads->contains($thread)) {
+            $this->threads[] = $thread;
+            $thread->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeThread(Thread $thread): self
+    {
+        if ($this->threads->contains($thread)) {
+            $this->threads->removeElement($thread);
+            // set the owning side to null (unless already changed)
+            if ($thread->getCreator() === $this) {
+                $thread->setCreator(null);
             }
         }
 

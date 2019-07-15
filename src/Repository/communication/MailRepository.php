@@ -2,9 +2,12 @@
 
 namespace App\Repository\communication;
 
+use App\Entity\user\User;
+use FontLib\TrueType\Collection;
 use App\Entity\communication\Mail;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\user\Owner;
 
 /**
  * @method Mail|null find($id, $lockMode = null, $lockVersion = null)
@@ -31,6 +34,62 @@ class MailRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult()
         ;
+    }
+
+    /**
+     * @return Int[]
+     */
+    public function notReadMessages(User $user = null, Owner $owner = null)
+    {
+        
+        if($user)
+        {
+
+            $userThreads = $user->getThreads();
+
+        }
+
+        if($owner)
+        {
+
+            $ownerThreads = $owner->getThreads();
+
+        }
+        
+        
+        if ($user || $owner) 
+        {
+        
+            $query = $this->createQueryBuilder('m')
+                        ->select('COUNT(m.id) AS number')
+                        ->andWhere('m.thread IN (:threads)')
+                        ->andWhere('m.isRead IS null')
+            ;
+
+            if ($owner) 
+            {
+
+                $query->setParameter('threads', $owner->getThreads());
+                
+            }
+            else 
+            {            
+
+                $query->setParameter('threads', $user->getThreads());
+
+            }
+
+            return $query->getQuery()
+                        ->getResult()
+            ;
+        }
+        else 
+        {
+
+            return null;
+
+        }
+
     }
     
 

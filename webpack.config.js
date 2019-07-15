@@ -45,7 +45,8 @@ Encore
     .addEntry('showCalendar', './assets/js/advert/showCalendar.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('payment', './assets/js/payment/payment.js')    
-    .addEntry('registration', './assets/js/security/registration.js')
+    .addEntry('registration', './assets/js/security/registration.js')    
+    .addEntry('threads', './assets/js/communication/threads.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // will require an extra script tag for runtime.js

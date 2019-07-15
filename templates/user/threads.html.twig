@@ -6,65 +6,62 @@
 
     {{ include('_messages.html.twig') }}
 
-    {% for thread in user.threads %}
+    {% if user.threads|length > 0 %}
 
-        <div class="row">
-            
-            <div class="col-md-4">
-            
-                {{ thread.getFormattedCreatedAt }}
-            
+        <div>
+
+            <div> 
+
+                With owners
+
             </div>
-            
-            <div class="col-md-4">
-        
-                {{ thread.advert.title }}
-        
-            </div>
-            
-            <div class="col-md-4">
-        
-                {{ thread.advert.owner.user.firstname }} {{ thread.advert.owner.user.name }}
-        
-            </div>
+
+            {% for thread in user.threads %}
+
+                {% set i = 0 %}
+
+                {{ include('communication/_thread.html.twig', { 'i': i, 'notReadMessages': notReadUserMessages }) }}
+
+                {% set i = i + 1 %}
+
+            {% endfor %}
 
         </div>
 
-        {% for mail in thread.mails %}
-    
-            <div class="row">
-            
-                <div class="col-md-2">
+    {% endif %}
 
-                    {{ mail.sender.firstname }}
+    {% if user.owner is not null and user.owner.threads|length > 0 %}
 
-                </div>
-            
-                <div class="col-md-10">
+        <div>
 
-                    {{ mail.message }}
+            <div> 
 
-                </div>
+                From users
 
             </div>
-                
-        {% endfor %}
-    
-        <div class="row">
+
+            {% for thread in user.owner.threads %}
+
+                {% set i = 0 %}
+
+                {{ include('communication/_thread.html.twig', { 'i': i, 'notReadMessages': notReadOwnerMessages }) }}
+
+                {% set i = i + 1 %}
+
+            {% endfor %}
+
+        </div> 
         
-            <div class="col-md-12">
+    {% endif %}
 
-                <form method = "post" action="{{ path('communication.create', { 'id': thread.id }) }}">
+    <div id="ajaxUrlDiv" style="display: none" data-url="{{ path('communication.mail.update.read') }}"></div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
 
-                    <textarea id="response_thread_{{ thread.id }}" name="response_thread_{{ thread.id }}" rows="10" cols="33"></textarea>
-                    <button class="btn btn-primary">{{ button | default('Send') }}</button>
+        {{ encore_entry_script_tags('threads') }}
 
-                </form>
+    {% endblock %}
 
-            </div>
-
-        </div>
-                
-    {% endfor %}
-
-{% endblock %}
+{% endblock body %}

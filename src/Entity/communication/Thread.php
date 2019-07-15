@@ -3,6 +3,7 @@
 namespace App\Entity\communication;
 
 use App\Entity\user\User;
+use App\Entity\user\Owner;
 use App\Entity\advert\Advert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
@@ -34,7 +35,7 @@ class Thread
     private $advert;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\communication\Mail", mappedBy="thread")
+     * @ORM\OneToMany(targetEntity="App\Entity\communication\Mail", mappedBy="thread", cascade={"persist"})
      * @OrderBy({"createdAt" = "ASC"})
      */
     private $mails;
@@ -43,7 +44,13 @@ class Thread
      * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="threads")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $creator;
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\user\Owner", inversedBy="threads")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
 
     public function __construct() 
 	{
@@ -118,14 +125,26 @@ class Thread
         return $this;
     }
 
-    public function getCreator(): ?User
+    public function getUser(): ?User
     {
-        return $this->creator;
+        return $this->user;
     }
 
-    public function setCreator(?User $creator): self
+    public function setUser(?User $user): self
     {
-        $this->creator = $creator;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getOwner(): ?Owner
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?Owner $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

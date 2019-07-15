@@ -1,0 +1,72 @@
+<div id="threadDiv_{{ thread.id }}" class="threadDiv">
+                    
+    {{ thread.getFormattedCreatedAt }} - {{ thread.advert.title }} 
+    ({{ thread.mails|length }} 
+        
+    {% if thread.mails|length > 1 %}
+        
+        messages
+            
+    {% else %}
+        
+        message
+            
+    {% endif %} - <span id="notReadSpan_{{ thread.id }}">
+        
+    {% if  notReadMessages[i]['number'] > 0 %}
+
+        <b>{{ notReadMessages[i]['number'] }} not read)</b></span>
+
+    {% else %}
+
+        {{ notReadMessages[i]['number'] }} not read)</span>
+
+    {% endif %}
+            
+     
+</div>
+    
+<div id="mailsDiv_{{ thread.id }}"  class="mailDiv" style="display: none">
+
+    <ul>
+            
+        {% for mail in thread.mails %}
+
+            <li>
+                <pre>
+
+                    {% if mail.sender.id != user.id and mail.isRead is null %}
+
+                        <b>{{ mail.getFormattedCreatedAt }} - {{ mail.sender.firstname }}</b>
+                            
+                    {% else %}
+
+                        {{ mail.getFormattedCreatedAt }} - {{ mail.sender.firstname }}
+                            
+                    {% endif %}
+
+                    {{ mail.message | nl2br }}
+
+                    {% if mail.sender.id != user.id and mail.isRead %}
+
+                        Seen
+
+                    {% endif %}
+
+                </pre>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+    <form method = "post" action="{{ path('communication.create', { 'id': thread.id }) }}">
+
+        <textarea id="response_thread_{{ thread.id }}" name="response_thread_{{ thread.id }}" rows="5" cols="150"></textarea>
+        <button class="btn btn-primary">{{ button | default('Send') }}</button>
+
+    </form>
+
+</div>
+    
+<div id="notReadDiv_{{ thread.id }}" style="display: none" data-notread="{{ notReadMessages[i]['number'] }}"></div>

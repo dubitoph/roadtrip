@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\communication\MailRepository;
 use App\Repository\communication\ThreadRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MessageController extends AbstractController
@@ -18,13 +20,19 @@ class MessageController extends AbstractController
      * @Route("/communication/messages", name="communication.messages")
      * @return Response
      */
-    public function index(ThreadRepository $threadRepository): Response
+    public function index(ThreadRepository $threadRepository, MailRepository $mailRepository): Response
     {
      
         $user = $this->getUser();
+        $owner = $user->getOwner();
+        
+        $notReadUserMessages = $mailRepository->notReadMessages($user, null);
+        $notReadOwnerMessages = $mailRepository->notReadMessages(null, $owner);
 
         return $this->render('user/threads.html.twig', [
-                                                            'user' => $user
+                                                            'user' => $user,
+                                                            'notReadUserMessages' => $notReadUserMessages,
+                                                            'notReadOwnerMessages' => $notReadOwnerMessages
                                                        ]
                             )
         ;  
@@ -45,10 +53,25 @@ class MessageController extends AbstractController
         if (strlen($message) >= 10) 
         {
         
+            $currentUser = $this->getUser();
+            $owner = $thread->getAdvert()->getOwner()->getUser();
             $mail = new Mail();
+
+            if ($currentUser == $owner) 
+            {
+
+                $receiver = $thread->getUser();
+
+            }
+            else 
+            {
+
+                $receiver = $currentUser;
+
+            }
             
-            $mail->setSender($this->getUser())
-                 ->setReceiver($thread->getAdvert()->getOwner()->getUser())
+            $mail->setSender($currentUser)
+                 ->setReceiver($receiver)
                  ->setSubject($this->getParameter('thread_subject'))
                  ->setThread($thread)
                  ->setMessage($message)
@@ -83,6 +106,49 @@ class MessageController extends AbstractController
         }
 
          return $this->redirectToRoute('communication.messages');
+
+    }
+
+    /** 
+     * @Route("/communication/mail/update/read", name="communication.mail.update.read") 
+     */ 
+    public function ajaxAction(Request $request, ObjectManager $manager, ThreadRepository $threadRepository) 
+    {
+        if($request->isXmlHttpRequest())
+        {
+            
+            $threadId = $request->request->get('threadId');
+            
+            $thread = $threadRepository->find($threadId);
+
+            foreach ($thread->getMails() as $mail) 
+            {
+
+                if (! $mail->getIsRead() and $mail->getSender() != $this->getUser()) 
+                {
+
+                    $mail->setIsRead(true);
+
+                }
+
+            }
+
+            $manager->persist($thread);
+            $manager->flush();
+             
+            $response = new JsonResponse();
+            $response->setData(array('success'=> 'Mails updated')); 
+
+            return $response;
+        }
+        else
+        {
+
+            $response = new JsonResponse();
+            $response->setData(array('error'=> 'Mails not updated'));
+            return $response;
+         
+        }
 
     }
 

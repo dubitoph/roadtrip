@@ -19,23 +19,6 @@ class Mail
     private $id;
 
     /**
-     * @ORM\Column(type="text")
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Length(min=10)
-     */
-    private $message;
-
-    /**
-     * @ORM\Column(type="text")
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
-     */
-    private $body;
-
-    /**
      * @var User
      * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="sentMails")
      * @ORM\JoinColumn(nullable=false)
@@ -62,6 +45,25 @@ class Mail
     private $subject;
 
     /**
+     * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $message;
+
+    /**
+     * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
+     */
+    private $body;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\communication\Thread", inversedBy="mails")
+     */
+    private $thread;
+
+    /**
      * @ORM\Column(type="datetime")
      * @ORM\JoinColumn(nullable=false)
      * 
@@ -70,9 +72,9 @@ class Mail
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\communication\Thread", inversedBy="mails")
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $thread;
+    private $isRead;
 
     public function __construct() 
 	{
@@ -83,30 +85,6 @@ class Mail
     {
         return $this->id;
 
-    }
-
-    public function getMessage(): ?string
-    {
-        return $this->message;
-    }
-
-    public function setMessage(string $message): self
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
-
-    public function setBody(string $body): self
-    {
-        $this->body = $body;
-
-        return $this;
     }
 
     public function getSender(): ?User
@@ -145,9 +123,48 @@ class Mail
         return $this;
     }
 
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getThread(): ?Thread
+    {
+
+        return $this->thread;
+
+    }
+
+    public function setThread(?Thread $thread): self
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
+
         return $this->createdAt;
+
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
@@ -155,7 +172,19 @@ class Mail
         $this->createdAt = $createdAt;
 
         return $this;
-    }   
+    } 
+
+    public function getIsRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): self
+    {
+        $this->isRead = $isRead;
+
+        return $this;
+    }  
 
     public function sendEmail(\Swift_Mailer $mailer)
     {
@@ -179,19 +208,7 @@ class Mail
     public function getFormattedCreatedAt(): string
     {
 
-        return $this->createdAt->format('d-m-Y');
+        return $this->createdAt->format('d-m-Y H:m');
 
-    }
-
-    public function getThread(): ?Thread
-    {
-        return $this->thread;
-    }
-
-    public function setThread(?Thread $thread): self
-    {
-        $this->thread = $thread;
-
-        return $this;
     }
 }

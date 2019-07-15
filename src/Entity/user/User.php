@@ -58,7 +58,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=25, nullable=true)
      * 
-     * @Assert\Blank()
      * @Assert\Length(
      *                  min = 8, 
      *                  max = 25, 
@@ -175,7 +174,7 @@ class User implements UserInterface
      private $favorites;
 
      /**
-      * @ORM\OneToMany(targetEntity="App\Entity\communication\Thread", mappedBy="creator", orphanRemoval=true)
+      * @ORM\OneToMany(targetEntity="App\Entity\communication\Thread", mappedBy="user", orphanRemoval=true)
       * @OrderBy({"createdAt" = "DESC"})
       */
      private $threads;
