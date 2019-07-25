@@ -15,12 +15,15 @@
 40 km: 40 km
 50 km: 50 km
 100 km: 100 km
+-: -
 Abbreviation: Abréviation
+About me: A propos de moi
 Address: Adresse
 Bed: Couchage
 Beds number: Nombre de couchages
 Begin at: Date de début
 Belonging: Appartenance
+Birthday: Date de naissance
 Box: Boîte
 Card code: Code de la carte
 Carrier: Porteur
@@ -38,6 +41,7 @@ Country: Pays
 Cost: Prix
 Days number: Nombre de jours
 Deductible: Franchise
+Default user location: Localisation par défaut
 Distance: Distance
 Duration: Durée
 Email address: Adresse email
@@ -47,6 +51,7 @@ Equipment: Equipement
 Email: Email
 Email address...: Adresse email...
 Extra: Supplémentaire
+Female: Femme
 File: Fichier
 Firstname: Prénom
 Firstname...: Prénom...
@@ -60,7 +65,9 @@ Kilometer: Kilomètre
 Last name: Nom
 Length: Longueur
 Login: S'identifier
+Mail: Mail
 Main photo: Photo principale
+Male: Homme
 Manufacture date: Date de fabrication
 Mileage: Kilométrage
 Main: Principale
@@ -83,6 +90,7 @@ Period: Période
 Phone: Téléphone
 Phone...: Téléphone...
 Phone number: Numéro de téléphone
+Photo: Photo
 Price: Prix
 Proximity: Proximité
 Proximity + price: Proximité + prix
@@ -95,18 +103,23 @@ Response: Réponse
 Seat: Siège
 Seats number: Nombre de sièges
 Season: Saison
+Sex: Sexe
+Signature: Signature
 Situation: Adresse
 Sort: Type
 Sorting: Sorte
 Start: Début
 State: Etat
 Street: Rue
+Subject: Sujet
 Terms accepted: J'accepte les conditions générales
 Title: Titre
 Username: Nom d'utilisateur
 Username...: Nom d'utilisateur...
 Vat: TVA
+Vehicle: Véhicule
 Verification code: Code de vérification
+Website: Site internet
 Weight: Poids
 Year expiration: Année d'expiration
 Zip code: Code postal

@@ -18,13 +18,19 @@
     
                     <li class="nav-item">
 
-                        <a class="nav-link"  href="{{ path('user.user.edit') }}">Edit my profile</a>
+                        <a class="nav-link"  href="{{ path('user.user.edit') }}">My user data</a>
 
                     </li>
     
                     <li class="nav-item">
 
-                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">Reset my password</a>
+                        <a class="nav-link"  href="{{ path('user.profile.update') }}">My profile ({{ profileCompletion }}% completed)</a>
+
+                    </li>
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">My password</a>
 
                     </li>
 
@@ -32,7 +38,7 @@
     
                         <li class="nav-item">
 
-                            <a class="nav-link"  href="#last_adverts">Edit my owner contact informations</a>
+                            <a class="nav-link"  href="#last_adverts">My owner contact informations</a>
 
                         </li>
                         
@@ -44,11 +50,15 @@
 
                     </li>
 
-                    <li class="nav-item">
+                    {% if user.owner is not null %}
+    
+                        <li class="nav-item">
 
-                        <a class="nav-link"  href="#subscriptions">My opened bookings</a>
+                            <a class="nav-link"  href="{{ path('advert.booking.requests') }}">My booking requests</a>
 
-                    </li>
+                        </li>
+                        
+                    {% endif %}
 
                     <li class="nav-item">
 

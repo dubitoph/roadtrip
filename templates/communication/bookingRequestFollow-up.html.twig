@@ -1,0 +1,11 @@
+<pre>
+
+    Hi {{ mail.receiver.firstname }}!
+
+    {{ mail.sender.firstname }} {% if action == 'refuse' %}refused{% else %}accepted{% endif %} your booking request :
+
+    {{ mail.message }}   
+
+    Click <a href="{{ url('communication.messages') }}">here</a> to see your requests.
+
+</pre>

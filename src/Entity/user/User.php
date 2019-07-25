@@ -2,6 +2,8 @@
 
 namespace App\Entity\user;
 
+use App\Entity\user\Profile;
+use App\Entity\advert\Booking;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
 use App\Entity\rating\Rating;
@@ -179,6 +181,16 @@ class User implements UserInterface
       */
      private $threads;
 
+     /**
+      * @ORM\OneToMany(targetEntity="App\Entity\advert\Booking", mappedBy="user")
+      */
+     private $bookings;
+
+     /**
+      * @ORM\OneToOne(targetEntity="App\Entity\user\Profile", mappedBy="user", cascade={"persist", "remove"})
+      */
+     private $profile;
+
      public function __construct()
      {
          $this->sentMails = new ArrayCollection();
@@ -186,7 +198,8 @@ class User implements UserInterface
          $this->sentRatings = new ArrayCollection();
          $this->receivedRatings = new ArrayCollection();
          $this->favorites = new ArrayCollection();
-         $this->threads = new ArrayCollection(); 
+         $this->threads = new ArrayCollection();
+         $this->bookings = new ArrayCollection(); 
      }
 
     public function getId(): ?int
@@ -408,7 +421,8 @@ class User implements UserInterface
     public function serialize()
     {
 
-        return serialize([$this->id,
+        return serialize([
+                          $this->id,
                           $this->username,
                           $this->email,
                           $this->password
@@ -426,7 +440,8 @@ class User implements UserInterface
     public function unserialize($serialized)
     {
 
-        list($this->id,
+        list(
+             $this->id,
              $this->username,
              $this->email,
              $this->password
@@ -645,6 +660,54 @@ class User implements UserInterface
             if ($thread->getCreator() === $this) {
                 $thread->setCreator(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->contains($booking)) {
+            $this->bookings->removeElement($booking);
+            // set the owning side to null (unless already changed)
+            if ($booking->getUser() === $this) {
+                $booking->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): self
+    {
+        $this->profile = $profile;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $profile->getUser()) {
+            $profile->setUser($this);
         }
 
         return $this;

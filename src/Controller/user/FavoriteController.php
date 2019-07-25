@@ -2,7 +2,7 @@
 
 namespace App\Controller\user;
 
-use App\Repository\advert\PhotoRepository;
+use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

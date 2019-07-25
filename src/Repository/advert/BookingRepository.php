@@ -26,8 +26,10 @@ class BookingRepository extends ServiceEntityRepository
     public function findBetweenDates($start, $end, Vehicle $vehicle = null)
     {
 
-         $query = $this->createQueryBuilder('b')
-                      ->where('b.beginAt BETWEEN :start and :end');
+        $query = $this->createQueryBuilder('b')
+                      ->where('b.beginAt BETWEEN :start and :end')
+                      ->andWhere('b.accepted = true')
+        ;
 
         if (!empty($vehicle))
         {
@@ -51,22 +53,39 @@ class BookingRepository extends ServiceEntityRepository
         ;
     }
 
-    // /**
-    //  * @return Booking[] Returns an array of Booking objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Booking[]
+      */
+    public function findOpenedRequests($ownerVehicles)
     {
+        
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+                    ->andWhere('b.vehicle IN (:ownerVehicles)')
+                    ->andWhere('b.accepted is NULL')
+                    ->andWhere('b.refused is NULL')
+                    ->setParameter('ownerVehicles', $ownerVehicles)
+                    ->orderBy('b.createdAt', 'ASC')
+                    ->getQuery()
+                    ->getResult()
         ;
     }
-    */
+
+    /**
+     * @return Booking[]
+     */
+   public function findRefusedRequests($ownerVehicles)
+   {
+       
+       return $this->createQueryBuilder('b')
+                   ->andWhere('b.vehicle IN (:ownerVehicles)')
+                   ->andWhere('b.accepted is NULL')
+                   ->andWhere('b.refused = true')
+                   ->setParameter('ownerVehicles', $ownerVehicles)
+                   ->orderBy('b.createdAt', 'DESC')
+                   ->getQuery()
+                   ->getResult()
+       ;
+   }
 
     /*
     public function findOneBySomeField($value): ?Booking

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entity\advert;
+namespace App\Entity\media;
 
+use App\Entity\user\Profile;
 use App\Entity\advert\Advert;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -9,10 +10,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\advert\PhotoRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\media\PhotoRepository")
  * @Vich\Uploadable()
  */
-class Photo
+class Photo implements \Serializable
 {
     /**
      * @ORM\Id()
@@ -33,13 +34,13 @@ class Photo
      * @Assert\Image(
      *     mimeTypes="image/jpeg"
      * )
-     * @Vich\UploadableField(mapping="adverts_photos", fileNameProperty="name")
+     * @Vich\UploadableField(mapping="photos", fileNameProperty="name")
      */
     private $file;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="photos")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * 
      * @Assert\Type(type="App\Entity\advert\Advert")
      * @Assert\Valid()
@@ -55,6 +56,11 @@ class Photo
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated_at;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\user\Profile", mappedBy="photo")
+     */
+    private $profile;
 
     public function __construct()
     {        
@@ -149,5 +155,54 @@ class Photo
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?Profile $profile): self
+    {
+        $this->profile = $profile;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newPhoto = $profile === null ? null : $this;
+        if ($newPhoto !== $profile->getPhoto()) {
+            $profile->setPhoto($newPhoto);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+
+        return serialize([
+                          $this->id,
+                          $this->name
+                         ]
+                        )
+        ;
+
+    }
+
+    /**
+     * @param string $serialized 
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+
+        list($this->id,
+             $this->name
+            )
+        = unserialize($serialized, ['allowed_class' => false]);
+
     }
 }

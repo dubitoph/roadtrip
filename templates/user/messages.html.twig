@@ -18,11 +18,7 @@
 
             {% for thread in user.threads %}
 
-                {% set i = 0 %}
-
-                {{ include('communication/_thread.html.twig', { 'i': i, 'notReadMessages': notReadUserMessages }) }}
-
-                {% set i = i + 1 %}
+                {{ include('user/_thread.html.twig', { 'notReadMessages': notReadUserMessages }) }}
 
             {% endfor %}
 
@@ -36,17 +32,13 @@
 
             <div> 
 
-                From users
+                With users
 
             </div>
 
             {% for thread in user.owner.threads %}
 
-                {% set i = 0 %}
-
-                {{ include('communication/_thread.html.twig', { 'i': i, 'notReadMessages': notReadOwnerMessages }) }}
-
-                {% set i = i + 1 %}
+                {{ include('user/_thread.html.twig', { 'notReadMessages': notReadOwnerMessages }) }}
 
             {% endfor %}
 
@@ -54,19 +46,19 @@
         
     {% endif %}
 
-    {% if otherMails|length > 0 %}
+    {% if adminMails|length > 0 %}
 
         <div>
 
             <div> 
 
-                From Roadtrip
+                Mails from Roadtripr
 
             </div>
 
             <div>
 
-                {% for mail in otherMails %}
+                {% for mail in adminMails %}
 
                     <pre>    
                         {{ mail.getFormattedCreatedAt }} - {{ mail.sender.firstname }}

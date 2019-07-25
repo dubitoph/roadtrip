@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\advert;
+namespace App\Repository\media;
 
-use App\Entity\advert\Photo;
+use App\Entity\media\Photo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 

@@ -22,7 +22,7 @@ use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
 use App\Entity\communication\Thread;
-use App\Repository\advert\PhotoRepository;
+use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -828,27 +828,32 @@ class AdvertController extends AbstractController
 
         }
         
-        $thread = new Thread();
+        if($user)
+        {
+        
+            $thread = new Thread();
 
-        $thread->setAdvert($advert)
-               ->setUser($user)
-               ->setOwner($advert->getOwner())
-        ;        
+            $thread->setAdvert($advert)
+                ->setUser($user)
+                ->setOwner($advert->getOwner())
+            ;        
 
-        $mail = new Mail();
+            $mail = new Mail();
 
-        $mail->setSender($user)
-             ->setReceiver($receiver)
-             ->setSubject($this->getParameter('contact_owner_subject'))
-             ->setThread($thread)
-             ->setBody($this->renderView(
-                                         'communication/contactAboutAdvert.html.twig', 
-                                         [
-                                            'mail' => $mail
-                                         ]
-                                        )
-                      )
-        ;
+            $mail->setSender($user)
+                ->setReceiver($receiver)
+                ->setSubject($this->getParameter('contact_owner_subject'))
+                ->setThread($thread)
+                ->setBody($this->renderView(
+                                            'communication/contactAboutAdvert.html.twig', 
+                                            [
+                                                'mail' => $mail
+                                            ]
+                                            )
+                        )
+            ;
+
+        }
 
         $minPrice = $this->getMinPrice($advert);
         $mainPhoto = $photoRepository->findOneBy(array('advert' => $advert, 'mainPhoto' => true));
@@ -874,50 +879,71 @@ class AdvertController extends AbstractController
 
         }
 
-        $form = $this->createForm(MailType::class, $mail);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
+        if($user)
         {
-            
-            if ($mail->sendEmail($mailer))
-            {                
 
-                $manager->persist($thread);
-                $manager->persist($mail);
-                $manager->flush();
+            $form = $this->createForm(MailType::class, $mail);
+            $form->handleRequest($request);
 
-                $this->addFlash('success', "Your message was successfully send.");
-
-            }
-            else
+            if ($form->isSubmitted() && $form->isValid()) 
             {
+                
+                if ($mail->sendEmail($mailer))
+                {                
 
-                $this->addFlash('error', "Your message couldn't be sent");
+                    $manager->persist($thread);
+                    $manager->persist($mail);
+                    $manager->flush();
+
+                    $this->addFlash('success', "Your message was successfully send.");
+
+                }
+                else
+                {
+
+                    $this->addFlash('error', "Your message couldn't be sent");
+
+                }
+
+                return $this->redirectToRoute('advert.show', [
+                                                                'id' => $advert->getId(),
+                                                                'slug' => $advertSlug,
+                                                            ]
+                                            )
+                ;
 
             }
-
-            return $this->redirectToRoute('advert.show', [
-                                                            'id' => $advert->getId(),
-                                                            'slug' => $advertSlug,
-                                                         ]
-                                         )
+            
+            return $this->render('advert/show.html.twig', [
+                                                            'current_menu' => 'adverts', 
+                                                            'controller_name' => 'AdvertController', 
+                                                            'advert' => $advert,
+                                                            'minPrice' => $minPrice,
+                                                            'mainPhoto' => $mainPhoto,
+                                                            'cellEquipments' => $cellEquipments,
+                                                            'carrierEquipments' => $carrierEquipments,
+                                                            'form' => $form->createView(),
+                                                        ]
+                                )
             ;
 
         }
-        
-        return $this->render('advert/show.html.twig', [
-                                                        'current_menu' => 'adverts', 
-                                                        'controller_name' => 'AdvertController', 
-                                                        'advert' => $advert,
-                                                        'minPrice' => $minPrice,
-                                                        'mainPhoto' => $mainPhoto,
-                                                        'cellEquipments' => $cellEquipments,
-                                                        'carrierEquipments' => $carrierEquipments,
-                                                        'form' => $form->createView(),
-                                                      ]
-                            )
-    ;
+        else 
+        {
+
+            return $this->render('advert/show.html.twig', [
+                                                            'current_menu' => 'adverts', 
+                                                            'controller_name' => 'AdvertController', 
+                                                            'advert' => $advert,
+                                                            'minPrice' => $minPrice,
+                                                            'mainPhoto' => $mainPhoto,
+                                                            'cellEquipments' => $cellEquipments,
+                                                            'carrierEquipments' => $carrierEquipments
+                                                        ]
+                                )
+            ;
+
+        }
 
     }
 

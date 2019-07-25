@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\advert;
+namespace App\Form\media;
 
-use App\Entity\advert\Photo;
+use App\Entity\media\Photo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
@@ -15,15 +15,23 @@ class PhotoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('file', FileType::class, array( 
-                                                    'label' => false, 
-                                                    'required' => true, 
-                                                    'constraints' => array(new File(),),
+        $builder->add('file', FileType::class, array( 
+                                                        'label' => false, 
+                                                        'required' => true, 
+                                                        'constraints' => array(new File(),),
                                                      )
                       )
-                 ->add('mainPhoto', CheckboxType::class)
-                 ->add('name', HiddenType::class)  
         ;
+
+        if(! $options['profilePhoto'])
+        {
+
+            $builder->add('mainPhoto', CheckboxType::class);
+
+        }
+
+                
+        $builder->add('name', HiddenType::class);
 
     }
 
@@ -31,6 +39,7 @@ class PhotoType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Photo::class,
+            'profilePhoto' => false,
             'translation_domain' => 'forms',
         ]);
     }

@@ -3,7 +3,6 @@
 namespace App\Repository\communication;
 
 use App\Entity\user\User;
-use FontLib\TrueType\Collection;
 use App\Entity\communication\Mail;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -58,30 +57,46 @@ class MailRepository extends ServiceEntityRepository
         
         
         if ($user || $owner) 
-        {
-        
+        {        
+            
             $query = $this->createQueryBuilder('m')
-                        ->select('COUNT(m.id) AS number')
-                        ->andWhere('m.thread IN (:threads)')
-                        ->andWhere('m.isRead IS null')
+                          ->select('COUNT(m.id) AS number')
+                          ->addSelect('t.id AS thread')
+                          ->leftJoin('t.mails', 't')
+                          ->Where('m.receiver = t.user')
+                          ->andWhere('m.isRead IS null')
+                          ->andWhere('t.user = :user')
+                          ->groupBy('thread')
             ;
-
+/*            
+            $query = $this->createQueryBuilder('m')
+                          ->select('COUNT(m.id) AS number')
+                          ->addSelect('t.id as thread')
+                          ->leftJoin('m.receiver', 'u')
+                          ->leftJoin('u.threads', 't')
+                          ->where('m.receiver = :user')
+                          ->andWhere('m.isRead IS null')
+            ;
+*/
             if ($owner) 
             {
 
-                $query->setParameter('threads', $owner->getThreads());
+                $query->setParameter('user', $owner->getUser())
+                ;
                 
             }
             else 
             {            
 
-                $query->setParameter('threads', $user->getThreads());
+                $query->setParameter('user', $user)
+                ;
 
             }
 
             return $query->getQuery()
-                        ->getResult()
+                         ->getScalarResult()
             ;
+
         }
         else 
         {

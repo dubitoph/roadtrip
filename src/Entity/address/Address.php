@@ -127,6 +127,11 @@ class Address
      */
     private $vehicles;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $defaultUserLocation;
+
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
@@ -274,6 +279,18 @@ class Address
                 $vehicle->setSituation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDefaultUserLocation(): ?bool
+    {
+        return $this->defaultUserLocation;
+    }
+
+    public function setDefaultUserLocation(?bool $defaultUserLocation): self
+    {
+        $this->defaultUserLocation = $defaultUserLocation;
 
         return $this;
     }

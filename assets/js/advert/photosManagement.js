@@ -1,3 +1,5 @@
+import { deletePhoto } from '../app';
+
 jQuery(document).ready(function() {
 
     //Adding a photo
@@ -75,44 +77,6 @@ function addPhotoForm()
     $newFormLi.append('<a href="#" class="btn btn-danger btn-dynamically-created">Supprimer cette photo</a>');
 //    $newLink.addClass("btn-dynamically-created");
     $collectionHolderPhotos.append($newFormLi);
-
-}
-
-function deletePhoto($element) 
-{
-
-    if (confirm('Etes-vous certain de vouloir supprimer cette photo définitivement?')) 
-    {
-
-        if (! $element.hasClass('btn-dynamically-created')) 
-        {
-
-           //Photo suppression from the database
-
-           var path = $element.attr('href'); 
-            
-            $.post(path,
-                   {
-                        file: $('#photos_advert_mainPhotoFile').val()           
-                   }, 
-                   function() 
-                   {
-
-                        $element.parent().remove();
-
-                   }
-                  )
-            ;
-            
-        }
-        else
-        {
-
-            $element.parent().remove();
-
-        }
-         
-    }
 
 } 
 

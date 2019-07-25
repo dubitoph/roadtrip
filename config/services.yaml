@@ -20,6 +20,9 @@ parameters:
     registration_email_subject: 'Welcome to Roadtrip'
     contact_owner_subject: 'Contact about your advert on Raodtrip'
     thread_subject: 'New message in your thread on Roadtrip'
+    booking_request_subject: 'New booking request from Roadtrip'
+    booking_request_refused_subject: 'Your request booking is refused'
+    booking_request_accepted_subject: 'Your request booking is accepted'
     password_Resetting_email_subject: 'Renew password on Roadtrip'
     rating_email_subject: "Waiting for lease approval"
     rating_approval_subject: "New assessment pending approval"
@@ -62,6 +65,8 @@ services:
     App\Listener\CalendarListener:
         tags:
             - { name: 'kernel.event_listener', event: 'calendar.set_data', method: load }
+    App\Upload\PhotoDirectoryNamer:
+        public: true
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones 

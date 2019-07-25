@@ -7546,17 +7546,17 @@
     },
     {
         "name": "vich/uploader-bundle",
-        "version": "1.9.2",
-        "version_normalized": "1.9.2.0",
+        "version": "1.10.1",
+        "version_normalized": "1.10.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/dustin10/VichUploaderBundle.git",
-            "reference": "e294d61ce7bc2d20cf04fc350bef7f26f00eb3f5"
+            "reference": "0df4b3c88f5470aad2faa187fea29ba74809a53d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dustin10/VichUploaderBundle/zipball/e294d61ce7bc2d20cf04fc350bef7f26f00eb3f5",
-            "reference": "e294d61ce7bc2d20cf04fc350bef7f26f00eb3f5",
+            "url": "https://api.github.com/repos/dustin10/VichUploaderBundle/zipball/0df4b3c88f5470aad2faa187fea29ba74809a53d",
+            "reference": "0df4b3c88f5470aad2faa187fea29ba74809a53d",
             "shasum": ""
         },
         "require": {
@@ -7564,14 +7564,14 @@
             "ext-simplexml": "*",
             "jms/metadata": "^2.0",
             "php": "^7.2",
-            "symfony/config": "^3.4|^4.0",
-            "symfony/dependency-injection": "^3.4|^4.0",
-            "symfony/event-dispatcher": "^3.4|^4.0",
-            "symfony/form": "^3.4|^4.0",
-            "symfony/http-foundation": "^3.4|^4.0",
-            "symfony/http-kernel": "^3.4|^4.0",
-            "symfony/property-access": "^3.4|^4.0",
-            "symfony/templating": "^3.4|^4.0"
+            "symfony/config": "^3.4 || ^4.0",
+            "symfony/dependency-injection": "^3.4 || ^4.0",
+            "symfony/event-dispatcher": "^3.4 || ^4.0",
+            "symfony/form": "^3.4.19 || ^4.0",
+            "symfony/http-foundation": "^3.4 || ^4.0",
+            "symfony/http-kernel": "^3.4 || ^4.0",
+            "symfony/property-access": "^3.4 || ^4.0",
+            "symfony/templating": "^3.4 || ^4.0"
         },
         "require-dev": {
             "alcaeus/mongo-php-adapter": "^1.1",
@@ -7583,20 +7583,20 @@
             "matthiasnoback/symfony-dependency-injection-test": "^4.0",
             "mikey179/vfsstream": "^1.6",
             "oneup/flysystem-bundle": "^3.0",
-            "phpunit/phpunit": "^7.0|^8.0",
-            "symfony/browser-kit": "^3.4|^4.0",
-            "symfony/css-selector": "^3.4|^4.0",
-            "symfony/doctrine-bridge": "^3.4|^4.0",
-            "symfony/dom-crawler": "^3.4|^4.0",
-            "symfony/framework-bundle": "^3.4|^4.0",
-            "symfony/phpunit-bridge": "^3.3",
-            "symfony/security-csrf": "^3.4|^4.0",
-            "symfony/translation": "^3.4|^4.0",
-            "symfony/twig-bridge": "^3.4|^4.0",
-            "symfony/twig-bundle": "^3.4|^4.0",
-            "symfony/validator": "^3.4|^4.0",
-            "symfony/var-dumper": "^3.4|^4.0",
-            "symfony/yaml": "^3.4|^4.0"
+            "phpunit/phpunit": "^8.0",
+            "symfony/browser-kit": "^3.4 || ^4.0",
+            "symfony/css-selector": "^3.4 || ^4.0",
+            "symfony/doctrine-bridge": "^3.4 || ^4.0",
+            "symfony/dom-crawler": "^3.4 || ^4.0",
+            "symfony/framework-bundle": "^3.4.23 || ^4.2.4",
+            "symfony/phpunit-bridge": "^4.3",
+            "symfony/security-csrf": "^3.4 || ^4.0",
+            "symfony/translation": "^3.4 || ^4.0",
+            "symfony/twig-bridge": "^3.4 || ^4.0",
+            "symfony/twig-bundle": "^3.4 || ^4.0",
+            "symfony/validator": "^3.4 || ^4.0",
+            "symfony/var-dumper": "^3.4 || ^4.0",
+            "symfony/yaml": "^3.4 || ^4.0"
         },
         "suggest": {
             "doctrine/doctrine-bundle": "For integration with Doctrine",
@@ -7610,7 +7610,7 @@
             "symfony/yaml": "To use YAML mapping",
             "willdurand/propel-eventdispatcher-bundle": "For integration with Propel"
         },
-        "time": "2019-03-29T09:48:14+00:00",
+        "time": "2019-07-11T13:00:05+00:00",
         "type": "symfony-bundle",
         "extra": {
             "branch-alias": {

@@ -31,8 +31,7 @@ class UserType extends AbstractType
                 ->add('confirmedPassword', PasswordType::class)
                 ->add('email', EmailType::class)
                 ->add('username', TextType::class)
-        ;
-            
+        ;            
 
         if ($options['isAdmin']) 
         {

@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Booking requests management{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Booking requests</h1>
+
+        <div>
+
+            <h2>Opened booking requests</h2>
+            
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Request date</th>
+                        <th>Begin date</th>
+                        <th>End date</th>
+                        <th>User</th>
+                        <th>Message</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                
+                    {% for openRequest in openedRequests %}
+
+                        <tr>
+
+                            <td>{{ openRequest.getFormattedCreatedAt }}</td>
+                            <td>{{ openRequest.getFormattedBeginAt }}</td>
+                            <td>{{ openRequest.getFormattedEndAt }}</td>
+                            <td>{{ openRequest.user.firstname }} {{ openRequest.user.name }}</td>
+                            <td>{{ openRequest.userMail.message }}</td>
+                            <td>
+                                <a href="{{ path('advert.booking.edit', { 'id': openRequest.id, 'action': 'refuse' }) }}" class="btn btn-danger">Refuse</a>
+                                <a href="{{ path('advert.booking.edit', { 'id': openRequest.id, 'action': 'accept' }) }}" class="btn btn-primary">Accept</a>
+                            </td>
+
+                        </tr>
+                
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div>
+
+            <h2>Bookings</h2>
+            
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Advert</th>
+                        <th>Vehicle</th>
+                        <th>Calendar</th>
+
+                    </tr>
+
+                </thead>
+
+                {% for vehicle in ownerVehicles %}
+
+                    <tr>
+
+                        <td>{{ vehicle.advert.id }} - "{{ vehicle.advert.title }}"</td>
+                        <td>{{ vehicle.mark.mark }} - {{ vehicle.sort.sort }} - {{ vehicle.getFormattedManufactureDate }}</td>
+                        <td><a href="{{ path('advert.show', { slug: vehicle.advert.slug, id: vehicle.advert.id } ) }}#vehicleCalendar">See</a></td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+        <div>
+
+            <h2>Refused booking requests</h2>
+            
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Request date</th>
+                        <th>Begin date</th>
+                        <th>End date</th>
+                        <th>User</th>
+                        <th>Message</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                
+                    {% for refusedRequest in refusedRequests %}
+
+                        <tr>
+
+                            <td>{{ refusedRequest.getFormattedCreatedAt }}</td>
+                            <td>{{ refusedRequest.getFormattedBeginAt }}</td>
+                            <td>{{ refusedRequest.getFormattedEndAt }}</td>
+                            <td>{{ refusedRequest.user.firstname }} {{ refusedRequest.user.name }}</td>
+                            <td>{{ refusedRequest.userMail.message }}</td>
+                            <td><a href="{{ path('communication.mail.create', { 'id': refusedRequest.vehicle.advert.id, 'receiver': refusedRequest.user.id }) }}" class="btn btn">Contact the user</a></td>
+
+                        </tr>
+                
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('bookingRequestsManagement') }}
+        
+        <script src="https://fullcalendar.io/releases/core/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/interaction/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/daygrid/4.0.1/main.min.js"></script>
+        <script src="https://fullcalendar.io/releases/timegrid/4.0.1/main.min.js"></script>
+        
+    {% endblock %}
+
+{% endblock %}

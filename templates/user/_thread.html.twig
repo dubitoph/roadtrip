@@ -13,13 +13,13 @@
             
     {% endif %} - <span id="notReadSpan_{{ thread.id }}">
         
-    {% if  notReadMessages[i]['number'] > 0 %}
+    {% if  notReadMessages[thread.id] is defined %}
 
-        <b>{{ notReadMessages[i]['number'] }} not read)</b></span>
+        <b>{{ notReadMessages[thread.id] }} not read)</b></span>
 
     {% else %}
 
-        {{ notReadMessages[i]['number'] }} not read)</span>
+        0 not read)</span>
 
     {% endif %}
             
@@ -60,7 +60,7 @@
 
     </ul>
 
-    <form method = "post" action="{{ path('communication.create', { 'id': thread.id }) }}">
+    <form method = "post" action="{{ path('communication.create.follow-up', { 'id': thread.id }) }}">
 
         <textarea id="response_thread_{{ thread.id }}" name="response_thread_{{ thread.id }}" rows="5" cols="150"></textarea>
         <button class="btn btn-primary">{{ button | default('Send') }}</button>
@@ -69,4 +69,12 @@
 
 </div>
     
-<div id="notReadDiv_{{ thread.id }}" style="display: none" data-notread="{{ notReadMessages[i]['number'] }}"></div>
+{% if notReadMessages[thread.id] is defined %}
+
+    <div id="notReadDiv_{{ thread.id }}" style="display: none" data-notread="{{ notReadMessages[thread.id] }}"></div>
+
+{% else %}
+
+    <div id="notReadDiv_{{ thread.id }}" style="display: none" data-notread="0"></div>
+
+{% endif %}

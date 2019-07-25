@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %} 
+
+     {{ parent () }} 
+     <link rel = "stylesheet" href = "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css"> 
+
+ {% endblock %}
+
+{% block title %} Request a booking {% endblock %}
+
+{% block body %}
+
+{% set mailValue = 'Hello ' ~ booking.vehicle.advert.owner.user.firstname ~ '!
+
+I would like to booking your vehicle for the period cited.
+
+Best regards,' ~ '
+ 
+' ~ app.user.firstname %}
+
+    <div class="container mt4">
+
+        <h1>Request a booking</h1>
+
+        {{ form_start(form) }}
+                                
+            {{ form_row(form.beginAt) }}
+            {{ form_row(form.endAt) }}
+            {{ form_row(form.mail, {'value' : mainValue }) }}
+
+            <button class="btn btn-primary">{{ button | default('Request') }}</button>
+            
+        {{ form_end(form) }}
+
+    </div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('bookingManagement') }}
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+
+    {% endblock %}
+
+{% endblock %}

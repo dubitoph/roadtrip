@@ -6,7 +6,7 @@ use App\Entity\communication\Thread;
 use App\Entity\user\Favorite;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
-use App\Entity\advert\Photo;
+use App\Entity\media\Photo;
 use App\Entity\advert\Price;
 use App\Entity\backend\Bill;
 use App\Entity\advert\Period;
@@ -87,7 +87,7 @@ class Advert
     private $vehicle;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Photo", mappedBy="advert", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\media\Photo", mappedBy="advert", orphanRemoval=true, cascade={"persist"})
      */
     private $photos;
 

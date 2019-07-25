@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create a message{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig', { 'form': form }) }}
+
+        <h1>Message to {{ mail.receiver.firstname }} {{ mail.receiver.name }}</h1>
+
+        {{ form_start(form) }}
+
+            {{ form_rest(form) }}
+
+            <input type="hidden" name="referer" value="{{app.request.headers.get('referer')}}"/>
+            
+            <button class="btn btn-primary">{{ button | default('Send') }}</button>
+            
+            {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}

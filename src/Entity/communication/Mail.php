@@ -3,7 +3,9 @@
 namespace App\Entity\communication;
 
 use App\Entity\user\User;
+use App\Entity\advert\Booking;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\communication\Thread;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -62,6 +64,12 @@ class Mail
      * @ORM\ManyToOne(targetEntity="App\Entity\communication\Thread", inversedBy="mails")
      */
     private $thread;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Booking", inversedBy="mails")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $booking;
 
     /**
      * @ORM\Column(type="datetime")
@@ -156,6 +164,20 @@ class Mail
     public function setThread(?Thread $thread): self
     {
         $this->thread = $thread;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+
+        return $this->booking;
+
+    }
+
+    public function setBooking(?Booking $booking): self
+    {
+        $this->booking = $booking;
 
         return $this;
     }

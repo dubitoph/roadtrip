@@ -1,9 +1,9 @@
 <?php
-namespace App\Controller\advert;
+namespace App\Controller\media;
 
-use App\Entity\advert\Photo;
+use App\Entity\media\Photo;
 use App\Entity\advert\Advert;
-use App\Form\advert\PhotosAdvertType;
+use App\Form\media\PhotosAdvertType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -128,7 +128,7 @@ class PhotoController extends AbstractController
     /**
      * Deleting a photo
      * 
-     * @Route("advert/photo/delete/{id}", name="advert.photo.delete")
+     * @Route("photo/delete/{id}", name="photo.delete")
      *
      * @param Photo $photo
      * @param Request $request
@@ -138,8 +138,20 @@ class PhotoController extends AbstractController
     public function delete(Photo $photo, Request $request, ObjectManager $manager): Response 
     {
 
+        $profile = $photo->getProfile();
+        
+        if($profile)
+        {
+
+            $profile->setPhoto(null);
+            $manager->persist($profile);
+
+        }
+
         $manager->remove($photo);
         $manager->flush();
+
+        $this->addFlash('success', 'Your photo was successfully removed.');
         
         return new JsonResponse(['success' => 1]);
 
@@ -149,7 +161,7 @@ class PhotoController extends AbstractController
     /**
       * Updating photo file
       *
-      * @Route("advert/photo/update/{id}", name="advert.photo.update")
+      * @Route("photo/update/{id}", name="photo.update")
       *
       * @param Photo $photo
       * @param Request $request

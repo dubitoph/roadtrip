@@ -2,7 +2,7 @@
 
 namespace App\Listener;
 
-use App\Entity\advert\Photo;
+use App\Entity\media\Photo;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -30,7 +30,8 @@ class PhotoCacheSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
 
-        return ['preRemove',
+        return [
+                'preRemove',
                 'preUpdate'
                ]
         ;

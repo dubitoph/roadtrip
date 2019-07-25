@@ -8,7 +8,16 @@
 
         <div class="container">
 
-            {{ include('_messages.html.twig', { 'form': form }) }}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                {{ include('_messages.html.twig', { 'form': form }) }}
+
+            {% else %}
+
+                {{ include('_messages.html.twig') }}
+
+            {% endif %}
+                
 
             <div class='row'>
 
@@ -49,28 +58,30 @@
                         <div class="text-primary" style"font-size: 4rem; font-weight: bold">{{ minPrice.formattedPrice }} €</div>
 
                     {% endif %}
-                    
-                    <a href="#" class="btn btn-primary" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contact the owner</a>
-                    
-                    <div id="contactForm" class="mt-4"{% if not form.vars.submitted %} style="display: none;"{% endif %}>
 
-                        {{ form_start(form) }}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                        <div>
+
+                            <a href="{{ path('communication.mail.create', { 'id': advert.id, 'receiver': advert.owner.user.id }) }}" class="btn btn-primary">Contact the owner</a>
+
+                        </div>
+
+                        <div>
+
+                            <a href="{{ path('advert.booking.request', { 'id': advert.vehicle.id }) }}" class="btn btn-primary">Request a booking</a>
+
+                        </div>
+
+                    {% else %}
                         
                         <div>
 
-                            {{ form_row( form.message ) }} 
-                            
-                        </div>
-                        
-                        <div>
-        
-                            <button class="btn btn-primary">{{ button | default('Send') }}</button>
-                            
+                            <a href="{{ path('security.login') }}">Login to contact the owner or to request a booking</a>
+
                         </div>
 
-                        {{ form_end(form) }}
-
-                    </div>
+                    {% endif %}
         
                 </div>
         
@@ -176,7 +187,7 @@
 
                 </div>
 
-                <div class="row">
+                <div id="vehicleCalendar" class="row">
                 
                     {% include '@Calendar/calendar.html' %}
 

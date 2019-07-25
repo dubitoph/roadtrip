@@ -72,19 +72,136 @@ jQuery( document ).ready( function( $ ){
 
 //Map.init();
 
-export function setSessionLocation(address) 
+export function deletePhoto($element) 
+{
+
+    if (confirm('Are you sure you want to remove this photo definitively?')) 
+    {
+
+        if (! $element.hasClass('btn-dynamically-created')) 
+        {
+
+           //Photo suppression from the database
+
+           $.ajax(
+                    {
+                      url: $element.attr('href'),
+                      method: 'POST',
+                      data: {},              
+                      success: function(response) 
+                               {
+
+                                location.href = $element.data('redirection');
+
+                               }
+
+                    }
+                  )
+            ;
+            
+        }
+        else
+        {
+
+            $element.parent().remove();
+
+        }
+         
+    }
+
+}
+
+export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode, idInputCountry, idInputNumber, idInputBox, idInputState, IdInputLatitude, idInputLongitude, 
+                                    idInputDefaultAddress)
+{
+
+  var places = require('places.js');
+  var inputAddress = document.querySelector('#' + idInputAddress);
+  $('#' + idInputCountry).select2();
+  
+  if (inputAddress !== null) 
+  {
+  
+    var placesAutocomplete = places({
+  
+      appId: 'pl3HG0JAQ7C3',
+      apiKey: '1c3a71e4dabb3c07b37e1275f63c154f',
+      container: inputAddress
+  
+    });
+  
+    placesAutocomplete.on('change', e => {
+      
+      document.querySelector('#' + idInputCity).value = e.suggestion.city;
+      document.querySelector('#' + idInputPostcode).value = e.suggestion.postcode;  
+      document.querySelector('#' + IdInputLatitude).value = e.suggestion.latlng.lat;
+      document.querySelector('#' + idInputLongitude).value = e.suggestion.latlng.lng;
+
+      $('#' + idInputCountry).val(e.suggestion.countryCode.toUpperCase());
+      $('#' + idInputCountry).select2().trigger('change'); 
+
+      if (confirm('Would you like this location becomes your default location?'))
+      {
+
+        localStorage.setItem('userLatitude', e.suggestion.latlng.lat);
+        localStorage.setItem('userLongitude', e.suggestion.latlng.lng);
+        localStorage.setItem('userCity', e.suggestion.city);
+        localStorage.setItem('userAddress', e.query);
+
+        if (typeof idInputDefaultAddress !== 'undefined') 
+        {
+
+          document.querySelector('#' + idInputDefaultAddress).checked = true;
+          
+        }
+        
+        setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city);
+        
+      }     
+  
+    })
+
+    placesAutocomplete.on('clear', function() {
+      
+      document.querySelector('#' + idInputCity).value = '';
+      document.querySelector('#' + idInputPostcode).value = '';
+      document.querySelector('#' + idInputNumber).value = ''; 
+      document.querySelector('#' + idInputBox).value = '';
+      document.querySelector('#' + idInputState).value = '';   
+      document.querySelector('#' + IdInputLatitude).value = '';
+      document.querySelector('#' + idInputLongitude).value = '';
+
+      $('#' + idInputCountry).val(-1);
+      $('#' + idInputCountry).select2().trigger('change');
+
+      if (typeof idInputDefaultAddress !== 'undefined') 
+      {
+
+        document.querySelector('#' + idInputDefaultAddress).checked = false;
+        
+      }
+
+    });
+  
+  } 
+
+}
+
+export function setSessionLocation(address, latitude, longitude, city) 
 {
     
-    $.ajax(
+  console.log($('#urlAjaxSession').val()); 
+  
+  $.ajax(
 
       {
 
         url: $('#urlAjaxSession').val(),
         method: 'POST',
         data: {
-                'userLatitude': $('#latitude').val(),
-                'userLongitude': $('#longitude').val(),
-                'userCity': $('#city').val(),
+                'userLatitude': latitude,
+                'userLongitude': longitude,
+                'userCity': city,
                 'userAddress': address
 
               },
@@ -94,9 +211,9 @@ export function setSessionLocation(address)
 
                   console.log(response);
 
-                  localStorage.setItem('userLatitude',  $('#latitude').val());
-                  localStorage.setItem('userLongitude',  $('#longitude').val());
-                  localStorage.setItem('userCity',  $('#city').val());
+                  localStorage.setItem('userLatitude',  latitude);
+                  localStorage.setItem('userLongitude',  longitude);
+                  localStorage.setItem('userCity',  city);
                   localStorage.setItem('userAddress',  address);
 
                   sessionStorage.setItem('phpSessionVariablesExist', '1');
@@ -105,10 +222,49 @@ export function setSessionLocation(address)
         error : function(response) 
                 {  
 
-                  console.log('Error from Ajax call');
+                  console.log('Error from Ajax call to create session variables');
                   
                 }, 
 
   });
 
 }
+/*
+function deletePhoto($element) 
+{
+
+    if (confirm('Etes-vous certain de vouloir supprimer cette photo définitivement?')) 
+    {
+
+        if (! $element.hasClass('btn-dynamically-created')) 
+        {
+
+           //Photo suppression from the database
+
+           var path = $element.attr('href'); 
+            
+            $.post(path,
+                   {
+                        file: $('#photos_advert_mainPhotoFile').val()           
+                   }, 
+                   function() 
+                   {
+
+                        $element.parent().remove();
+
+                   }
+                  )
+            ;
+            
+        }
+        else
+        {
+
+            $element.parent().remove();
+
+        }
+         
+    }
+
+} 
+*/

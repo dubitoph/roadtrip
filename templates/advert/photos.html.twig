@@ -45,7 +45,7 @@
                         {{ form_row ( photo.mainPhoto ) }}
                         {{ form_row ( photo.name ) }}
 
-                        <a href="{{ path('advert.photo.delete', {id: recordedPhotosIds[i]}) }}" class="btn btn-danger">Supprimer cette photo</a>
+                        <a href="{{ path('photo.delete', {id: recordedPhotosIds[i]}) }}" class="btn btn-danger">Supprimer cette photo</a>
         
                     </li>
                     

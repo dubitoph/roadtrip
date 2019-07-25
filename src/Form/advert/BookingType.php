@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class BookingType extends AbstractType
 {
@@ -26,14 +26,26 @@ class BookingType extends AbstractType
                                                     'attr' => ['class' => 'js-datepicker-date'],
                                                  )
                  )
-            ->add('title', TextType::class)
-        ;
+        ;            
+
+        if ($options['request']) 
+        { 
+            $builder->add('mail', TextareaType::class, array(
+                                                                'required' => false,
+                                                                'mapped' => false
+                                                            )
+                         )
+                ;
+            
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Booking::class,
+            'request' => false,
             'translation_domain' => 'forms',
         ]);
     }
