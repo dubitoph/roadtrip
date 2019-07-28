@@ -123,19 +123,14 @@ class Address
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Vehicle", mappedBy="situation")
+     * @ORM\OneToOne(targetEntity="App\Entity\advert\Vehicle", mappedBy="situation")
      */
-    private $vehicles;
+    private $vehicle;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $defaultUserLocation;
-
-    public function __construct()
-    {
-        $this->vehicles = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -250,22 +245,14 @@ class Address
         return $this;
     }
 
-
-
-    /**
-     * @return Collection|Vehicle[]
-     */
-    public function getVehicles(): Collection
+    public function getVehicle(): ?Vehicle
     {
-        return $this->vehicles;
+        return $this->vehicle;
     }
 
-    public function addVehicle(Vehicle $vehicle): self
+    public function setVehicle(Vehicle $vehicle): self
     {
-        if (!$this->vehicles->contains($vehicle)) {
-            $this->vehicles[] = $vehicle;
-            $vehicle->setSituation($this);
-        }
+        $this->vehicle = $vehicle;
 
         return $this;
     }

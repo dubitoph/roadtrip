@@ -182,7 +182,7 @@ class Vehicle
     private $equipments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\address\Address", inversedBy="vehicles", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\address\Address", inversedBy="vehicle", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\Type(type="App\Entity\address\Address")

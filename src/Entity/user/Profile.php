@@ -39,7 +39,7 @@ class Profile
     private $photo;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\address\Address", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\address\Address", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="address_id", nullable=true)
      */
     private $address;

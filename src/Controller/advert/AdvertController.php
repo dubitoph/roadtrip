@@ -170,8 +170,7 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         { 
                 
-            $advert->setCreatedAt(new \DateTime('now'));
-            $advert->setExpiresAt(new \DateTime($advert->getCreatedAt()->format('Y-m-d H:i:s') . " +" . $this->getParameter('advert_active_duration')));           
+            $advert->setCreatedAt(new \DateTime('now'));           
 
             $manager->persist($advert);
             $manager->flush();   
@@ -1043,7 +1042,7 @@ class AdvertController extends AbstractController
         $clonedAdvert = clone $advert;
 
         $clonedAdvert->setCreatedAt(new \DateTime('now'));
-        $clonedAdvert->setExpiresAt(new \DateTime($clonedAdvert->getCreatedAt()->format('Y-m-d H:i:s') . " +" . $this->getParameter('advert_active_duration')));
+        $clonedAdvert->setExpiresAt(null);
         $clonedAdvert->setVehicle(clone $advert->getVehicle());
 
         foreach ($advert->getPrices() as $price) 
