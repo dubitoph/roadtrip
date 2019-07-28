@@ -14,6 +14,7 @@ use App\Entity\rating\Rating;
 use App\Entity\advert\Vehicle;
 use App\Entity\advert\Insurance;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use App\Entity\backend\Subscription;
 use App\Entity\advert\IncludedMileage;
 use Doctrine\Common\Collections\Collection;
@@ -25,8 +26,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\advert\AdvertRepository")
  * 
  * @UniqueEntity(
- *               fields={"title"},
- *               message="Une annonce avec ce titre existe déjà. Veuillez donc en créer un autre."
+ *               fields={"vehicle"},
+ *               message="An advert already exists for this vehicle"
  * )
  */
 class Advert
@@ -64,6 +65,7 @@ class Advert
 
     /**
      * @ORM\Column(type="datetime")
+     * @OrderBy({"createdAt" = "ASC"})
      */
     private $createdAt;
 
@@ -234,6 +236,13 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         return $this->updatedAt;
     }
 
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y');
+
+    }
+
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
@@ -246,12 +255,19 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         return $this->expiresAt;
     }
 
+    public function getFormattedExpiresAt(): string
+    {
+
+        return $this->expiresAt->format('d-m-Y');
+
+    }
+
 	public function setExpiresAt(?\DateTimeInterface $expiresAt): self
-                                                                                                          {
-                                                                                                              $this->expiresAt = $expiresAt;
+    {
+        $this->expiresAt = $expiresAt;
                                                                                                                                                                                                                            
-                                                                                                              return $this;
-                                                                                                          }
+        return $this;
+    }
 
     public function getVehicle(): ?Vehicle
     {
@@ -274,7 +290,7 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         return $this->photos;
     }
 
-    public function setPhotos(Collection $photos)
+    public function setPhotos(Collection $photos = null)
     {
         $this->photos = $photos;
     }
@@ -605,13 +621,6 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         }
 
         return $this;
-    }
-
-    public function getFormattedCreatedAt(): string
-    {
-
-        return $this->createdAt->format('d-m-Y');
-
     }
 
     /**

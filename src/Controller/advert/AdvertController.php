@@ -124,6 +124,33 @@ class AdvertController extends AbstractController
         ;
 
     }
+    
+    /**
+     * @Route("/advert/owner", name="advert.owner")
+     * @return Response
+     */
+    public function ownerAdverts(AdvertRepository $advertRepository, PhotoRepository $photoRepository): Response
+    {
+     
+        $adverts = $this->getUser()->getOwner()->getAdverts();
+
+        $mainPhotos = array();
+
+        if (count($adverts) > 0) 
+        {
+        
+            $mainPhotos = $photoRepository->getMainPhotos($adverts);
+
+        }
+
+        return $this->render('advert/ownerAdverts.html.twig', [
+                                                                'adverts' => $adverts,
+                                                                'mainPhotos' => $mainPhotos
+                                                              ]
+                            )
+        ;  
+        
+    }
 
     /**
      * @Route("/advert/create", name="advert.create")
@@ -140,7 +167,8 @@ class AdvertController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) { 
+        if ($form->isSubmitted() && $form->isValid()) 
+        { 
                 
             $advert->setCreatedAt(new \DateTime('now'));
             $advert->setExpiresAt(new \DateTime($advert->getCreatedAt()->format('Y-m-d H:i:s') . " +" . $this->getParameter('advert_active_duration')));           
@@ -999,6 +1027,54 @@ class AdvertController extends AbstractController
         } 
             
         return $this->redirectToRoute('backend.advert.index');
+        
+    }
+
+    /**
+     * @Route("/advert/clone/{id}", name="advert.clone")
+     * @param Advert $advert
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function clone(Advert $advert, Request $request, ObjectManager $manager): Response
+    {
+
+        $clonedAdvert = clone $advert;
+
+        $clonedAdvert->setCreatedAt(new \DateTime('now'));
+        $clonedAdvert->setExpiresAt(new \DateTime($clonedAdvert->getCreatedAt()->format('Y-m-d H:i:s') . " +" . $this->getParameter('advert_active_duration')));
+        $clonedAdvert->setVehicle(clone $advert->getVehicle());
+
+        foreach ($advert->getPrices() as $price) 
+        {
+
+            $clonedAdvert->addPrice(clone $price);
+
+        }
+
+        foreach ($advert->getPeriods() as $period) 
+        {
+
+            $clonedAdvert->addPeriod(clone $period);
+
+        }
+
+        $clonedAdvert->setInsurance(clone $advert->getInsurance());
+
+        foreach ($advert->getIncludedMileages() as $includedMileage) 
+        {
+
+            $clonedAdvert->addIncludedMileage(clone $includedMileage);
+
+        }
+
+        $clonedAdvert->setStripeIntentId(null);
+
+        $manager->persist($clonedAdvert);
+        $manager->flush();
+            
+        return $this->redirectToRoute('advert.edit', array('id' => $clonedAdvert->getId()));
         
     }
 

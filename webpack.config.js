@@ -48,7 +48,8 @@ Encore
     .addEntry('registration', './assets/js/security/registration.js')    
     .addEntry('threads', './assets/js/communication/threads.js')    
     .addEntry('bookingRequestsManagement', './assets/js/user/bookingRequestsManagement.js')    
-    .addEntry('profile', './assets/js/user/profile.js')
+    .addEntry('profile', './assets/js/user/profile.js')    
+    .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // will require an extra script tag for runtime.js

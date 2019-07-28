@@ -15,6 +15,28 @@
             <div class="vertical-navbar">
         
                 <ul class="navbar-nav mr-auto">
+
+                    {% if user.owner is not null %}
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="{{ path('advert.booking.requests') }}">My booking requests</a>
+
+                        </li>
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="{{ path('advert.owner') }}">My adverts</a>
+
+                        </li>
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="#last_adverts">My owner contact informations</a>
+
+                        </li>
+                        
+                    {% endif %}
     
                     <li class="nav-item">
 
@@ -34,31 +56,11 @@
 
                     </li>
 
-                    {% if user.owner is not null %}
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="#last_adverts">My owner contact informations</a>
-
-                        </li>
-                        
-                    {% endif %}
-
                     <li class="nav-item">
 
                         <a class="nav-link"  href="{{ path('user.favorites') }}">My favorites</a>
 
                     </li>
-
-                    {% if user.owner is not null %}
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="{{ path('advert.booking.requests') }}">My booking requests</a>
-
-                        </li>
-                        
-                    {% endif %}
 
                     <li class="nav-item">
 
