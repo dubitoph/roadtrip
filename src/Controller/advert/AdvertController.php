@@ -30,6 +30,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\user\FavoriteRepository;
 
 class AdvertController extends AbstractController
 {
@@ -836,7 +837,7 @@ class AdvertController extends AbstractController
     /**
      * @Route("/advert/show/{slug}-{id}", name="advert.show", requirements = {"slug": "[a-z0-9\-]*"})
      */
-    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response 
+    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, FavoriteRepository $favoriteRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response 
     {
         
         $user = $this->getUser();
@@ -909,6 +910,8 @@ class AdvertController extends AbstractController
         if($user)
         {
 
+            $favorite = $favoriteRepository->findOneBy(array('advert' => $advert, 'user' => $user));
+            
             $form = $this->createForm(MailType::class, $mail);
             $form->handleRequest($request);
 
@@ -949,6 +952,7 @@ class AdvertController extends AbstractController
                                                             'mainPhoto' => $mainPhoto,
                                                             'cellEquipments' => $cellEquipments,
                                                             'carrierEquipments' => $carrierEquipments,
+                                                            'favorite' => $favorite,
                                                             'form' => $form->createView(),
                                                         ]
                                 )
@@ -1025,7 +1029,7 @@ class AdvertController extends AbstractController
 
         } 
             
-        return $this->redirectToRoute('backend.advert.index');
+        return $this->redirectToRoute('advert.owner');
         
     }
 
@@ -1044,6 +1048,7 @@ class AdvertController extends AbstractController
         $clonedAdvert->setCreatedAt(new \DateTime('now'));
         $clonedAdvert->setExpiresAt(null);
         $clonedAdvert->setVehicle(clone $advert->getVehicle());
+        $clonedAdvert->getVehicle()->setSituation(clone $advert->getVehicle()->getSituation());
 
         foreach ($advert->getPrices() as $price) 
         {

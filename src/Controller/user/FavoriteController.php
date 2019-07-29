@@ -2,8 +2,12 @@
 
 namespace App\Controller\user;
 
+use App\Entity\advert\Advert;
+use App\Entity\user\Favorite;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,6 +104,56 @@ class FavoriteController extends AbstractController
                                                          ]
                             )
         ;  
+        
+    }
+
+    /**
+     * @Route("user/favorite/create/{id}", name="user.favorite.create")
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function new(Advert $advert, Request $request, ObjectManager $manager): Response
+    {
+
+        $user = $this->getUser();
+        
+        $favorite = new Favorite();
+
+        $favorite->setUser($user)
+                 ->setAdvert($advert);
+
+        $manager->persist($favorite);
+        $manager->flush();    
+
+        $this->addFlash('success', "This advert is now in your favorites.");
+        
+        return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug())); 
+
+    }
+
+    /**
+     * @Route("/user/favorite/delete/{id}", name="user.favorite.delete", methods = "DELETE")
+     * @param Favorite $favorite
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function delete(Favorite $favorite, Request $request, ObjectManager $manager): Response
+    {
+
+    $advert = $favorite->getAdvert();
+        
+        if ($this->isCsrfTokenValid('delete'. $favorite->getId(), $request->get('_token'))) 
+        {
+
+            $manager->remove($favorite);
+            $manager->flush();
+            $this->addFlash('success', "This advert isn't anymore in your favorites"); 
+
+        } 
+            
+        return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug()));
         
     }
 

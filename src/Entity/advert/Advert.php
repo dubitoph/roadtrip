@@ -258,7 +258,18 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
     public function getFormattedExpiresAt(): string
     {
 
-        return $this->expiresAt->format('d-m-Y');
+        if($this->expiresAt)
+        {
+        
+            return $this->expiresAt->format('d-m-Y');
+
+        }
+        else 
+        {
+
+            return "Not active";
+
+        }
 
     }
 

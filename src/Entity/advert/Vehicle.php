@@ -443,7 +443,8 @@ class Vehicle
 
     public function addCellEquipment(Equipment $cellEquipment): self
     {
-        if (!$this->cellEquipments->contains($cellEquipment)) {
+        if (!$this->cellEquipments->contains($cellEquipment)) 
+        {
             $this->cellEquipments[] = $cellEquipment;
             $cellEquipment->addVehicle($this);
         }
@@ -453,7 +454,8 @@ class Vehicle
 
     public function removeCellEquipment(Equipment $cellEquipment): self
     {
-        if ($this->cellEquipments->contains($cellEquipment)) {
+        if ($this->cellEquipments->contains($cellEquipment)) 
+        {
             $this->cellEquipments->removeElement($cellEquipment);
             $cellEquipment->removeVehicle($this);
         }
@@ -472,7 +474,7 @@ class Vehicle
     {
 
         $this->situation = $situation;
-        $situation->addVehicle($this);
+        $situation->setVehicle($this);
 
         return $this;
 
