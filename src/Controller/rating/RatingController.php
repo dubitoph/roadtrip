@@ -6,6 +6,7 @@ use App\Entity\rating\Rating;
 use App\Entity\booking\Booking;
 use App\Form\rating\RatingType;
 use App\Entity\communication\Mail;
+use App\Entity\rating\ResponseToRating;
 use App\Form\rating\RatingResponseType;
 use App\Repository\user\UserRepository;
 use App\Repository\media\PhotoRepository;
@@ -17,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\rating\ResponseToRating;
 
 class RatingController extends AbstractController
 {
@@ -155,7 +155,7 @@ class RatingController extends AbstractController
 
                 $message = "A new rating is pending approval. Please manage it in the <a href=\"" . $this->generateUrl('backend.rating.toApprove', array(), UrlGeneratorInterface::ABSOLUTE_URL) . "\">dashboard</a>.";
                 
-                $this->sendPendingApprovalRatingMail($rating, $mailer, $userRepository, $message);
+                $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
                 
                 return $this->redirectToRoute('rating.dashbord');
 
