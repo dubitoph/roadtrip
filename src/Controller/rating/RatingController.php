@@ -127,6 +127,20 @@ class RatingController extends AbstractController
             $rating->setBooking($booking);
             $rating->setUser($user);
 
+            if ($user == $booking->getUser()) 
+            {
+
+                $rating->setAdvert($booking->getVehicle()->getAdvert());
+
+            } 
+            else 
+            {
+
+                $rating->setTenant($booking->getUser());
+
+            }
+            
+
             $form = $this->createForm(RatingType::class, $rating);
 
             $form->handleRequest($request);

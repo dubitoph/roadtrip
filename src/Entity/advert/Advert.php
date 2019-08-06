@@ -2,6 +2,7 @@
 
 namespace App\Entity\advert;
 
+use App\Entity\rating\Rating;
 use App\Entity\communication\Thread;
 use App\Entity\user\Favorite;
 use App\Entity\user\Owner;
@@ -170,6 +171,11 @@ class Advert
      */
     private $threads;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="advert")
+     */
+    private $ratings;
+
     public function __construct() 
 	{
         $this->createdAt = new \DateTime();
@@ -181,6 +187,7 @@ class Advert
         $this->bills = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->discussions = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
 	}    
 
     public function getId(): ?int
@@ -267,11 +274,11 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
     }
 
 	public function setExpiresAt(?\DateTimeInterface $expiresAt): self
-    {
-        $this->expiresAt = $expiresAt;
-                                                                                                                                                                                                                           
-        return $this;
-    }
+                      {
+                          $this->expiresAt = $expiresAt;
+                                                                                                                                                                                                                                             
+                          return $this;
+                      }
 
     public function getVehicle(): ?Vehicle
     {
@@ -652,6 +659,37 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
             // set the owning side to null (unless already changed)
             if ($thread->getAdvert() === $this) {
                 $thread->setAdvert(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setAdvert($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->contains($rating)) {
+            $this->ratings->removeElement($rating);
+            // set the owning side to null (unless already changed)
+            if ($rating->getAdvert() === $this) {
+                $rating->setAdvert(null);
             }
         }
 

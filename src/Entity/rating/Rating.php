@@ -2,11 +2,12 @@
 
 namespace App\Entity\rating;
 
-use App\Entity\rating\ResponseToRating;
 use App\Entity\user\User;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\advert\Advert;
 use App\Entity\booking\Booking;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\rating\ResponseToRating;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\rating\RatingRepository")
@@ -60,16 +61,26 @@ class Rating
     private $booking;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="ratings")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\rating\ResponseToRating", mappedBy="rating", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $responseToRating;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="ratings")
+     */
+    private $advert;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="createdRatings")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="receivedRatings")
+     */
+    private $tenant;
+
 
     public function __construct() 
 	{
@@ -152,18 +163,6 @@ class Rating
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getResponseToRating(): ?ResponseToRating
     {
         return $this->responseToRating;
@@ -178,6 +177,42 @@ class Rating
             $responseToRating->setRating($this);
         }
 */
+        return $this;
+    }
+
+    public function getAdvert(): ?Advert
+    {
+        return $this->advert;
+    }
+
+    public function setAdvert(?Advert $advert): self
+    {
+        $this->advert = $advert;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function geTenant(): ?User
+    {
+        return $this->tenant;
+    }
+
+    public function setTenant(?User $tenant): self
+    {
+        $this->tenant = $tenant;
+
         return $this;
     }
 }

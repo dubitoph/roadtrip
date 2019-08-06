@@ -281,16 +281,6 @@
                     
                 {% endif %}
 
-                {% if app.user %}
-
-                    <a href="{{ path('rating.advert.create', { 'id': advert.id }) }}">Propose your rating</a>
-                    
-                {% else %}
-
-                    <a href="{{ path('security.login') }}">Login to propose your rating</a>
-                    
-                {% endif %}
-
             </section>
 
         </div>

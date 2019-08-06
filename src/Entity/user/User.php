@@ -3,10 +3,10 @@
 namespace App\Entity\user;
 
 use App\Entity\rating\Rating;
-use App\Entity\user\Profile;
-use App\Entity\booking\Booking;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
+use App\Entity\user\Profile;
+use App\Entity\booking\Booking;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use App\Entity\communication\Mail;
@@ -182,7 +182,12 @@ class User implements UserInterface
      /**
       * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="user")
       */
-     private $ratings;
+     private $createdRatings;
+
+     /**
+      * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="tenant")
+      */
+     private $receivedRatings;
 
      public function __construct()
      {
@@ -191,7 +196,8 @@ class User implements UserInterface
          $this->favorites = new ArrayCollection();
          $this->threads = new ArrayCollection();
          $this->bookings = new ArrayCollection();
-         $this->ratings = new ArrayCollection(); 
+         $this->createdRatings = new ArrayCollection();
+         $this->receivedRatings = new ArrayCollection();
      }
 
     public function getId(): ?int
@@ -644,28 +650,59 @@ class User implements UserInterface
     /**
      * @return Collection|Rating[]
      */
-    public function getRatings(): Collection
+    public function getCreatedRatings(): Collection
     {
         return $this->ratings;
     }
 
-    public function addRating(Rating $rating): self
+    public function addCreatedRating(Rating $createdRating): self
     {
-        if (!$this->ratings->contains($rating)) {
-            $this->ratings[] = $rating;
-            $rating->setUser($this);
+        if (!$this->createdRatings->contains($createdRating)) {
+            $this->createdRatings[] = $createdRating;
+            $createdRating->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeRating(Rating $rating): self
+    public function removeCreatedRating(Rating $createdRating): self
     {
-        if ($this->ratings->contains($rating)) {
-            $this->ratings->removeElement($rating);
+        if ($this->createdRatings->contains($createdRating)) {
+            $this->createdRatings->removeElement($createdRating);
             // set the owning side to null (unless already changed)
-            if ($rating->getUser() === $this) {
-                $rating->setUser(null);
+            if ($createdRating->getUser() === $this) {
+                $createdRating->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getReceivedRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addReceivedRating(Rating $receivedRating): self
+    {
+        if (!$this->receivedRatings->contains($receivedRating)) {
+            $this->receivedRatings[] = $receivedRating;
+            $receivedRating->setTenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceivedRating(Rating $receivedRating): self
+    {
+        if ($this->receivedRatings->contains($receivedRating)) {
+            $this->receivedRatings->removeElement($receivedRating);
+            // set the owning side to null (unless already changed)
+            if ($receivedRating->getTenant() === $this) {
+                $receivedRating->setTenant(null);
             }
         }
 
