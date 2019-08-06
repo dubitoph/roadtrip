@@ -1,3 +1,4 @@
+0: 0
 1: 1
 2: 2
 3: 3
@@ -101,6 +102,7 @@ Rental end: Date de fin de la location
 Repeat your password...: Répétez votre mot de passe...
 Repeat your new password...: Répétez votre nouveau mot de passe...
 Response: Réponse
+Score: Score
 Seat: Siège
 Seats number: Nombre de sièges
 Season: Saison

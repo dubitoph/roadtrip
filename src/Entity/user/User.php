@@ -2,11 +2,11 @@
 
 namespace App\Entity\user;
 
+use App\Entity\rating\Rating;
 use App\Entity\user\Profile;
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
-use App\Entity\rating\Rating;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use App\Entity\communication\Mail;
@@ -158,18 +158,6 @@ class User implements UserInterface
      private $receivedMails;
 
      /**
-      * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="user")
-      * @OrderBy({"createdAt" = "DESC"})
-      */
-     private $sentRatings;
-
-     /**
-      * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="tenant")
-      * @OrderBy({"createdAt" = "DESC"})
-      */
-     private $receivedRatings;
-
-     /**
       * @ORM\OneToMany(targetEntity="App\Entity\user\Favorite", mappedBy="user", orphanRemoval=true)
       * @OrderBy({"createdAt" = "DESC"})
       */
@@ -182,7 +170,7 @@ class User implements UserInterface
      private $threads;
 
      /**
-      * @ORM\OneToMany(targetEntity="App\Entity\advert\Booking", mappedBy="user")
+      * @ORM\OneToMany(targetEntity="App\Entity\booking\Booking", mappedBy="user")
       */
      private $bookings;
 
@@ -191,15 +179,19 @@ class User implements UserInterface
       */
      private $profile;
 
+     /**
+      * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="user")
+      */
+     private $ratings;
+
      public function __construct()
      {
          $this->sentMails = new ArrayCollection();
          $this->receivedMails = new ArrayCollection();
-         $this->sentRatings = new ArrayCollection();
-         $this->receivedRatings = new ArrayCollection();
          $this->favorites = new ArrayCollection();
          $this->threads = new ArrayCollection();
-         $this->bookings = new ArrayCollection(); 
+         $this->bookings = new ArrayCollection();
+         $this->ratings = new ArrayCollection(); 
      }
 
     public function getId(): ?int
@@ -532,70 +524,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Rating[]
-     */
-    public function getSentRatings(): Collection
-    {
-        return $this->sentRatings;
-    }
-
-    public function addSentRating(Rating $sentRating): self
-    {
-        if (!$this->sentRatings->contains($sentRating)) {
-            $this->sentRatings[] = $sentRating;
-            $sentRating->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSentRating(Rating $sentRating): self
-    {
-        if ($this->sentRatings->contains($sentRating)) {
-            $this->sentRatings->removeElement($sentRating);
-            // set the owning side to null (unless already changed)
-            if ($sentRating->getUser() === $this) {
-                $sentRating->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Rating[]
-     */
-    public function getReceivedRatings(): Collection
-    {
-        return $this->receivedratings;
-    }
-
-    public function addReceivedRating(Rating $receivedRating): self
-    {
-        if (!$this->receivedRatings->contains($receivedRating)) {
-            $this->receivedRatings[] = $receivedRating;
-            $receivedRating->setTenant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReceivedRating(Rating $receivedRating): self
-    {
-
-        if ($this->receivedRatings->contains($receivedRating)) {
-            $this->receivedRatings->removeElement($receivedRating);
-            // set the owning side to null (unless already changed)
-            if ($receivedRating->getTenant() === $this) {
-                $receivedRating->setTenant(null);
-            }
-        }
-
-        return $this;
-
-    }
-
     public function getSlug(): string 
     {
 
@@ -708,6 +636,37 @@ class User implements UserInterface
         // set the owning side of the relation if necessary
         if ($this !== $profile->getUser()) {
             $profile->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->contains($rating)) {
+            $this->ratings->removeElement($rating);
+            // set the owning side to null (unless already changed)
+            if ($rating->getUser() === $this) {
+                $rating->setUser(null);
+            }
         }
 
         return $this;

@@ -10,7 +10,6 @@ use App\Entity\media\Photo;
 use App\Entity\advert\Price;
 use App\Entity\backend\Bill;
 use App\Entity\advert\Period;
-use App\Entity\rating\Rating;
 use App\Entity\advert\Vehicle;
 use App\Entity\advert\Insurance;
 use Doctrine\ORM\Mapping as ORM;
@@ -162,11 +161,6 @@ class Advert
     private $bills;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="advert", orphanRemoval=true)
-     */
-    private $ratings;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\user\Favorite", mappedBy="advert", orphanRemoval=true)
      */
     private $favorites;
@@ -185,7 +179,6 @@ class Advert
         $this->includedMileages = new ArrayCollection();
         $this->mails = new ArrayCollection();
         $this->bills = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
         $this->favorites = new ArrayCollection();
         $this->discussions = new ArrayCollection();
 	}    
@@ -597,37 +590,6 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
             // set the owning side to null (unless already changed)
             if ($bill->getOwner() === $this) {
                 $bill->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Rating[]
-     */
-    public function getRatings(): Collection
-    {
-        return $this->ratings;
-    }
-
-    public function addRating(Rating $rating): self
-    {
-        if (!$this->ratings->contains($rating)) {
-            $this->ratings[] = $rating;
-            $rating->setAdvert($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRating(Rating $rating): self
-    {
-        if ($this->ratings->contains($rating)) {
-            $this->ratings->removeElement($rating);
-            // set the owning side to null (unless already changed)
-            if ($rating->getAdvert() === $this) {
-                $rating->setAdvert(null);
             }
         }
 

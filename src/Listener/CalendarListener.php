@@ -3,7 +3,7 @@
 namespace App\Listener;
 
 use CalendarBundle\Entity\Event;
-use App\Repository\advert\BookingRepository;
+use App\Repository\booking\BookingRepository;
 use App\Repository\advert\VehicleRepository;
 use CalendarBundle\Event\CalendarEvent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -73,7 +73,7 @@ class CalendarListener
 
             $bookingEvent->addOption(
                                         'url',
-                                        $this->router->generate('advert.booking.show', ['id' => $booking->getId(),])
+                                        $this->router->generate('booking.booking.show', ['id' => $booking->getId(),])
                                     )
             ;
 

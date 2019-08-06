@@ -12,7 +12,7 @@ parameters:
     minimum_creation_periods: '1 year'
     rental_automatically_confirmation: '15 days'
     periods_durations: [ "Week-end", "Long week-end", "Semaine" ]
-    administrateur_email: 'administrateur@roadtrip.com'    
+    administrateur_email: 'administrateur@roadtrip.com'  
     contestation_email: "contestation@roadtrip.com"    
     backend_admin_user: "backendAdminUser"
     administrateur_firstname: 'Administrator'
@@ -24,9 +24,15 @@ parameters:
     booking_request_refused_subject: 'Your request booking is refused'
     booking_request_accepted_subject: 'Your request booking is accepted'
     password_Resetting_email_subject: 'Renew password on Roadtrip'
+    approved_rating_subject: "Your rating was approved"
+    removed_rating_subject: "Rating removed"
+    rating_pending_approval_subject: "New rating or response pending approval"
     rating_email_subject: "Waiting for lease approval"
     rating_approval_subject: "New assessment pending approval"
     rating_not_confirmed_rental_email_subject: "Rent related to your unconfirmed evaluation"
+    removed_rating_response_subject: "Response removed"
+    approved_rating_response_subject: "Response approved"
+    response_rating_subject: "A response to your rating was posted"
     succeed_payment_email_subject: 'Accepted payment'
     stripe_account: acct_1EbuOxJ448Kc3t3S
     stripe_public_key: pk_test_lFbnmMuNBNktwcox9MhvdFnA00txD1vT93

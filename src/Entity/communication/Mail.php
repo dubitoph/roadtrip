@@ -3,7 +3,7 @@
 namespace App\Entity\communication;
 
 use App\Entity\user\User;
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\communication\Thread;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,7 +66,7 @@ class Mail
     private $thread;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Booking", inversedBy="mails")
+     * @ORM\ManyToOne(targetEntity="App\Entity\booking\Booking", inversedBy="mails")
      * @ORM\JoinColumn(nullable=true)
      */
     private $booking;

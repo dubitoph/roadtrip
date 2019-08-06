@@ -36,9 +36,9 @@
                         <td>{{ booking.endAt ? booking.endAt|date('Y-m-d H:i:s') : '' }}</td>
                         <td>
                             
-                            <a href="{{ path('owner.booking.edit', { 'id': booking.id }) }}" class="btn btn-secondary">Editer</a>
+                            <a href="{{ path('booking.booking.edit', { 'id': booking.id }) }}" class="btn btn-secondary">Editer</a>
                             
-                            <form method = "post" action="{{ path('owner.booking.delete', { 'id': booking.id }) }}" style="display: inline-block">
+                            <form method = "post" action="{{ path('booking.booking.delete', { 'id': booking.id }) }}" style="display: inline-block">
 
                                 <input type="hidden"  name="_method" value="DELETE">
                                 <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ booking.id ) }}">

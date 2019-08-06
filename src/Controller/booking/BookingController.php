@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\advert;
+namespace App\Controller\booking;
 
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use App\Entity\advert\Vehicle;
-use App\Form\advert\BookingType;
+use App\Form\booking\BookingType;
 use App\Entity\communication\Mail;
 use App\Form\communication\MailType;
-use App\Repository\advert\BookingRepository;
+use App\Repository\booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ class BookingController extends AbstractController
 {
 
     /**
-     * @Route("/advert/booking/request/{id}", name="advert.booking.request")
+     * @Route("/booking/booking/request/{id}", name="booking.booking.request")
      * 
      * @param Vehicle $vehicle
      * @param Request $request
@@ -92,7 +92,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/advert/booking/show/{id}", name="advert.booking.show")
+     * @Route("/booking/booking/show/{id}", name="booking.booking.show")
      * 
      * @param Booking $booking
      * @return Response
@@ -105,7 +105,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/advert/booking/requests", name="advert.booking.requests")
+     * @Route("/booking/booking/requests", name="booking.booking.requests")
      * 
      * @param BookingRepository $bookingRepository
      * @return Response
@@ -145,7 +145,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/advert/booking/edit/{id}/{action}", name="advert.booking.edit")
+     * @Route("/booking/booking/edit/{id}/{action}", name="booking.booking.edit")
      * @param Booking $booking
      * @param Request $request
      * @param ObjectManager $manager
@@ -225,7 +225,7 @@ class BookingController extends AbstractController
 
             } 
 
-            return $this->redirectToRoute('advert.booking.requests');
+            return $this->redirectToRoute('booking.booking.requests');
 
         }
      
@@ -239,7 +239,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/advert/booking/refuse/{id}", name="advert.booking.refuse", methods={"DELETE"})
+     * @Route("/booking/booking/refuse/{id}", name="booking.booking.refuse", methods={"DELETE"})
      * @param Booking $booking
      * @param Request $request
      * @param ObjectManager $manager
@@ -289,7 +289,7 @@ class BookingController extends AbstractController
 
             } 
 
-            return $this->redirectToRoute('advert.booking.requests');
+            return $this->redirectToRoute('booking.booking.requests');
 
         }
      
@@ -302,7 +302,7 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/advert/booking/delete/{id}", name="advert.booking.delete", methods={"DELETE"})
+     * @Route("/booking/booking/delete/{id}", name="booking.booking.delete", methods={"DELETE"})
      * @param Booking $booking
      * @param Request $request
      * @param ObjectManager $manager
@@ -316,7 +316,7 @@ class BookingController extends AbstractController
             $manager->flush();
             $this->addFlash('success', "La réservation a été supprimée avec succès.");
         }
-        return $this->redirectToRoute('backend.booking.index');
+        return $this->redirectToRoute('booking.booking.index');
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 namespace App\Repository\advert;
+
 use App\Entity\advert\Advert;
 use App\Entity\advert\AdvertSearch;
 use Symfony\Bridge\Doctrine\RegistryInterface;

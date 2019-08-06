@@ -1,16 +1,20 @@
 <?php
 
-namespace App\Entity\advert;
+namespace App\Entity\booking;
 
-use App\Entity\communication\Mail;
-use App\Entity\advert\Vehicle;
 use App\Entity\user\User;
+use App\Entity\rating\Rating;
+use App\Entity\advert\Vehicle;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
+use App\Entity\communication\Mail;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\advert\BookingRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\booking\BookingRepository")
  * 
  * @UniqueEntity(
  *               fields={"beginAt"},
@@ -96,9 +100,16 @@ class Booking
      */
     private $mails;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\rating\Rating", mappedBy="booking")
+     * @OrderBy({"createdAt" = "DESC"})
+     */
+    private $ratings;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,7 +119,9 @@ class Booking
 
     public function getBeginAt(): ?\DateTimeInterface
     {
+
         return $this->beginAt;
+        
     }
 
     public function getFormattedBeginAt(): string
@@ -130,18 +143,18 @@ class Booking
         return $this->endAt;
     }
 
-    public function setEndAt(?\DateTimeInterface $endAt): self
-    {
-        $this->endAt = $endAt;
-
-        return $this;
-    }
-
     public function getFormattedEndAt(): string
     {
 
         return $this->endAt->format('d-m-Y');
 
+    }
+
+    public function setEndAt(?\DateTimeInterface $endAt): self
+    {
+        $this->endAt = $endAt;
+
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -273,6 +286,47 @@ class Booking
             if ($mail->getBooking() === $this) {
                 $mail->setBooking(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) 
+        {
+
+            $this->ratings[] = $rating;
+            $rating->setBooking($this);
+
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->contains($rating)) 
+        {
+
+            $this->ratings->removeElement($rating);
+
+            // set the owning side to null (unless already changed)
+            if ($rating->geBooking() === $this) 
+            {
+
+                $rating->setBooking(null);
+
+            }
+
         }
 
         return $this;

@@ -62,16 +62,15 @@ class HomeController extends AbstractController
         
             $mainPhotos = $photoRepository->getMainPhotos($lastAdverts);
 
-        }
-        
-        
+        }       
         
         $lastAdvertRatings = $ratingRepository->findBy(
-                                                        array('type'=> 'Advert', 'ratingApproved' => true),
+                                                        array('ratingApproved' => true),
                                                         array('createdAt' => 'DESC'),
                                                         $limit  = 10
                                                       )
         ;
+
         $subscriptions = $subscriptionRepository->findAll();
            
         $search = new AdvertSearch();

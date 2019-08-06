@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\rating\RatingRepository;
 
 class UserUserController extends AbstractController
 {
@@ -92,7 +93,7 @@ class UserUserController extends AbstractController
      * @param User $user
      * @return Response
      */
-    public function dashbord(): Response
+    public function dashbord(RatingRepository $ratingRepository): Response
     {
      
         $user = $this->getUser();
@@ -110,18 +111,6 @@ class UserUserController extends AbstractController
             $profileTab[4] = $profile->getAboutMe();
 
             $numberItems = 0;
-            
-            foreach ($profileTab as $value) 
-            {
-
-                if($value)
-                {
-
-                    $numberItems++;
-
-                }
-
-            }
 
             $profileCompletion = ($numberItems / count($profileTab)) * 100;
 

@@ -6,7 +6,7 @@ use App\Entity\backend\Fuel;
 use App\Entity\backend\Mark;
 use App\Entity\backend\Sort;
 use App\Entity\advert\Advert;
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use App\Entity\address\Address;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\backend\Equipment;
@@ -191,7 +191,7 @@ class Vehicle
     private $situation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Booking", mappedBy="vehicle", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\booking\Booking", mappedBy="vehicle", orphanRemoval=true)
      */
     private $bookings;
 

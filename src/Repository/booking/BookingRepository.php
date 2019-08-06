@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\advert;
+namespace App\Repository\booking;
 
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use App\Entity\advert\Vehicle;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -86,6 +86,22 @@ class BookingRepository extends ServiceEntityRepository
                    ->getResult()
        ;
    }
+
+   /**
+    * @return Booking[]
+    */
+  public function findBookingsWithoutRating($user)
+  {
+      
+      return $this->createQueryBuilder('b')
+                  ->leftJoin('App\Entity\rating\Rating', 'r', "WITH", 'r.booking = b AND r.user = :user')
+                  ->andWhere('r.booking is null')
+                  ->setParameter('user', $user)
+                  ->orderBy('b.createdAt', 'ASC')
+                  ->getQuery()
+                  ->getResult()
+      ;
+  }
 
     /*
     public function findOneBySomeField($value): ?Booking

@@ -2,7 +2,7 @@
 
 namespace App\Controller\backend;
 
-use App\Repository\advert\BookingRepository;
+use App\Repository\booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

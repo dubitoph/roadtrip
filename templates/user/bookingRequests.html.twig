@@ -43,8 +43,8 @@
                             <td>{{ openRequest.user.firstname }} {{ openRequest.user.name }}</td>
                             <td>{{ openRequest.userMail.message }}</td>
                             <td>
-                                <a href="{{ path('advert.booking.edit', { 'id': openRequest.id, 'action': 'refuse' }) }}" class="btn btn-danger">Refuse</a>
-                                <a href="{{ path('advert.booking.edit', { 'id': openRequest.id, 'action': 'accept' }) }}" class="btn btn-primary">Accept</a>
+                                <a href="{{ path('booking.booking.edit', { 'id': openRequest.id, 'action': 'refuse' }) }}" class="btn btn-danger">Refuse</a>
+                                <a href="{{ path('booking.booking.edit', { 'id': openRequest.id, 'action': 'accept' }) }}" class="btn btn-primary">Accept</a>
                             </td>
 
                         </tr>
