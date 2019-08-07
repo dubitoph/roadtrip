@@ -1,6 +1,5 @@
 //import Places from 'places.js';
 import { autocompleteAddress } from '../app';
-import { setSessionLocation } from '../app';
 
 jQuery( document ).ready( function( $ ) {
 

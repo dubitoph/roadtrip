@@ -24,7 +24,7 @@ class UserOwnerController extends AbstractController
      * @param ObjectManager $manager
      * @return Response
      */
-    public function ownerForm(Advert $advert = null, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function new(Advert $advert = null, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
 
         $user = $this->getUser();
@@ -140,6 +140,39 @@ class UserOwnerController extends AbstractController
                             )
         ;
         
+
+    }
+    
+    /**
+     *  @Route("/user/owner/edit", name="user.owner.edit")
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function edit(Request $request, ObjectManager $manager)
+    {
+
+        $owner = $this->getUser()->getOwner();
+        
+        $form = $this->createForm(OwnerType::class, $owner, array(
+                                                                    'user' => $this->getUser(),
+                                                                 ) 
+                                 )
+        ;
+ 
+        $form->handleRequest($request);
+ 
+        if ($form->isSubmitted() && $form->isValid()) 
+        {  
+                        
+            $manager->persist($owner);
+            $manager->flush(); 
+
+            $this->addFlash('success', "Your owner contact informations were updated.");
+
+        }
+
+        return $this->render('user/owner/edit.html.twig', ['form' => $form->createView()]);
 
     }
 

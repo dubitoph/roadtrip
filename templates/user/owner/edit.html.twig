@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Update owner contact informations {% endblock %}
+
+{% block body %}
+
+    {{ include('_messages.html.twig', { 'form': form }) }}
+
+    <div class="container mt-4">
+
+        <h1>Update my owner contact informations</h1>
+
+        {{ form_start(form) }}
+
+            {{ form_rest(form) }}                   
+
+            <button type="submit" class="btn btn-success">Update</button>        
+
+        {{ form_end(form) }}
+        
+    </div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+        
+        {{ encore_entry_script_tags('editOwner') }}
+
+    {% endblock %}
+
+{% endblock %}

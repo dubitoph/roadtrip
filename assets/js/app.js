@@ -112,7 +112,7 @@ export function deletePhoto($element)
 }
 
 export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode, idInputCountry, idInputNumber, idInputBox, idInputState, IdInputLatitude, idInputLongitude, 
-                                    idInputDefaultAddress)
+                                    defaultLocationQuestion, idInputDefaultAddress)
 {
 
   var places = require('places.js');
@@ -133,29 +133,34 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
     placesAutocomplete.on('change', e => {
       
       document.querySelector('#' + idInputCity).value = e.suggestion.city;
-      document.querySelector('#' + idInputPostcode).value = e.suggestion.postcode;  
-      document.querySelector('#' + IdInputLatitude).value = e.suggestion.latlng.lat;
+      document.querySelector('#' + idInputPostcode).value = e.suggestion.postcode; 
+      document.querySelector('#' + IdInputLatitude).value = e.suggestion.latlng.lat; 
       document.querySelector('#' + idInputLongitude).value = e.suggestion.latlng.lng;
 
       $('#' + idInputCountry).val(e.suggestion.countryCode.toUpperCase());
       $('#' + idInputCountry).select2().trigger('change'); 
 
-      if (confirm('Would you like this location becomes your default location?'))
+      if (typeof idInputDefaultAddress !== 'undefined')
       {
 
-        localStorage.setItem('userLatitude', e.suggestion.latlng.lat);
-        localStorage.setItem('userLongitude', e.suggestion.latlng.lng);
-        localStorage.setItem('userCity', e.suggestion.city);
-        localStorage.setItem('userAddress', e.query);
-
-        if (typeof idInputDefaultAddress !== 'undefined') 
+        if (confirm('Would you like this location becomes your default location?'))
         {
 
-          document.querySelector('#' + idInputDefaultAddress).checked = true;
-          
-        }
-        
-        setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city);
+          localStorage.setItem('userLatitude', e.suggestion.latlng.lat);
+          localStorage.setItem('userLongitude', e.suggestion.latlng.lng);
+          localStorage.setItem('userCity', e.suggestion.city);
+          localStorage.setItem('userAddress', e.query);
+
+            if (typeof idInputDefaultAddress !== 'undefined') 
+            {
+
+              document.querySelector('#' + idInputDefaultAddress).checked = true;
+              
+            }
+            
+            setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city);
+
+          }
         
       }     
   
@@ -188,9 +193,7 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 }
 
 export function setSessionLocation(address, latitude, longitude, city) 
-{
-    
-  console.log($('#urlAjaxSession').val()); 
+{ 
   
   $.ajax(
 

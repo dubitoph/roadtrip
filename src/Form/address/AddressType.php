@@ -19,13 +19,13 @@ class AddressType extends AbstractType
         $builder
             ->add('street', TextType::class)
             ->add('number', TextType::class)
-            ->add('box', NumberType::class)
+            ->add('box', NumberType::class, ['required' => false])
             ->add('zipCode', TextType::class)
             ->add('city', TextType::class)
-            ->add('state', TextType::class)
+            ->add('state', TextType::class, ['required' => false])
             ->add('country', CountryType::class)
-            ->add('latitude', HiddenType::class)
-            ->add('longitude', HiddenType::class)
+            ->add('latitude', HiddenType::class, ['required' => false])
+            ->add('longitude', HiddenType::class, ['required' => false])
         ;
 
         if($options['userProfile'])
