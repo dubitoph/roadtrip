@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\backend;
+namespace App\Repository\payment;
 
-use App\Entity\backend\Bill;
+use App\Entity\payment\Bill;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +17,20 @@ class BillRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Bill::class);
+    }
+
+    /**
+     * @return Bill[]
+     */
+    public function findOwnerBills($adverts)
+    {
+        return $this->createQueryBuilder('b')
+                    ->andWhere('b.advert IN (:adverts)')
+                    ->setParameter('adverts', $adverts)
+                    ->orderBy('b.createdAt', 'DESC')
+                    ->getQuery()
+                    ->getResult()
+        ;
     }
 
     // /**

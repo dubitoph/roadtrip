@@ -9,7 +9,7 @@ use App\Entity\user\Owner;
 use Cocur\Slugify\Slugify;
 use App\Entity\media\Photo;
 use App\Entity\advert\Price;
-use App\Entity\backend\Bill;
+use App\Entity\payment\Bill;
 use App\Entity\advert\Period;
 use App\Entity\advert\Vehicle;
 use App\Entity\advert\Insurance;
@@ -157,7 +157,7 @@ class Advert
     private $stripeIntentId;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\backend\Bill", mappedBy="advert")
+     * @ORM\OneToMany(targetEntity="App\Entity\payment\Bill", mappedBy="advert")
      */
     private $bills;
 

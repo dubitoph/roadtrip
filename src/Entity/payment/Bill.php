@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity\backend;
+namespace App\Entity\payment;
 
 use App\Entity\advert\Advert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\backend\BillRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\payment\BillRepository")
  */
 class Bill
 {
@@ -60,6 +60,13 @@ class Bill
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y');
+
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self

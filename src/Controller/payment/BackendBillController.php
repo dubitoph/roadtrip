@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Controller\backend;
+namespace App\Controller\payment;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\backend\VAT;
 use App\Entity\advert\Advert;
-use App\Repository\backend\BillRepository;
+use App\Repository\payment\BillRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\backend\Bill;
+use App\Entity\payment\Bill;
 
 class BackendBillController extends AbstractController
 {
