@@ -64,7 +64,18 @@
 
                             </form>
 
-                            <a href="{{ path('advert.subscription.management', { 'id': advert.id }) }}" class="btn btn-secondary">Extend</a>
+                            {% if advert.expiresAt and "now"|date('Y-m-d') < advert.expiresAt|date('Y-m-d') %}
+
+                                <a href="{{ path('advert.subscription.management', { 'id': advert.id }) }}" class="btn btn-secondary">Extend</a>
+                                
+                            {% else %}
+
+                                <a href="{{ path('advert.subscription.management', { 'id': advert.id }) }}" class="btn btn-secondary">Activate</a>
+                                
+                            {% endif %}
+
+                            <a href="{{ path('advert.periods.management', { 'id': advert.id, 'onlyPeriodManagement': true }) }}" class="btn btn-secondary">Manage periods</a>
+                            <a href="{{ path('advert.prices.management', { 'id': advert.id, 'onlyPriceManagement': true }) }}" class="btn btn-secondary">Manage prices</a>
                             <a href="{{ path('advert.clone', { 'id': advert.id }) }}" class="btn btn-secondary">Clone to add a new advert</a>
 
                         </td>

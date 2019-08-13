@@ -132,7 +132,7 @@ class AdvertController extends AbstractController
      * @Route("/advert/owner", name="advert.owner")
      * @return Response
      */
-    public function ownerAdverts(AdvertRepository $advertRepository, PhotoRepository $photoRepository): Response
+    public function ownerAdverts(PhotoRepository $photoRepository): Response
     {
      
         $adverts = $this->getUser()->getOwner()->getAdverts();
@@ -267,13 +267,13 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/periods/management/{id}", name="advert.periods.management")
+     *  @Route("/advert/periods/management/{id}/{onlyPeriodManagement}", name="advert.periods.management")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function periodsForm(Advert $advert, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
+    public function periodsForm(Advert $advert, bool $onlyPeriodManagement = false, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
 
         $format = 'Y-m-d H:i:s';
         $date = date("Y-m-d 00:00:00");
@@ -449,7 +449,18 @@ class AdvertController extends AbstractController
 
             }
 
-            return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+            if ($onlyPeriodManagement) 
+            {
+
+                return $this->redirectToRoute('advert.owner');
+                
+            } 
+            else 
+            {
+
+                return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+
+            }
 
         }
   
@@ -466,13 +477,13 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/prices/management/{id}", name="advert.prices.management")
+     *  @Route("/advert/prices/management/{id}/{onlyPriceManagement}", name="advert.prices.management")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function pricesForm(Advert $advert, Request $request, ObjectManager $manager) { 
+    public function pricesForm(Advert $advert, bool $onlyPriceManagement, Request $request, ObjectManager $manager) { 
 
         $editMode = false;
         
@@ -584,7 +595,18 @@ class AdvertController extends AbstractController
 
             }
 
-            return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+            if ($onlyPriceManagement) 
+            {
+
+                return $this->redirectToRoute('advert.owner');
+
+            } 
+            else 
+            {
+
+                return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+
+            }
 
         }
   

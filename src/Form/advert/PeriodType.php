@@ -15,24 +15,28 @@ class PeriodType extends AbstractType
     {
         $builder
             ->add('start', DateTimeType::class, array(
-                                                    'widget' => 'single_text', 
-                                                    'html5' => false, 
-//                                                    'format' => 'yyyy-MM-dd',
-                                                    'attr' => ['class' => 'js-datepicker-period start'],
-                                                 )
+                                                        'widget' => 'single_text', 
+                                                        'html5' => false,
+                                                        'attr' => array(
+                                                                        'class' => 'js-datepicker-period start',
+                                                                        'readonly' => true
+                                                                    ),
+                                                     )
                  )
             ->add('end', DateTimeType::class, array(
                                                     'widget' => 'single_text', 
-                                                    'html5' => false, 
-//                                                    'format' => 'yyyy-MM-dd',
-                                                    'attr' => ['class' => 'js-datepicker-period end'],
+                                                    'html5' => false,
+                                                    'attr' => array(
+                                                                    'class' => 'js-datepicker-period end',
+                                                                    'readonly' => true
+                                                                   ),
                                                     'data' => $options['endDate']
-                                               )
+                                                   )
                  )
             ->add('season', EntityType::class, array(
                                                         'class' => 'App\Entity\backend\Season', 
                                                         'choice_label' => 'season', 
-                                                        'attr' => ['class' => 'periodSeason'],
+                                                        'attr' => array('class' => 'periodSeason'),
                                                     )
                  )
         ;
