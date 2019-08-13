@@ -137,6 +137,9 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v3.0.0"
     },
+    "kriswallsmith/assetic": {
+        "version": "v1.0.5"
+    },
     "liip/imagine-bundle": {
         "version": "1.8",
         "recipe": {
@@ -145,6 +148,9 @@
             "version": "1.8",
             "ref": "523b4b0cfb88dc8637cb56e427e6be7718bdce32"
         }
+    },
+    "moment/moment": {
+        "version": "2.24.0"
     },
     "nelmio/cors-bundle": {
         "version": "1.5",
@@ -193,6 +199,9 @@
     },
     "psr/log": {
         "version": "1.1.0"
+    },
+    "robloach/component-installer": {
+        "version": "0.2.3"
     },
     "sabberworm/php-css-parser": {
         "version": "8.1.0"

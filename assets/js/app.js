@@ -19,6 +19,11 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
+
+import moment from 'moment';
+window['moment'] = moment;
+moment.locale(navigator.language);
+
 /*
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';

@@ -31,6 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\user\FavoriteRepository;
+use App\Repository\advert\PeriodRepository;
+use App\Repository\backend\SeasonRepository;
 
 class AdvertController extends AbstractController
 {
@@ -271,10 +273,28 @@ class AdvertController extends AbstractController
      * @param ObjectManager $manager
      * @return Response
      */
-    public function periodsForm(Advert $advert, Request $request, ObjectManager $manager) {
+    public function periodsForm(Advert $advert, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
 
+        $format = 'Y-m-d H:i:s';
+        $date = date("Y-m-d 00:00:00");
+        $today = \DateTime::createFromFormat($format, $date);
+        
+        foreach($advert->getPeriods() as $period)
+        {
+
+            if ($period->getEnd() < $today) 
+            {
+
+                $advert->removePeriod($period);
+
+            }
+
+        }
+        
         $numberPeriods = count($advert->getPeriods());
         $editMode = false;
+        $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
+        $seasons = $seasonRepository->findAll();
 
         if ($numberPeriods > 0) 
         {
@@ -283,7 +303,7 @@ class AdvertController extends AbstractController
 
         }
 
-        $form = $this->createForm(PeriodsAdvertType::class, $advert);
+        $form = $this->createForm(PeriodsAdvertType::class, $advert, array('endDate' => $upLimitDate));
 
         $form->handleRequest($request);
 
@@ -296,19 +316,18 @@ class AdvertController extends AbstractController
             $overlap = false;
 
             //They will be used to check if the periods are valid (between today and the fixed limit in the parameters)
+/*
             $format = 'Y-m-d H:i:s';
             $date = date("Y-m-d 00:00:00");
             $toDay = \DateTime::createFromFormat($format, $date);
-            $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
+*/
             $previousLimit = false;
             $overLimit = false;
-            $oldestDate = new \DateTime("+ 10 years");
-            $mostDistantDate = new \DateTime("- 10 years");
 
             foreach ($periods as $period) {
 
                 //Checking if there is a date older than today
-                if ($period->getStart() < $toDay) {
+                if ($period->getStart() < $today) {
 
                     $previousLimit = true;
 
@@ -372,11 +391,11 @@ class AdvertController extends AbstractController
                     
                 $daterange = new \DatePeriod($startDate, $interval, $endDate);
                     
-                if (($startDate >= $toDay && $startDate <= $endCkeckedPeriod) || ($end >= $toDay && $end <= $endCkeckedPeriod)) {
+                if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) {
                     
                     foreach ($daterange as $periodDate) {
 
-                        if ( $periodDate >= $toDay && $periodDate <= $endCkeckedPeriod) {
+                        if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) {
 
                             $daysCovered[] = $periodDate;
 
@@ -388,7 +407,7 @@ class AdvertController extends AbstractController
 
             }
 
-            $dayDate = clone $toDay;
+            $dayDate = clone $today;
             $gaps = true;
 
             while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
@@ -417,7 +436,7 @@ class AdvertController extends AbstractController
             $manager->persist($advert);
             $manager->flush();  
 
-            if ($editMode) 
+            if ($editMode)
             {
 
                 $this->addFlash('success', 'Les périodes ont été modifiées avec succès.');
@@ -436,7 +455,10 @@ class AdvertController extends AbstractController
   
         return $this->render('advert/periods.html.twig', [
                                                             'form' => $form->createView(), 
-                                                            'editMode' => $numberPeriods > 0
+                                                            'editMode' => $numberPeriods > 0, 
+                                                            'upLimitDate' => $upLimitDate,
+                                                            'seasons' => $seasons,
+                                                            'limitCreationPeriods' => $this->getParameter('limit_creation_periods')
                                                          ]
                             )
         ;

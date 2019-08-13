@@ -14,5 +14,7 @@ return array(
     'Knp\\Component' => array($vendorDir . '/knplabs/knp-components/src'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'ComponentInstaller' => array($vendorDir . '/robloach/component-installer/src'),
     'Behat\\Transliterator' => array($vendorDir . '/behat/transliterator/src'),
+    'Assetic' => array($vendorDir . '/kriswallsmith/assetic/src'),
 );
