@@ -54,7 +54,7 @@
                         <td>{{ advert.getFormattedExpiresAt }}
                         <td>
                             
-                            <a href="{{ path('advert.edit', { 'id': advert.id }) }}" class="btn btn-secondary">Edit</a>
+                            <a href="{{ path('advert.description.edit', { 'id': advert.id }) }}" class="btn btn-secondary">Edit</a>
 
                             <form method = "post" action="{{ path('advert.delete', { 'id': advert.id }) }}" style="display: inline-block">
 
@@ -92,7 +92,7 @@
 
         <div class="text-right">
 
-            <a href="{{ path('advert.create') }}" class="btn btn-primary">Add an advert</a>
+            <a href="{{ path('advert.description.create') }}" class="btn btn-primary">Add an advert</a>
 
         </div>
 

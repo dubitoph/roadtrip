@@ -7,7 +7,7 @@ use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
 use App\Entity\advert\Vehicle;
 use App\Form\advert\CostsType;
-use App\Form\advert\AdvertType;
+use App\Form\advert\DescriptionType;
 use App\Entity\advert\Insurance;
 use App\Entity\backend\Duration;
 use App\Form\advert\VehicleType;
@@ -31,7 +31,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\user\FavoriteRepository;
-use App\Repository\advert\PeriodRepository;
 use App\Repository\backend\SeasonRepository;
 
 class AdvertController extends AbstractController
@@ -156,50 +155,75 @@ class AdvertController extends AbstractController
     }
 
     /**
-     * @Route("/advert/create", name="advert.create")
+     * Creating and updating advert
+     *
+     * @Route("/advert/description/create", name="advert.description.create")
+     * @Route("/advert/description/edit/{id}", name="advert.description.edit")
+     * 
+     * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function new(Request $request, ObjectManager $manager): Response
+    public function descriptionForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
     {
 
-        $advert = new Advert();
+        $editMode = true;
+        
+        if(!$advert)
+        {
 
-        $form = $this->createForm(AdvertType::class, $advert);
+            $advert = new Advert();
+            $editMode = false;
+
+        }
+
+        $form = $this->createForm(DescriptionType::class, $advert);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 
-        { 
-                
-            $advert->setCreatedAt(new \DateTime('now'));           
+        {            
 
             $manager->persist($advert);
-            $manager->flush();   
-            $this->addFlash('success', 'La première partie de votre annonce a été créée avec succès.');       
+            $manager->flush(); 
+            
+            if($editMode)
+            {
+                
+                $this->addFlash('success', 'Your advert title and description were successfully updated.');
 
-            return $this->redirectToRoute('advert.vehicle.management', array('id' => $advert->getId()));
+            } 
+            else 
+            {
+                
+                $this->addFlash('success', 'Your advert title and description were successfully created.');
+
+            }
+
+            return $this->redirectToRoute('advert.vehicle.create', array('id' => $advert->getId()));
+
         }
      
-        return $this->render('advert/new.html.twig', [
-                                                        'advert' => $advert,
-                                                        'current_menu' => 'add_advert',
-                                                        'form' => $form->createView(),
-                                                     ]
+        return $this->render('advert/descriptionCreation.html.twig', [
+                                                            'editMode' => $editMode,
+                                                            'current_menu' => 'add_advert',
+                                                            'form' => $form->createView(),
+                                                        ]
                             )
         ; 
         
     }
 
     /**
-     *  @Route("/advert/vehicle/management/{id}", name="advert.vehicle.management")
+     *  @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager) {
+    public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager): Response 
+    {
 
         $vehicle = $advert->getVehicle();
         $editMode = true;
@@ -217,7 +241,8 @@ class AdvertController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) { 
+        if ($form->isSubmitted() && $form->isValid()) 
+        { 
 
             $equipments = $vehicle->getEquipments();
 
@@ -243,13 +268,13 @@ class AdvertController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Le véhicule a été modifié avec succès.');
+                $this->addFlash('success', 'Your vehicle data were successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Le véhicule a été ajouté à votre annonce avec succès.');
+                $this->addFlash('success', 'Your vehicle data were successfully created.');
 
             }             
             
@@ -257,7 +282,7 @@ class AdvertController extends AbstractController
 
         }
 
-        return $this->render('advert/vehicle.html.twig', [
+        return $this->render('advert/vehicleCreation.html.twig', [
                                                             'vehicle' => $vehicle,
                                                             'form' => $form->createView(),
                                                          ]
@@ -453,7 +478,7 @@ class AdvertController extends AbstractController
             {
 
                 return $this->redirectToRoute('advert.owner');
-                
+
             } 
             else 
             {
@@ -1020,38 +1045,6 @@ class AdvertController extends AbstractController
 
         }
 
-    }
-
-    /**
-     * @Route("/advert/edit/{id}", name="advert.edit")
-     * @param Advert $advert
-     * @param Request $request
-     * @param ObjectManager $manager
-     * @return Response
-     */
-    public function edit(Advert $advert, Request $request, ObjectManager $manager): Response
-    {
-
-        $form = $this->createForm(AdvertType::class, $advert);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
-        {           
-
-            $manager->flush();
-            $this->addFlash('success', 'Votre annonce a bien été modifiée');                   
-
-            return $this->redirectToRoute('advert.vehicle.management', array('id' => $advert->getId()));
-        }
-     
-        return $this->render('advert/edit.html.twig', [
-                                                        'advert' => $advert,
-                                                        'form' => $form->createView(),
-                                                      ]
-                            )
-        ;  
-        
     }
 
     /**

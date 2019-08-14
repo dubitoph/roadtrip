@@ -8,21 +8,30 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-class AdvertType extends AbstractType
+class DescriptionType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('title', TextareaType::class)
             ->add('description', TextareaType::class)
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Advert::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Advert::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }

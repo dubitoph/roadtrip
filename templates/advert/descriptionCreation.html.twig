@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - Management of your advert title and description 
+    
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {% if editMode %}
+
+            <h1>Updating your advert description</h1>
+            
+        {% else %}
+
+            <h1>Creating your advert description</h1>
+            
+        {% endif %}
+
+        {{ form_start(form) }}
+
+            {{ form_rest(form) }}
+
+            {% if editMode %}
+
+                <button type="submit" class="btn btn-success">Save</button>
+                
+            {% else %}
+
+                <button type="submit" class="btn btn-success">Next</button>
+                
+            {% endif %}
+                        
+        {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}
