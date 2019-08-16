@@ -5,7 +5,7 @@ var collectionHolderPeriods;
 var $addPeriodButton = $('<button type="button" class="add_period_link">Ajouter une période</button>');
 var $newLinkLiPeriod = $('<li></li>').append($addPeriodButton);
 
-moment.locale(navigator.language);
+//moment.locale(navigator.language);
 var localData = moment.localeData();
 var localeDateFormat = localData['_longDateFormat']['L'];
 

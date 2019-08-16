@@ -131,7 +131,7 @@ class AdvertController extends AbstractController
      * @Route("/advert/owner", name="advert.owner")
      * @return Response
      */
-    public function ownerAdverts(PhotoRepository $photoRepository): Response
+    public function ownerAdverts(PhotoRepository $photoRepository, Request $request): Response
     {
      
         $adverts = $this->getUser()->getOwner()->getAdverts();
@@ -147,6 +147,7 @@ class AdvertController extends AbstractController
 
         return $this->render('advert/ownerAdverts.html.twig', [
                                                                 'adverts' => $adverts,
+                                                                'locale' => $request->getLocale(),
                                                                 'mainPhotos' => $mainPhotos
                                                               ]
                             )
@@ -169,12 +170,14 @@ class AdvertController extends AbstractController
     {
 
         $editMode = true;
+        $current_menu = 'dashbord';
         
         if(!$advert)
         {
 
             $advert = new Advert();
             $editMode = false;
+            $current_menu = 'add_advert';
 
         }
 
@@ -191,6 +194,7 @@ class AdvertController extends AbstractController
             if($editMode)
             {
                 
+                $advert->setUpdatedAt(new \DateTime());
                 $this->addFlash('success', 'Your advert title and description were successfully updated.');
 
             } 
@@ -205,11 +209,13 @@ class AdvertController extends AbstractController
 
         }
      
+        
+        
         return $this->render('advert/descriptionCreation.html.twig', [
-                                                            'editMode' => $editMode,
-                                                            'current_menu' => 'add_advert',
-                                                            'form' => $form->createView(),
-                                                        ]
+                                                                        'editMode' => $editMode,
+                                                                        'current_menu' => $current_menu,
+                                                                        'form' => $form->createView(),
+                                                                     ]
                             )
         ; 
         
@@ -227,6 +233,7 @@ class AdvertController extends AbstractController
 
         $vehicle = $advert->getVehicle();
         $editMode = true;
+        $current_menu = 'dashbord';
         
         if (! $vehicle) 
         {
@@ -234,6 +241,7 @@ class AdvertController extends AbstractController
             $vehicle = new Vehicle();
             $advert->setVehicle($vehicle);
             $editMode = false;
+            $current_menu = 'add_advert';
 
         }
 
@@ -244,6 +252,8 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         { 
 
+            $advert->setUpdatedAt(new \DateTime());
+            
             $equipments = $vehicle->getEquipments();
 
             foreach ($equipments as $equipment) 
@@ -265,7 +275,7 @@ class AdvertController extends AbstractController
             $manager->persist($advert);
             $manager->flush();   
 
-            if ($editMode) 
+            if ($editMode)
             {
 
                 $this->addFlash('success', 'Your vehicle data were successfully updated.');
@@ -283,9 +293,10 @@ class AdvertController extends AbstractController
         }
 
         return $this->render('advert/vehicleCreation.html.twig', [
-                                                            'vehicle' => $vehicle,
-                                                            'form' => $form->createView(),
-                                                         ]
+                                                                    
+                                                                    'current_menu' => $current_menu,
+                                                                    'form' => $form->createView()
+                                                                 ]
                             )
         ;
 

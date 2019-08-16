@@ -19,9 +19,14 @@ class SortType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Sort::class,
-            'translation_domain' => 'forms',
-        ]);
+        
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Sort::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
 }

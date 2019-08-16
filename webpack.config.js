@@ -32,7 +32,7 @@ Encore
     .addEntry('indexSubscription', './assets/js/backend/indexSubscription.js')
     .addEntry('indexVAT', './assets/js/backend/indexVAT.js')
     .addEntry('indexRating', './assets/js/backend/indexRating.js')
-    .addEntry('vehicleManagement', './assets/js/advert/vehicleManagement.js')
+    .addEntry('vehicleCreation', './assets/js/advert/vehicleCreation.js')
     .addEntry('photosManagement', './assets/js/advert/photosManagement.js')
     .addEntry('periodsManagement', './assets/js/advert/periodsManagement.js')
     .addEntry('pricesManagement', './assets/js/advert/pricesManagement.js')

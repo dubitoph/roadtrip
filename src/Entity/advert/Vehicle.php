@@ -30,7 +30,7 @@ class Vehicle
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotBlank(
-     *      message = "La date de construction ne peut pas être vide."
+     *      message = "The building date can't be empty"
      * )
      * @Assert\Type("\DateTime")
      * @Assert\LessThan("today")
@@ -42,9 +42,9 @@ class Vehicle
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\Type(type="App\Entity\backend\Sort")
-     * @Assert\Valid()     * 
+     * @Assert\Valid()
      * @Assert\NotBlank(
-     *      message = "La sorte ne peut pas être vide."
+     *      message = "The sort can't be empty."
      * )
      */
     private $sort;
@@ -56,7 +56,7 @@ class Vehicle
      * @Assert\Type(type="App\Entity\Backend\Fuel")
      * @Assert\Valid()
      * @Assert\NotBlank(
-     *      message = "Le carburant ne peut pas être vide."
+     *      message = "The sort can't be empty."
      * )
      */
     private $fuel;
@@ -68,7 +68,7 @@ class Vehicle
      * @Assert\Type(type="App\Entity\backend\Mark")
      * @Assert\Valid()
      * @Assert\NotBlank(
-     *      message = "La marque ne peut pas être vide."
+     *      message = "The mark can't be empty."
      * )
      */
     private $mark;
@@ -83,7 +83,7 @@ class Vehicle
      *     value = 11
      * )
      * @Assert\NotBlank(
-     *      message = "Le nombre de lits ne peut pas être vide."
+     *      message = "The beds number can't be empty."
      * )
      */
     private $bedsNumber;
@@ -98,7 +98,7 @@ class Vehicle
      *     value = 11
      * )
      * @Assert\NotBlank(
-     *      message = "Le nombre de sièges ne peut pas être vide."
+     *      message = "The seats number can't be empty."
      * )
      */
     private $seatsNumber;
@@ -108,11 +108,11 @@ class Vehicle
      * 
      * @Assert\GreaterThan(
      *     value = 2,
-     *     message = "La longeur doit être supérieure à 2 m."
+     *     message = "The length must be greater than {{ limit }} m."
      * )
      * @Assert\LessThan(
      *     value = 7,
-     *     message = "La longeur doit être inférieure à 7 m."
+     *     message = "The length must be less than {{ limit }} m."
      * )
      */
     private $length;
@@ -122,11 +122,11 @@ class Vehicle
      * 
      * @Assert\GreaterThan(
      *     value = 1.5,
-     *     message = "La hauteur doit être supérieure à 1.50 m."
+     *     message = "The height must be greater than {{ limit }} m."
      * )
      * @Assert\LessThan(
      *     value = 5,
-     *     message = "La hauteur doit être inférieure à 5 m."
+     *     message = "The height must be less than {{ limit }} m."
      * )
      */
     private $height;
@@ -136,11 +136,11 @@ class Vehicle
      * 
      * @Assert\GreaterThan(
      *     value = 800,
-     *     message = "Le poids doit être supérieur à 800 kg."
+     *     message = "The weight must be greater than {{ limit }} kg."
      * )
      * @Assert\LessThan(
      *     value = 20000,
-     *     message = "Le poids doit être inférieur à 20000 kg."
+     *     message = "The weight must be less than {{ limit }} kg."
      * )
      */
     private $weight;
@@ -150,11 +150,11 @@ class Vehicle
      * 
      * @Assert\GreaterThan(
      *     value = 70,
-     *     message = "La puissance doit être supérieure à 70 cv."
+     *     message = "The power must be greater than {{ limit }} cv."
      * )
      * @Assert\LessThan(
      *     value = 600,
-     *     message = "La puissance doit être inférieure à 600 cv."
+     *     message = "The power must be less than {{ limit }} cv."
      * )
      */
     private $power;
@@ -164,7 +164,7 @@ class Vehicle
      *
      * @ORM\Column(name="gearbox", type="string", length=25)
      * 
-     * @Assert\Choice({"Automatique", "Manuelle"})
+     * @Assert\Choice({"Automatic", "Manual"})
      */
     private $gearbox;
 
@@ -195,6 +195,9 @@ class Vehicle
      */
     private $bookings;
 
+    /**
+     * Operations when creating
+     */
     public function __construct()
     {
 
@@ -203,52 +206,114 @@ class Vehicle
 
     }
 
-    public function __toString()
+    /**
+     * Get a string to describe the vehicle
+     *
+     * @return string
+     */
+    public function __toString(): string
     {
 
-        return 'whatever you neet to see the type';
+        return $this->mark->getMark() . ' -' . $this->sort->getSort() . ' (' . $this->getFormattedManufactureDate() . ')';
 
     }
 
+    /**
+     * Get de vehicle id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the manufacture date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getManufactureDate(): ?\DateTimeInterface
     {
+
         return $this->manufactureDate;
+
     }
 
+    /**
+     * Get a string of the manufacture date
+     *
+     * @return string
+     */
     public function getFormattedManufactureDate(): string
     {
+
         return $this->manufactureDate->format('d-m-Y');
+
     }
 
+    /**
+     * Set the manufacture date
+     *
+     * @param \DateTimeInterface $manufactureDate
+     * @return self
+     */
     public function setManufactureDate(\DateTimeInterface $manufactureDate): self
     {
+
         $this->manufactureDate = $manufactureDate;
 
         return $this;
+
     }
 
+    /**
+     * Get the sort
+     *
+     * @return Sort|null
+     */
     public function getSort(): ?Sort
     {
+
         return $this->sort;
+
     }
 
+    /**
+     * Set the sort
+     *
+     * @param Sort|null $sort
+     * @return self
+     */
     public function setSort(?Sort $sort): self
     {
+
         $this->sort = $sort;
 
         return $this;
+
     }
 
+    /**
+     * Get the fuel
+     *
+     * @return Fuel|null
+     */
     public function getFuel(): ?Fuel
     {
+
         return $this->fuel;
+
     }
 
+    /**
+     * Set the fuel
+     *
+     * @param Fuel|null $fuel
+     * @return self
+     */
     public function setFuel(?Fuel $fuel): self
     {
         $this->fuel = $fuel;
@@ -256,83 +321,186 @@ class Vehicle
         return $this;
     }
 
+    /**
+     * Get the mark
+     *
+     * @return Mark|null
+     */
     public function getMark(): ?Mark
     {
+
         return $this->mark;
+
     }
 
+    /**
+     * Set the mark
+     *
+     * @param Mark|null $mark
+     * @return self
+     */
     public function setMark(?Mark $mark): self
     {
+
         $this->mark = $mark;
 
         return $this;
+
     }
 
+    /**
+     * Get the beds number
+     *
+     * @return integer|null
+     */
     public function getBedsNumber(): ?int
     {
+
         return $this->bedsNumber;
+
     }
 
+    /**
+     * Get the beds number
+     *
+     * @param integer $bedsNumber
+     * @return self
+     */
     public function setBedsNumber(int $bedsNumber): self
     {
+
         $this->bedsNumber = $bedsNumber;
 
         return $this;
+
     }
 
+    /**
+     * Get the seats number
+     *
+     * @return integer|null
+     */
     public function getSeatsNumber(): ?int
     {
+
         return $this->seatsNumber;
+
     }
 
+    /**
+     * Get the seats number
+     *
+     * @param integer $seatsNumber
+     * @return self
+     */
     public function setSeatsNumber(int $seatsNumber): self
     {
+
         $this->seatsNumber = $seatsNumber;
 
         return $this;
+
     }
 
+    /**
+     * Set the length
+     *
+     * @return float|null
+     */
     public function getLength(): ?float
     {
+
         return $this->length;
+
     }
 
+    /**
+     * Get the length
+     *
+     * @param float $length
+     * @return self
+     */
     public function setLength(float $length): self
     {
+
         $this->length = $length;
 
         return $this;
+
     }
 
+    /**
+     * Get the height
+     *
+     * @return float|null
+     */
     public function getHeight(): ?float
     {
+
         return $this->height;
+
     }
 
+    /**
+     * Set the height
+     *
+     * @param float $height
+     * @return self
+     */
     public function setHeight(float $height): self
     {
+
         $this->height = $height;
 
         return $this;
+
     }
 
+    /**
+     * Get the weight
+     *
+     * @return integer|null
+     */
     public function getWeight(): ?int
     {
+
         return $this->weight;
+
     }
 
+    /**
+     * Set the weight
+     *
+     * @param integer $weight
+     * @return self
+     */
     public function setWeight(int $weight): self
     {
+
         $this->weight = $weight;
 
         return $this;
+
     }
 
+    /**
+     * Get the power
+     *
+     * @return integer|null
+     */
     public function getPower(): ?int
     {
+
         return $this->power;
+
     }
 
+    /**
+     * Set the power
+     *
+     * @param integer $power
+     * @return self
+     */
     public function setPower(int $power): self
     {
         $this->power = $power;
@@ -340,41 +508,78 @@ class Vehicle
         return $this;
     }
 
+    /**
+     * Get the gearbox type
+     *
+     * @return string|null
+     */
     public function getGearbox(): ?string
     {
+
         return $this->gearbox;
-    }
 
-    public function setGearbox(string $gearbox): self
-    {
-        $this->gearbox = $gearbox;
-
-        return $this;
-    }
-
-    public function getAdvert(): ?Advert
-    {
-        return $this->advert;
-    }
-
-    public function setAdvert(Advert $advert): self
-    {
-        $this->advert = $advert;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $advert->getVehicle()) {
-            $advert->setVehicle($this);
-        }
-
-        return $this;
     }
 
     /**
-     * @return Collection|Equipment[]
+     * Set the gearbox type
+     *
+     * @param string $gearbox
+     * @return self
+     */
+    public function setGearbox(string $gearbox): self
+    {
+
+        $this->gearbox = $gearbox;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the advert containing the vehicle
+     *
+     * @return Advert|null
+     */
+    public function getAdvert(): ?Advert
+    {
+
+        return $this->advert;
+
+    }
+
+    /**
+     * Set the advert containing the vehicle
+     *
+     * @param Advert $advert
+     * @return self
+     */
+    public function setAdvert(Advert $advert): self
+    {
+
+        $this->advert = $advert;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $advert->getVehicle()) 
+        {
+
+            $advert->setVehicle($this);
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Get equipments
+     *
+     * @return Collection
      */
     public function getEquipments(): Collection
     {
+
         return $this->equipments;
+
     }
 
     /**
@@ -398,6 +603,7 @@ class Vehicle
      */
     public function addEquipment(Equipment $equipment): self
     {
+
         if (!$this->equipments->contains($equipment)) 
         {
 
@@ -407,10 +613,11 @@ class Vehicle
         }
 
         return $this;
+
     }
 
     /**
-     * Get equipments
+     * Remove an equipment
      *
      * @param Equipment $equipment
      * @return self
@@ -429,40 +636,77 @@ class Vehicle
     }
 
     /**
+     * Get cell equipments
+     *
      * @return Collection|Equipment[]
      */
-    public function getCellEquipments(): Collection
+     public function getCellEquipments(): Collection
     {
+
         return $this->cellEquipments;
+
     }
 
+    /**
+     * Set cell equipments
+     *
+     * @param ArrayCollection $cellEquipments
+     * @return void
+     */
     public function setCellEquipments(ArrayCollection $cellEquipments)
     {
+
         $this->cellEquipments = $cellEquipments;
+
     }
 
+    /**
+     * Add an cell equipment
+     *
+     * @param Equipment $cellEquipment
+     * @return self
+     */
     public function addCellEquipment(Equipment $cellEquipment): self
     {
+
         if (!$this->cellEquipments->contains($cellEquipment)) 
         {
+
             $this->cellEquipments[] = $cellEquipment;
             $cellEquipment->addVehicle($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a cell equipment
+     *
+     * @param Equipment $cellEquipment
+     * @return self
+     */
     public function removeCellEquipment(Equipment $cellEquipment): self
     {
+
         if ($this->cellEquipments->contains($cellEquipment)) 
         {
+
             $this->cellEquipments->removeElement($cellEquipment);
             $cellEquipment->removeVehicle($this);
+
         }
 
         return $this;
+
     }
     
+    /**
+     * Get the vehicle address situation
+     *
+     * @return Address|null
+     */
     public function getSituation(): ?Address
     {
 
@@ -470,6 +714,12 @@ class Vehicle
 
     }
 
+    /**
+     * Set the vehicle address situation
+     *
+     * @param Address|null $situation
+     * @return self
+     */
     public function setSituation(?Address $situation): self
     {
 
@@ -481,33 +731,64 @@ class Vehicle
     }
 
     /**
+     * Get vehicle related bookings
+     *
      * @return Collection|Booking[]
      */
     public function getBookings(): Collection
     {
+
         return $this->bookings;
+        
     }
 
+    /**
+     * Add a booking
+     *
+     * @param Booking $booking
+     * @return self
+     */
     public function addBooking(Booking $booking): self
     {
-        if (!$this->bookings->contains($booking)) {
+
+        if (!$this->bookings->contains($booking)) 
+        {
+
             $this->bookings[] = $booking;
             $booking->setVehicle($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a booking
+     *
+     * @param Booking $booking
+     * @return self
+     */
     public function removeBooking(Booking $booking): self
     {
-        if ($this->bookings->contains($booking)) {
+
+        if ($this->bookings->contains($booking)) 
+        {
+
             $this->bookings->removeElement($booking);
+
             // set the owning side to null (unless already changed)
-            if ($booking->getVehicle() === $this) {
+            if ($booking->getVehicle() === $this) 
+            {
+
                 $booking->setVehicle(null);
+
             }
+
         }
 
         return $this;
+
     }
+    
 }

@@ -116,8 +116,8 @@ export function deletePhoto($element)
 
 }
 
-export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode, idInputCountry, idInputNumber, idInputBox, idInputState, IdInputLatitude, idInputLongitude, 
-                                    defaultLocationQuestion, idInputDefaultAddress)
+export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode, idInputCountry, idInputNumber, idInputBox, idInputState, 
+                                    IdInputLatitude, idInputLongitude, defaultLocationQuestion, idInputDefaultAddress)
 {
 
   var places = require('places.js');
@@ -145,9 +145,9 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
       $('#' + idInputCountry).val(e.suggestion.countryCode.toUpperCase());
       $('#' + idInputCountry).select2().trigger('change'); 
 
-      if (typeof idInputDefaultAddress !== 'undefined')
+      if (typeof defaultLocationQuestion !== 'undefined')
       {
-
+        
         if (confirm('Would you like this location becomes your default location?'))
         {
 
@@ -160,14 +160,14 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
             {
 
               document.querySelector('#' + idInputDefaultAddress).checked = true;
-              
+                
             }
-            
+              
             setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city);
 
           }
-        
-      }     
+
+      }    
   
     })
 
