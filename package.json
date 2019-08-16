@@ -2,7 +2,7 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.22.4",
         "file-loader": "^3.0.1",
-        "jquery": "^3.3.1",
+        "jquery": "^3.4.1",
         "url-loader": "^1.1.2",
         "webpack-notifier": "^1.7.0"
     },
@@ -19,11 +19,11 @@
         "@fullcalendar/daygrid": "^4.1.0",
         "@fullcalendar/list": "^4.1.0",
         "@fullcalendar/timegrid": "^4.1.0",
-        "core-js": "3",
+        "core-js": "^3.1.4",
         "js-yaml": "^3.13.1",
-        "leaflet": "^1.4.0",
-        "places.js": "^1.16.3",
-        "select2": "^4.0.6-rc.1",
+        "leaflet": "^1.5.1",
+        "places.js": "^1.16.4",
+        "select2": "^4.0.7",
         "slick-carousel": "^1.8.1",
         "yarn": "^1.16.0"
     }
