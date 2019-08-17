@@ -6,7 +6,7 @@
 
     <div class="container mt4">
 
-        {{ include('_messages.html.twig', { 'form': form }) }}
+        {{ include('_messages.html.twig') }}
 
         <h1>My profile</h1>
 
@@ -44,7 +44,8 @@
 
                 <div>
 
-                    <a href="{{ path('photo.delete', {id: profile.photo.id}) }}" class="btn btn-danger" data-redirection="{{ path('user.profile.update') }}">Remove this photo</a>
+                    <a href="{{ path('media.photo.delete', {id: profile.photo.id}) }}" class="btn btn-danger" 
+                     data-redirection="{{ path('user.profile.update') }}">Remove this photo</a>
 
                 </div>
 

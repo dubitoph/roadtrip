@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - Management of your vehicle photos
+    
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Your advert photos</h1>
+
+        {{ form_start(form) }}
+
+            <ul class= "photos" data-prototype= " {{ form_widget ( form.photos.vars.prototype )| e ( 'html_attr' ) }} " >
+                
+                {% set i = 0 %}
+                
+                {% for photo in form.photos %}
+        
+                    {{ include('advert/_photoCreation.html.twig') }}
+                    
+                    {% set i = i + 1 %}
+        
+                {% endfor %}
+                
+            </ul> 
+            
+            {{ form_row(form.deletedPhotos) }}
+
+            <div class="text-left">
+    
+                <a href="#" class="btn btn-primary" id="add_photo_link">Add a photo</a>
+    
+            </div>
+
+            <div class="text-right">
+    
+                <button type="submit" class="btn btn-success">Next</button>
+
+            </div>
+            
+        {{ form_end(form) }}
+
+    </div>
+        
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('photosCreation') }}
+        
+    {% endblock %}
+
+{% endblock %}

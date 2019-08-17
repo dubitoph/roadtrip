@@ -3133,6 +3133,80 @@
         ]
     },
     {
+        "name": "phpfastcache/riak-client",
+        "version": "3.4.3",
+        "version_normalized": "3.4.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PHPSocialNetwork/riak-php-client.git",
+            "reference": "d771f75d16196006604a30bb15adc1c6a9b0fcc9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PHPSocialNetwork/riak-php-client/zipball/d771f75d16196006604a30bb15adc1c6a9b0fcc9",
+            "reference": "d771f75d16196006604a30bb15adc1c6a9b0fcc9",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "php": ">=5.4"
+        },
+        "conflict": {
+            "basho/riak": "*"
+        },
+        "require-dev": {
+            "apigen/apigen": "4.1.*",
+            "phpunit/phpunit": "4.8.*"
+        },
+        "time": "2017-11-23T21:33:15+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Basho\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Georges.L",
+                "role": "Maintainer",
+                "email": "contact@geolim4.com",
+                "homepage": "https://github.com/Geolim4"
+            },
+            {
+                "name": "Christopher Mancini",
+                "role": "Former Lead Developer",
+                "email": "cmancini@basho.com",
+                "homepage": "https://github.com/christophermancini"
+            },
+            {
+                "name": "Alex Moore",
+                "role": "Former Developer",
+                "email": "amoore@basho.com",
+                "homepage": "https://github.com/alexmoore"
+            }
+        ],
+        "description": "Riak client for PHP (Fork of the official basho/riak due to maintainer significant inactivity)",
+        "homepage": "https://github.com/PHPSocialNetwork/riak-php-client",
+        "keywords": [
+            "basho",
+            "client",
+            "crdt",
+            "data",
+            "database",
+            "datatype",
+            "driver",
+            "kv",
+            "nosql",
+            "riak"
+        ]
+    },
+    {
         "name": "psr/cache",
         "version": "1.0.1",
         "version_normalized": "1.0.1.0",

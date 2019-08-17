@@ -161,6 +161,10 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
             'Cocur\\Slugify\\' => 14,
             'CalendarBundle\\' => 15,
         ),
+        'B' => 
+        array (
+            'Basho\\' => 6,
+        ),
         'A' => 
         array (
             'App\\Tests\\' => 10,
@@ -570,6 +574,10 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
         'CalendarBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/tattali/calendar-bundle/src',
+        ),
+        'Basho\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpfastcache/riak-client/src',
         ),
         'App\\Tests\\' => 
         array (

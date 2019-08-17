@@ -10,15 +10,17 @@ jQuery(document).ready(function() {
 
     });
 
-    $('body').on('click','.btn-danger',function(e) {
+    
+    //Removing a photo
+    $('body').on('click', '.btn-danger', function(e) {
 
         e.preventDefault();
         deletePhoto($(this));
     
     });
 
-    //Prevent from checking several main photos
-    $('body').on('click','input[type="checkbox"]',function()
+    //Prevent multiple photos from being checked as the main photo
+    $('body').on('click', 'input[type="checkbox"]', function()
     {
     
         if ($(this).is(':checked')) 
@@ -31,7 +33,7 @@ jQuery(document).ready(function() {
     }); 
 
     //Showing uploaded photos
-    $([document]).on( 'change', 'input[type="file"]',function() {
+    $([document]).on( 'change', 'input[type="file"]', function() {
 
         showPhoto($(this));
         
@@ -71,12 +73,18 @@ function addPhotoForm()
 
     // Displaying the form in an li, after the lastest li
     var $newFormLi = $("<li id='" + idLi + "'></li>");
-//    var $newLink = $('<a href="#" class="btn btn-danger btn-dynamically-created">Supprimer cette photo</a>');
 
     $newFormLi.append(newForm);
-    $newFormLi.append('<a href="#" class="btn btn-danger btn-dynamically-created">Supprimer cette photo</a>');
-//    $newLink.addClass("btn-dynamically-created");
+    $newFormLi.append('<a href="#" class="btn btn-danger btn-dynamically-created">Remove this photo</a>');
     $collectionHolderPhotos.append($newFormLi);
+    
+    //Assigning main photo on the first photo
+    if(index == 0) 
+    {
+    
+        $('#photos_advert_photos_0_mainPhoto').prop('checked', true);
+
+    }
 
 } 
 

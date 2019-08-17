@@ -96,7 +96,7 @@ export function deletePhoto($element)
                       success: function(response) 
                                {
 
-                                location.href = $element.data('redirection');
+                                  location.href = $element.data('redirection');
 
                                }
 

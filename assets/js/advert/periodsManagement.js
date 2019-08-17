@@ -111,7 +111,7 @@ function addPeriodForm(collectionHolderPeriods , $newLinkLiPeriod) {
     $newLinkLiPeriod.before($newFormLi);
     
     //Assigning the start date
-    if (index == 1) 
+    if(index == 1) 
     {
     
         var today = moment().format('L');

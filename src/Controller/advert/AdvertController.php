@@ -164,6 +164,7 @@ class AdvertController extends AbstractController
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function descriptionForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
@@ -222,10 +223,14 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
+     * Creating and updating vehicle data linked to the advert
+     *
+     * @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager): Response 
@@ -288,7 +293,7 @@ class AdvertController extends AbstractController
 
             }             
             
-            return $this->redirectToRoute('advert.photos.management', array('id' => $advert->getId()));
+            return $this->redirectToRoute('media.advert_photos.create', array('id' => $advert->getId()));
 
         }
 

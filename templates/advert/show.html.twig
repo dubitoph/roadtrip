@@ -8,16 +8,7 @@
 
         <div class="container">
 
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-
-                {{ include('_messages.html.twig', { 'form': form }) }}
-
-            {% else %}
-
-                {{ include('_messages.html.twig') }}
-
-            {% endif %}
-                
+            {{ include('_messages.html.twig', { 'form': form }) }}                
 
             <div class='row'>
 

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class PhotosAdvertType extends AbstractType
 {
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
@@ -24,16 +25,24 @@ class PhotosAdvertType extends AbstractType
                                                             'by_reference' => false,
                                                             'required' => false,
                                                             'label' => false
-                  ))
-            ->add('deletedPhotos', HiddenType::class, array('mapped' => false,))
+                                                        )
+                 )
+            ->add('deletedPhotos', HiddenType::class, array('mapped' => false))
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Advert::class, 
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Advert::class, 
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+    
 }
