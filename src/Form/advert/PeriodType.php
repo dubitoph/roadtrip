@@ -11,26 +11,28 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class PeriodType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('start', DateTimeType::class, array(
                                                         'widget' => 'single_text', 
                                                         'html5' => false,
                                                         'attr' => array(
-                                                                        'class' => 'js-datepicker-period start',
-                                                                        'readonly' => true
-                                                                    ),
+                                                                            'class' => 'js-datepicker-period start',
+                                                                            'readonly' => true
+                                                                       ),
                                                      )
                  )
             ->add('end', DateTimeType::class, array(
-                                                    'widget' => 'single_text', 
-                                                    'html5' => false,
-                                                    'attr' => array(
-                                                                    'class' => 'js-datepicker-period end',
-                                                                    'readonly' => true
-                                                                   ),
-                                                    'data' => $options['endDate']
+                                                        'widget' => 'single_text', 
+                                                        'html5' => false,
+                                                        'attr' => array(
+                                                                            'class' => 'js-datepicker-period end',
+                                                                            'readonly' => true
+                                                                       ),
+                                                        'data' => $options['endDate']
                                                    )
                  )
             ->add('season', EntityType::class, array(
@@ -44,10 +46,16 @@ class PeriodType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Period::class,
-            'endDate' => null,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Period::class,
+                                    'endDate' => null,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+    
 }

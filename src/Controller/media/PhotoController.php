@@ -104,7 +104,7 @@ class PhotoController extends AbstractController
 
             }           
 
-            return $this->redirectToRoute('advert.periods.management', array('id' => $advert->getId()));
+            return $this->redirectToRoute('advert.periods.create', array('id' => $advert->getId()));
         }        
 
         return $this->render('advert/photosCreation.html.twig', [

@@ -38,32 +38,38 @@
 
         </ul>
         <br>
-        For each period you will create, you will must choose a season. If you don't want create different periods, create only one for {{ limitCreationPeriods }}.
+        For each period you will create, you will must choose a season. If you don't want create different periods, create only one for 
+        minimum {{ minimumCreationPeriods }} to maximum {{ limitCreationPeriods }}.
         <br>
         <br>
-        In the next step, for each or for the unique season you will use, you will can specify prices.
+        In the next step, for each season or for the single season you are going use use, you will be able to specify the prices.
         <br>
         <br>                
-        <h4>From today to {{ upLimitDate|date("d/m/Y") }}</h4>
+        <h4>From today to {{ upLimitDate|localizeddate('medium', 'none', locale) }}</h4>
 
         {{ form_start(form) }}
-                
+            
             <ul class= "periods" data-prototype= " {{ form_widget ( form.periods.vars.prototype )| e ( 'html_attr' ) }} " >
 
                 {# iterate over each existing period #}
                 {% for period in form.periods %}
-                    <li> 
+
+                    <li class= "li_period"> 
                                     
                         {{ form_row(period.start) }}
                         {{ form_row( period.end ) }}
                         {{ form_row( period.season ) }}
                     
                     </li>
+
                 {% endfor %}
 
-            </ul> 
+            </ul>
                 
-            <button class="btn btn-primary">{{ button | default('Save') }}</button>
+            <button type="button" class="btn btn-primary" id="add_period_btn">Add a period</button>
+            <br>
+            <br>
+            <button type="submit" class="btn btn-success">Next</button>
             
         {{ form_end(form) }}
 
@@ -73,7 +79,7 @@
         
         {{ parent() }}
 
-        {{ encore_entry_script_tags('periodsManagement') }}
+        {{ encore_entry_script_tags('periodsCreation') }}
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 

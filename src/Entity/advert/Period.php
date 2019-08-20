@@ -9,12 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\advert\PeriodRepository")
+ * 
+ * @UniqueEntity(
+ *     fields={"start", "end", "advert"},
+ *     message="A period concerning this advert already exists for this start and end dates."
+ * )
  */
 class Period
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -24,15 +31,19 @@ class Period
 
     /**
      * @ORM\Column(type="datetime")
-     * 
-     * @Assert\LessThan("end")
+     *
+     * @Assert\DateTime()
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime")
      * 
-     * @Assert\GreaterThan("start")
+     * @Assert\DateTime()
+     * @Assert\GreaterThan(
+     *      propertyPath="start",
+     *      message="The end date must be later than the start date."
+     * )
      */
     private $end;
 
@@ -59,89 +70,188 @@ class Period
      */
     private $advert;
 
+    /**
+     * Operations when creating
+     */
     public function __construct()
     {
+
         $this->prices = new ArrayCollection();
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getStart(): ?\DateTimeInterface
-    {
-        return $this->start;
-    }
-
-    public function setStart(\DateTimeInterface $start): self
-    {
-        $this->start = $start;
-
-        return $this;
-    }
-
-    public function getEnd(): ?\DateTimeInterface
-    {
-        return $this->end;
-    }
-
-    public function setEnd(\DateTimeInterface $end): self
-    {
-        $this->end = $end;
-
-        return $this;
-    }
-
-    public function getSeason(): ?Season
-    {
-        return $this->season;
-    }
-
-    public function setSeason(?Season $season): self
-    {
-        $this->season = $season;
-
-        return $this;
     }
 
     /**
-     * @return Collection|Price[]
+     * Get id
+     *
+     * @return integer|null
      */
-    public function getPrices(): Collection
+    public function getId(): ?int
     {
-        return $this->prices;
+
+        return $this->id;
+
     }
 
+    /**
+     * Get the beginning date
+     *
+     * @return \DateTimeInterface|null
+     */
+    public function getStart(): ?\DateTimeInterface
+    {
+
+        return $this->start;
+
+    }
+
+    /**
+     * Set the beginning date
+     *
+     * @param \DateTimeInterface $start
+     * @return self
+     */
+    public function setStart(\DateTimeInterface $start): self
+    {
+
+        $this->start = $start;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the end date
+     *
+     * @return \DateTimeInterface|null
+     */
+    public function getEnd(): ?\DateTimeInterface
+    {
+
+        return $this->end;
+
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTimeInterface $end
+     * @return self
+     */
+    public function setEnd(\DateTimeInterface $end): self
+    {
+
+        $this->end = $end;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the season
+     *
+     * @return Season|null
+     */
+    public function getSeason(): ?Season
+    {
+
+        return $this->season;
+
+    }
+
+    /**
+     * Set the season
+     *
+     * @param Season|null $season
+     * @return self
+     */
+    public function setSeason(?Season $season): self
+    {
+
+        $this->season = $season;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the prices|Price[]
+     *
+     * @return Collection
+     */
+     public function getPrices(): Collection
+    {
+
+        return $this->prices;
+
+    }
+
+    /**
+     * Add a price
+     *
+     * @param Price $price
+     * @return self
+     */
     public function addPrice(Price $price): self
     {
-        if (!$this->prices->contains($price)) {
+
+        if (!$this->prices->contains($price)) 
+        {
+
             $this->prices[] = $price;
             $price->addPeriod($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a price
+     *
+     * @param Price $price
+     * @return self
+     */
     public function removePrice(Price $price): self
     {
-        if ($this->prices->contains($price)) {
+
+        if ($this->prices->contains($price)) 
+        {
+
             $this->prices->removeElement($price);
             $price->removePeriod($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Get the advert
+     *
+     * @return Advert|null
+     */
     public function getAdvert(): ?Advert
     {
+
         return $this->advert;
+
     }
 
+    /**
+     * Set the advert
+     *
+     * @param Advert|null $advert
+     * @return self
+     */
     public function setAdvert(?Advert $advert): self
     {
+
         $this->advert = $advert;
 
         return $this;
+
     }
+
 }

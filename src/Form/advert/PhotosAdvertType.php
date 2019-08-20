@@ -6,6 +6,7 @@ use App\Entity\advert\Advert;
 use App\Form\media\PhotoType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -24,6 +25,7 @@ class PhotosAdvertType extends AbstractType
                                                             'allow_delete' => true,
                                                             'by_reference' => false,
                                                             'required' => false,
+                                                            'constraints' => array(new Valid()),
                                                             'label' => false
                                                         )
                  )

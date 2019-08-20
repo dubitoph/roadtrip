@@ -33,7 +33,10 @@ class Vehicle
      *      message = "The building date can't be empty"
      * )
      * @Assert\Type("\DateTime")
-     * @Assert\LessThan("today")
+     * @Assert\LessThan(
+     *      "today",
+     *      message = "The building date must be less or equal than today."
+     * )
      */
     private $manufactureDate;
 
@@ -76,11 +79,13 @@ class Vehicle
     /**
      * @ORM\Column(type="integer")
      * 
-     * @Assert\GreaterThan(
-     *     value = 0
+     * @Assert\GreaterThanOrEqual(
+     *     value = 0,
+     *     message = "The beds number must be greather or equal than {{ value }}."
      * )
-     * @Assert\LessThan(
-     *     value = 11
+     * @Assert\LessThanOrEqual(
+     *     value = 10,
+     *     message = "The beds number position must be less or equal than {{ value }}."
      * )
      * @Assert\NotBlank(
      *      message = "The beds number can't be empty."
@@ -90,12 +95,14 @@ class Vehicle
 
     /**
      * @ORM\Column(type="integer") 
-     * 
-     * @Assert\GreaterThan(
-     *     value = 0
+     *  
+     * @Assert\GreaterThanOrEqual(
+     *     value = 0,
+     *     message = "The seats number must be greather or equal than {{ value }}."
      * )
-     * @Assert\LessThan(
-     *     value = 11
+     * @Assert\LessThanOrEqual(
+     *     value = 10,
+     *     message = "The seats number must be less or equal than {{ value }}."
      * )
      * @Assert\NotBlank(
      *      message = "The seats number can't be empty."
@@ -106,13 +113,13 @@ class Vehicle
     /**
      * @ORM\Column(type="float", scale=2, precision=3, nullable=true)
      * 
-     * @Assert\GreaterThan(
+     * @Assert\GreaterThanOrEqual(
      *     value = 2,
-     *     message = "The length must be greater than {{ limit }} m."
+     *     message = "The length must be greater or equal than {{ value }} m."
      * )
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 7,
-     *     message = "The length must be less than {{ limit }} m."
+     *     message = "The length must be less or equal than {{ value }} m."
      * )
      */
     private $length;
@@ -120,13 +127,13 @@ class Vehicle
     /**
      * @ORM\Column(type="float", scale=2, precision=3, nullable=true)
      * 
-     * @Assert\GreaterThan(
+     * @Assert\GreaterThanOrEqual(
      *     value = 1.5,
-     *     message = "The height must be greater than {{ limit }} m."
+     *     message = "The height must be greater or equal than {{ value }} m."
      * )
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 5,
-     *     message = "The height must be less than {{ limit }} m."
+     *     message = "The height must be less or equal than {{ value }} m."
      * )
      */
     private $height;
@@ -134,13 +141,13 @@ class Vehicle
     /**
      * @ORM\Column(type="integer", nullable=true)
      * 
-     * @Assert\GreaterThan(
-     *     value = 800,
-     *     message = "The weight must be greater than {{ limit }} kg."
+     * @Assert\GreaterThanOrEqual(
+     *     value = 200,
+     *     message = "The weight must be greater or equal than {{ value }} kg."
      * )
-     * @Assert\LessThan(
-     *     value = 20000,
-     *     message = "The weight must be less than {{ limit }} kg."
+     * @Assert\LessThanOrEqual(
+     *     value = 15000,
+     *     message = "The weight must be less or equal than {{ value }} kg."
      * )
      */
     private $weight;
@@ -148,13 +155,13 @@ class Vehicle
     /**
      * @ORM\Column(type="integer", nullable=true)
      * 
-     * @Assert\GreaterThan(
+     * @Assert\GreaterThanOrEqual(
      *     value = 70,
-     *     message = "The power must be greater than {{ limit }} cv."
+     *     message = "The power must be greater or equal than {{ value }} cv."
      * )
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 600,
-     *     message = "The power must be less than {{ limit }} cv."
+     *     message = "The power must be less or equal than {{ value }} cv."
      * )
      */
     private $power;

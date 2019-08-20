@@ -34,7 +34,7 @@ Encore
     .addEntry('indexRating', './assets/js/backend/indexRating.js')
     .addEntry('vehicleCreation', './assets/js/advert/vehicleCreation.js')
     .addEntry('photosCreation', './assets/js/advert/photosCreation.js')
-    .addEntry('periodsManagement', './assets/js/advert/periodsManagement.js')
+    .addEntry('periodsCreation', './assets/js/advert/periodsCreation.js')
     .addEntry('pricesManagement', './assets/js/advert/pricesManagement.js')
     .addEntry('costsManagement', './assets/js/advert/costsManagement.js')
     .addEntry('bookingManagement', './assets/js/booking/bookingManagement.js')

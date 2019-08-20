@@ -235,7 +235,7 @@ class AdvertController extends AbstractController
      */
     public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager): Response 
     {
-
+        
         $vehicle = $advert->getVehicle();
         $editMode = true;
         $current_menu = 'dashbord';
@@ -308,39 +308,58 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/periods/management/{id}/{onlyPeriodManagement}", name="advert.periods.management")
+     * Creating and updating periods
+     *
+     *  @Route("/advert/periods/create/{id}/{onlyPeriodsCreation}", name="advert.periods.create")
+     * 
      * @param Advert $advert
+     * @param Bool $onlyPeriodsCreation
+     * @param SeasonRepository $seasonRepository
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function periodsForm(Advert $advert, bool $onlyPeriodManagement = false, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
-
+    public function periodsForm(Advert $advert, bool $onlyPeriodsCreation = false, SeasonRepository $seasonRepository, Request $request, 
+                                ObjectManager $manager): Response
+    {
+        
+        $intl_date_formatter = new \IntlDateFormatter(
+                                                        $request->getLocale(),
+                                                        \IntlDateFormatter::MEDIUM,
+                                                        \IntlDateFormatter::NONE
+                                                     )
+        ;
+        
+        $limitCreationPeriods = $this->getParameter('limit_creation_periods');
+        $periods = $advert->getPeriods();
+        $numberPeriods = count($periods);
+        $editMode = false;
+        $upLimitDate = new \DateTime("+ " . $limitCreationPeriods);
+        $seasons = $seasonRepository->findAll();
+        
+        $current_menu = 'add_advert';        
+        
         $format = 'Y-m-d H:i:s';
         $date = date("Y-m-d 00:00:00");
         $today = \DateTime::createFromFormat($format, $date);
-        
-        foreach($advert->getPeriods() as $period)
-        {
-
-            if ($period->getEnd() < $today) 
-            {
-
-                $advert->removePeriod($period);
-
-            }
-
-        }
-        
-        $numberPeriods = count($advert->getPeriods());
-        $editMode = false;
-        $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
-        $seasons = $seasonRepository->findAll();
 
         if ($numberPeriods > 0) 
         {
+        
+            foreach($periods as $period)
+            {
+
+                if ($period->getEnd() < $today) 
+                {
+
+                    $advert->removePeriod($period);
+
+                }
+
+            }
 
             $editMode = true;
+            $current_menu = 'dasbord';
 
         }
 
@@ -351,166 +370,187 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
 
-            //They will be used to check if overlaps in the periods
             $periods = $advert->getPeriods();
 
-            $overlap = false;
+            if(count($periods) > 0)
+            {
 
-            //They will be used to check if the periods are valid (between today and the fixed limit in the parameters)
-/*
-            $format = 'Y-m-d H:i:s';
-            $date = date("Y-m-d 00:00:00");
-            $toDay = \DateTime::createFromFormat($format, $date);
-*/
-            $previousLimit = false;
-            $overLimit = false;
+                //Used to check if overlaps in the periods
+                $overlap = false;
 
-            foreach ($periods as $period) {
+                //Used to check if the periods are valid (between today and the fixed limit in the parameters)
+                $previousLimit = false;
+                $overLimit = false;
 
-                //Checking if there is a date older than today
-                if ($period->getStart() < $today) {
+                foreach ($periods as $period) 
+                {
 
-                    $previousLimit = true;
+                    //Checking if there is a date older than today
+                    if ($period->getStart() < $today) 
+                    {
 
-                }
+                        $previousLimit = true;
 
-                //Checking if there is a date most distant than the duration fixed in the parameters
-                if ($period->getEnd() > $upLimitDate) {
+                    }
 
-                    $overLimit = true;
+                    //Checking if there is a date most distant than the duration fixed in the parameters
+                    if ($period->getEnd() > $upLimitDate) 
+                    {
 
-                }
+                        $overLimit = true;
 
-                //Checking if there are overlaps in the periods
-                foreach ($periods as $periodChecked) {
+                    }
 
-                if ($period !== $periodChecked) {
+                    //Checking if there are overlaps in the periods
+                    foreach ($periods as $periodChecked) 
+                    {
 
-                    if (! ($period->getEnd() < $periodChecked->getStart() || $period->getStart() > $periodChecked->getEnd()))
+                        if ($period !== $periodChecked) 
                         {
 
-                            $overlap = true;
+                            if (! ($periodChecked->getEnd() < $period->getStart() || $periodChecked->getStart() > $period->getEnd()))
+                            {
 
-                        }
-                        
-                    }
+                                $overlap = true;
 
-                }
-
-            }  
-
-            if ($overlap) {
-                $error = new FormError("Des périodes se chevauchent. Veuillez vérifier les dates de début et de fin.");
-                $form->addError($error);
-            }
-
-            if ($previousLimit) {
-                $error = new FormError("Les périodes ne peuvent pas débuter avant ce jour. Veuillez vérifier les dates de début.");
-                $form->addError($error);
-            }
-
-            if ($overLimit) {
-                $error = new FormError("Les périodes ne peuvent pas être planifiées plus de " . $this->getParameter('limit_creation_periods') . 
-                                       " à l'avance. Veuillez vérifier les dates de début et de fin.");
-                $form->addError($error);
-            }
-
-            //End of overlaps and invalid periods check           
-
-            //Checking if they are gaps during the laps covered by the different periods
-
-            $endCkeckedPeriod = new \DateTime("+ " . $this->getParameter('minimum_creation_periods'));
-            $interval = new \DateInterval('P1D');
-            $daysCovered = array();
-
-            foreach ($periods as $period) {
-                
-                $startDate = $period->getStart();
-                $endDate = $period->getEnd();
-                $end = clone $endDate;
-                $modifiedEndDate = $endDate->modify( '+1 day' );
-                    
-                $daterange = new \DatePeriod($startDate, $interval, $endDate);
-                    
-                if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) {
-                    
-                    foreach ($daterange as $periodDate) {
-
-                        if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) {
-
-                            $daysCovered[] = $periodDate;
-
-                        }
+                            }
                             
+                        }
+
                     }
 
                 }
 
-            }
+                if ($overlap) 
+                {
 
-            $dayDate = clone $today;
-            $gaps = true;
+                    $error = new FormError("Periods overlap. Please check the start and end dates.");
+                    $form->addError($error);
 
-            while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
-            {
+                }
 
-                $dayDate->modify( '+1 day' );
+                if ($previousLimit)
+                {
 
-            }
+                    $error = new FormError("Periods can not begin before this day. Please check the start dates.");
+                    $form->addError($error);
 
-            if ($dayDate >= $endCkeckedPeriod) {
+                }
+
+                if ($overLimit) 
+                {
+
+                    $error = new FormError("Periods can not be scheduled more than " . $this->getParameter('limit_creation_periods') . 
+                                           " in advance. Please check the start and end dates.");
+                    $form->addError($error);
+
+                }           
+
+                //Checking if they are gaps until the minimum date
+                $endCkeckedPeriod = new \DateTime("+ " . $this->getParameter('minimum_creation_periods'));
+                $interval = new \DateInterval('P1D');
+                $daysCovered = array();
+
+                foreach ($periods as $period) 
+                {
+                    
+                    $startDate = $period->getStart();
+                    $endDate = $period->getEnd();
+                    $end = clone $endDate;
+                        
+                    $daterange = new \DatePeriod($startDate, $interval, $endDate);
+                        
+                    if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) 
+                    {
+                        
+                        foreach ($daterange as $periodDate) 
+                        {
+
+                            if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) 
+                            {
+
+                                $daysCovered[] = $periodDate;
+
+                            }
+                                
+                        }
+
+                    }
+
+                }
+
+                $dayDate = clone $today;
+                $gaps = true;
+
+                while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
+                {
+
+                    $dayDate->modify( '+1 day' );
+
+                }
+
+                if ($dayDate >= $endCkeckedPeriod) 
+                {
+                    
+                    $gaps = false;
+
+                }
                 
-                $gaps = false;
+                if (! $overlap && ! $previousLimit && ! $overLimit)
+                {
 
-            }
+                    $manager->persist($advert);
+                    $manager->flush();  
 
-            if ($gaps) 
-            {
+                    if ($editMode)
+                    {
 
-                $error = new FormError("Il existe des jours non couverts pour la prochaine période de " . $this->getParameter('minimum_creation_periods'));
-                $form->addError($error);
-                
-            }
+                        $message = 'The periods were successfully updated.';
 
-            //End of gaps check
+                    }
+                    else
+                    {
 
-            $manager->persist($advert);
-            $manager->flush();  
+                        $message = 'The periods were successfully created.';
 
-            if ($editMode)
-            {
+                    }
 
-                $this->addFlash('success', 'Les périodes ont été modifiées avec succès.');
+                    if($gaps)
+                    {
 
-            }
-            else
-            {
+                        $message .= ' However, there are gaps until ' . $intl_date_formatter->format($endCkeckedPeriod) . ". You will can add periods later";
+                    }
 
-                $this->addFlash('success', 'Les périodes ont été ajoutées à votre annonce avec succès.');
+                    $this->addFlash('success', $message);
 
-            }
+                    if ($onlyPeriodsCreation) 
+                     {
+     
+                         return $this->redirectToRoute('advert.owner');
+     
+                     } 
+                     else 
+                     {
+     
+                         return $this->redirectToRoute('advert.prices.create', array('id' => $advert->getId()));
+     
+                     }
 
-            if ($onlyPeriodManagement) 
-            {
-
-                return $this->redirectToRoute('advert.owner');
-
-            } 
-            else 
-            {
-
-                return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+                }
 
             }
 
         }
   
         return $this->render('advert/periods.html.twig', [
-                                                            'form' => $form->createView(), 
-                                                            'editMode' => $numberPeriods > 0, 
+                                                            'form' => $form->createView(),
+                                                            'current_menu' => $current_menu, 
+                                                            'editMode' => $editMode, 
                                                             'upLimitDate' => $upLimitDate,
                                                             'seasons' => $seasons,
-                                                            'limitCreationPeriods' => $this->getParameter('limit_creation_periods')
+                                                            'locale' => $request->getLocale(),
+                                                            'minimumCreationPeriods' => $this->getParameter('minimum_creation_periods'),
+                                                            'limitCreationPeriods' => $limitCreationPeriods
                                                          ]
                             )
         ;
@@ -518,22 +558,24 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/prices/management/{id}/{onlyPriceManagement}", name="advert.prices.management")
+     *  @Route("/advert/prices/create/{id}/{onlyPriceManagement}", name="advert.prices.create")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function pricesForm(Advert $advert, bool $onlyPriceManagement, Request $request, ObjectManager $manager) { 
+    public function pricesForm(Advert $advert, bool $onlyPriceManagement = false, Request $request, ObjectManager $manager) { 
 
         $editMode = false;
         
         //Preparation of the prices list in function of the number different seasons  
+        $seasons = array();
         $missingDurations = array();
         $durations = $manager->getRepository(Duration::class)->findAll();
 
         //Search seasons used by periods
-        foreach ($advert->getPeriods() as $key => $value) {
+        foreach ($advert->getPeriods() as $key => $value) 
+        {
 
             $seasons[] = $value->getSeason();
 

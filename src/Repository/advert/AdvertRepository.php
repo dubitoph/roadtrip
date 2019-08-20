@@ -14,11 +14,27 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class AdvertRepository extends ServiceEntityRepository
 {
+
+    /**
+     * Constructor
+     *
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Advert::class);
+
     }
-    public function findSearchedAdverts(AdvertSearch $search) : array
+
+    /**
+     * Get advert matching with the search criteria
+     *
+     * @param AdvertSearch $search
+     * 
+     * @return Advert[]|null
+     */
+    public function findSearchedAdverts(AdvertSearch $search) : ?array
     {
         $query = $this->createQueryBuilder('a')
                       ->addSelect('MIN(p.price / d.daysNumber) as minPrice')
@@ -29,8 +45,10 @@ class AdvertRepository extends ServiceEntityRepository
                       ->groupBy('a.id')
                       ->setParameter('today', date("Y-m-d"))
         ;
+
         if ($search->getLatitude() && $search->getLongitude()) 
         {
+
             $selectSqlDistance = '6353 * 2 * ASIN(SQRT( POWER(SIN((s.latitude - abs(:latitude)) * pi()/180 / 2),2) + COS(s.latitude * pi()/180 ) * ' . 
                                  'COS(abs(:latitude) *  pi()/180) * POWER(SIN((s.longitude - :longitude) *  pi()/180 / 2), 2) )) as distance';
             $query
@@ -38,63 +56,94 @@ class AdvertRepository extends ServiceEntityRepository
                 ->setParameter('longitude', $search->getLongitude())
                 ->setParameter('latitude', $search->getLatitude())
             ;
+
             if (! $search->getDistance()) 
-            {                
+            {   
+
                 $query->leftJoin('v.situation', 's');
+
             
             }
+
             if ($search->getDistance()) 
             {
+
                 $whereSqlDistance = '(6353 * 2 * ASIN(SQRT( POWER(SIN((s.latitude - abs(:latitude)) * pi()/180 / 2),2) + COS(s.latitude * pi()/180 ) * ' . 
                                     'COS(abs(:latitude) *  pi()/180) * POWER(SIN((s.longitude - :longitude) *  pi()/180 / 2), 2) )))';
                 $query
                       ->join('v.situation', 's')
                       ->andWhere($whereSqlDistance . '<= :distance')
                       ->setParameter('distance', $search->getDistance());
+
             }
+
             if (! $search->getSorting() || $search->getSorting() === 'Proximité' || $search->getSorting() === 'Proximité + prix') 
             {
+
                 $query->addOrderBy('distance', 'ASC');
- 
+                 
             }
+
         }
+
         if ($search->getMinimumBedsNumber())
         {
+
             $query = $query->andWhere('v.bedsNumber >= :minBedsNumber')
                            ->setParameter('minBedsNumber', $search->getMinimumBedsNumber())
             ;
+
         }
+
         $equipments = new ArrayCollection(array_merge($search->getCellEquipments()->toArray(), $search->getCarrierEquipments()->toArray()));
         
         if ($equipments->count() > 0)
         {
+
             $k = 0;
+
             foreach ($equipments as $equipment) 
             {
+
                 $k++;
                 $query = $query->andWhere(":equipment$k MEMBER OF v.equipments")
                                ->setParameter("equipment$k", $equipment)
                 ;
+
             }
+
         }
+
         if ($search->getMaximumPrice()) 
         {
+
             $query = $query
                         ->andWhere('p.price / d.daysNumber <= :maxPrice')
                         ->setParameter('maxPrice', $search->getMaximumPrice())
             ;
+
         }
+
         if (! $search->getSorting() || $search->getSorting() === 'Prix' || $search->getSorting() === 'Proximité + prix') 
         {
+
             $query->addOrderBy('minPrice', 'ASC');
+
         }
 
         return $query->getQuery()
                      ->getResult();
+
     }
 
-    public function lasAdverts(): array
+    /**
+     * Get the ten last adverts
+     *
+     * @return Advert[]|null
+     */
+    public function lasAdverts(): ?array
     {
+
         return $this->createQueryBuilder('a')
                     ->addSelect('MIN(p.price / d.daysNumber) as minPrice')
                     ->leftJoin('a.prices', 'p')
@@ -108,9 +157,19 @@ class AdvertRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult()
         ;
+
     }
 
-    public function favorites($adverts, $latitude = null, $longitude = null): array
+    /**
+     * Get user's favorite adverts
+     *
+     * @param [type] $adverts
+     * @param [type] $latitude
+     * @param [type] $longitude
+     * 
+     * @return Advert[]|null
+     */
+    public function favorites($adverts, $latitude = null, $longitude = null): ?array
     {
 
         $query = $this->createQueryBuilder('a')
@@ -143,17 +202,7 @@ class AdvertRepository extends ServiceEntityRepository
         
         return $query->getQuery()
                      ->getResult();
-    }
 
-    /*
-    public function findOneBySomeField($value): ?Advert
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
+    
 }

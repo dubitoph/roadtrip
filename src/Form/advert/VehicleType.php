@@ -23,7 +23,10 @@ class VehicleType extends AbstractType
             ->add('manufactureDate', DateType::class, array(
                                                             'widget' => 'single_text', 
                                                             'html5' => false,
-                                                            'attr' => ['class' => 'js-datepicker'],
+                                                            'attr' => [
+                                                                        'class' => 'js-datepicker',
+                                                                        'readonly' => true
+                                                                      ]
                                                            )
                  )        
             ->add('bedsNumber', ChoiceType::class, array('choices' => array(

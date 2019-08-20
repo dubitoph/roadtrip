@@ -14,16 +14,24 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PeriodRepository extends ServiceEntityRepository
 {
+
+    /**
+     * Constructor
+     *
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Period::class);
     }
 
     /**
-     * @return Period[] Returns an array of Period objects
+     * Return the periods linked to a specific advert
+     *
+     * @param [type] $advert
+     * @return Period[]|null
      */
-    
-    public function findByAdvert($advert)
+    public function findByAdvert($advert): ?array
     {
 
         $format = 'Y-m-d H:i:s';
@@ -42,15 +50,4 @@ class PeriodRepository extends ServiceEntityRepository
 
     }
     
-    /*
-    public function findOneBySomeField($value): ?Period
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
