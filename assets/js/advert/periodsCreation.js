@@ -38,6 +38,7 @@ jQuery(document).ready(function() {
     
     //Use a calendar for the start and end dates of periods        
     $(".js-datepicker-period").datepicker({
+        
         viewMode: "months",
         weekStart: 1,
         daysOfWeekHighlighted: "6,0",

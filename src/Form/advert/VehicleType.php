@@ -9,8 +9,8 @@ use App\Repository\backend\EquipmentRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class VehicleType extends AbstractType
 {
@@ -20,14 +20,14 @@ class VehicleType extends AbstractType
         $belongingCell = 'Cellule';
         
         $builder
-            ->add('manufactureDate', DateType::class, array(
-                                                            'widget' => 'single_text', 
-                                                            'html5' => false,
-                                                            'attr' => [
-                                                                        'class' => 'js-datepicker',
-                                                                        'readonly' => true
-                                                                      ]
-                                                           )
+            ->add('manufactureDate', DateTimeType::class, array(
+                                                                'widget' => 'single_text', 
+                                                                'html5' => false,
+                                                                'attr' => [
+                                                                            'class' => 'js-datepicker',
+                                                                            'readonly' => true
+                                                                          ]
+                                                               )
                  )        
             ->add('bedsNumber', ChoiceType::class, array('choices' => array(
                                                                             '1' => 1, 

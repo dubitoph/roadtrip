@@ -13,10 +13,9 @@ $(document).ready(function() {
     if (sDate) 
     {
 
-      $manufactureDateInput.val(moment(sDate, 'YYYY-MM-DD').format('L'));
+      $manufactureDateInput.val(moment(sDate).format('L'));
       
-    }    
-    //End manufacture date formatting
+    } 
 
     //Using a calendar for the building vehicle date
     $(".js-datepicker").datepicker({
@@ -26,18 +25,13 @@ $(document).ready(function() {
       daysOfWeekHighlighted: "6,0",
       autoclose: true,
       todayHighlight: true,
-      startDate: '-30y',
+      startDate: '-50y',
       endDate:'+0d',
-      format:  'yyyy-mm-dd'
+      format: localeDateFormat.toLowerCase()
 
     });
     
-    $manufactureDateInput.on('change', e => {
-        
-      $manufactureDateInput.val(moment($manufactureDateInput.val(), 'YYYY-MM-DD').format('L'));
-    
-    });
-    
+    //Building date formatting to ISO before submit
     $("form").submit(function(event) {
 
       var $mamufactureDateInput = $("#vehicle_manufactureDate");
