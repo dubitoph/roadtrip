@@ -148,8 +148,7 @@ function addPeriodForm()
     // increase the index with one for the next item
     collectionHolderPeriods.data('index' , index + 1);
 
-    // Display the form in the page in an li, before the "Add a Period" link li
-    
+    // Display the form in the end of the ul   
     var $newForm = $("<li class= 'li_period'></li>").append(newForm);
 
     collectionHolderPeriods.append($newForm);

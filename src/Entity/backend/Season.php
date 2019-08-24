@@ -48,16 +48,6 @@ class Season
     private $season;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Period", mappedBy="season")
-     */
-    private $periods;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Price", mappedBy="season")
-     */
-    private $prices;
-
-    /**
      * @ORM\Column(type="integer", unique=true)
      * 
      * @Assert\GreaterThanOrEqual(
@@ -97,68 +87,6 @@ class Season
     public function setSeason(string $season): self
     {
         $this->season = $season;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Period[]
-     */
-    public function getPeriods(): Collection
-    {
-        return $this->periods;
-    }
-
-    public function addPeriod(Period $period): self
-    {
-        if (!$this->periods->contains($period)) {
-            $this->periods[] = $period;
-            $period->setSeason($this);
-        }
-
-        return $this;
-    }
-
-    public function removePeriod(Period $period): self
-    {
-        if ($this->periods->contains($period)) {
-            $this->periods->removeElement($period);
-            // set the owning side to null (unless already changed)
-            if ($period->getSeason() === $this) {
-                $period->setSeason(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Price[]
-     */
-    public function getPrices(): Collection
-    {
-        return $this->prices;
-    }
-
-    public function addPrice(Price $price): self
-    {
-        if (!$this->prices->contains($price)) {
-            $this->prices[] = $price;
-            $price->setSeason($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrice(Price $price): self
-    {
-        if ($this->prices->contains($price)) {
-            $this->prices->removeElement($price);
-            // set the owning side to null (unless already changed)
-            if ($price->getSeason() === $this) {
-                $price->setSeason(null);
-            }
-        }
 
         return $this;
     }

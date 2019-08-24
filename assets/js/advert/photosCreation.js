@@ -46,8 +46,7 @@ function addPhotoForm()
     // Get the ul that holds the collection of photos
     var $collectionHolderPhotos = $('ul.photos');
 
-    // Count the current form inputs we have (e.g. 2), use that as the new
-    // Index when inserting a new item (e.g. 2)
+    // Get the current form inputs number to use as the new index when inserting a new item
     $collectionHolderPhotos.data('index' , $collectionHolderPhotos.find(':input').length);
     
     // Get the data-prototype
@@ -57,16 +56,11 @@ function addPhotoForm()
     var index = $collectionHolderPhotos.data('index');
 
     var newForm = prototype ;
-    // You need this only if you didn't set 'label' => false in your photos field in AdvertType
-    // Replace '__name__label__' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    // newForm = newForm.replace(/__name__label__/g, index);
 
-    // Replace '__name__' in the prototype's HTML to
-    // instead be a number based on how many items we have
+    // Replace '__name__' in the prototype's HTML to instead be a number based on how many items we have
     newForm = newForm.replace(/__name__/g , index);
 
-    // increase the index with one for the next item
+    // Increase the index with one for the next item
     $collectionHolderPhotos.data('index', index + 1);
 
     var idLi = "li_photo_" + (index - 1);

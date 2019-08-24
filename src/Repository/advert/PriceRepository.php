@@ -14,14 +14,20 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  */
 class PriceRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Price::class);
+        
     }
 
-    /**
+   /**
+     * Get the minimum price from an advert
+     *
+     * @param [type] $advert
      * @return Price[]
-     */
+     */ 
     public function getAdvertMinPrice($advert): array
     {
         return $this->createQueryBuilder('p')
@@ -38,32 +44,4 @@ class PriceRepository extends ServiceEntityRepository
 
     }
 
-    // /**
-    //  * @return Price[] Returns an array of Price objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Price
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -48,7 +48,7 @@ class Period
     private $end;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\backend\Season", inversedBy="periods")
+     * @ORM\ManyToOne(targetEntity="App\Entity\backend\Season")
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\Type(type="App\Entity\backend\Season")

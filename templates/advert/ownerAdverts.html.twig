@@ -73,8 +73,8 @@
                                 
                             {% endif %}
 
-                            <a href="{{ path('advert.periods.management', { 'id': advert.id, 'onlyPeriodManagement': true }) }}" class="btn btn-secondary">Manage periods</a>
-                            <a href="{{ path('advert.prices.management', { 'id': advert.id, 'onlyPriceManagement': true }) }}" class="btn btn-secondary">Manage prices</a>
+                            <a href="{{ path('advert.periods.create', { 'id': advert.id, 'onlyPeriodsCreation': true }) }}" class="btn btn-secondary">Manage periods</a>
+                            <a href="{{ path('advert.prices.create', { 'id': advert.id, 'onlyPricesCreation': true }) }}" class="btn btn-secondary">Manage prices</a>
                             <a href="{{ path('advert.clone', { 'id': advert.id }) }}" class="btn btn-secondary">Clone to add a new advert</a>
 
                         </td>

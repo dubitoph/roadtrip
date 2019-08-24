@@ -3,8 +3,9 @@
 namespace App\Repository\backend;
 
 use App\Entity\backend\Duration;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Duration|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,37 @@ class DurationRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Duration::class);
+    }
+
+    /**
+     * Return durations order by daysNumber ASC
+     *
+     * @return Duration[]
+     */
+    public function findAll(): Array
+    {
+
+        return $this->findBy(array(), array('daysNumber' => 'ASC'));
+        
+    }
+
+   /**
+    * Get the duration with the minimum days
+    *
+    * @return Duration
+    */
+    public function findMinimumDuration(): Duration
+    {
+
+        $subquery = $this->createQueryBuilder('d2')
+                         ->select('MIN(d2.daysNumber)');
+
+        return $queryBuilder = $this->createQueryBuilder('d')
+                                    ->where('d.daysNumber = (' . $subquery->getDQL() . ')')
+                                    ->getQuery()
+                                    ->getOneOrNullResult()
+        ;
+
     }
 
     // /**

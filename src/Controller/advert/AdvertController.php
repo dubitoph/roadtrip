@@ -7,13 +7,14 @@ use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
 use App\Entity\advert\Vehicle;
 use App\Form\advert\CostsType;
-use App\Form\advert\DescriptionType;
 use App\Entity\advert\Insurance;
 use App\Entity\backend\Duration;
 use App\Form\advert\VehicleType;
 use App\Entity\communication\Mail;
 use App\Entity\advert\AdvertSearch;
 use App\Entity\backend\Subscription;
+use App\Entity\communication\Thread;
+use App\Form\advert\DescriptionType;
 use App\Form\communication\MailType;
 use App\Entity\advert\InsurancePrice;
 use App\Form\advert\AdvertSearchType;
@@ -21,17 +22,18 @@ use App\Form\advert\PricesAdvertType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
-use App\Entity\communication\Thread;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
+use App\Repository\backend\DurationRepository;
+use App\Repository\user\FavoriteRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\backend\SeasonRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\user\FavoriteRepository;
-use App\Repository\backend\SeasonRepository;
 
 class AdvertController extends AbstractController
 {
@@ -558,105 +560,124 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/prices/create/{id}/{onlyPriceManagement}", name="advert.prices.create")
+     *  @Route("/advert/prices/create/{id}/{onlyPricesCreation}", name="advert.prices.create")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function pricesForm(Advert $advert, bool $onlyPriceManagement = false, Request $request, ObjectManager $manager) { 
-
+    public function pricesForm(Advert $advert, bool $onlyPricesCreation = false, DurationRepository $durationRepository, Request $request, ObjectManager $manager) 
+    { 
+        
         $editMode = false;
         
-        //Preparation of the prices list in function of the number different seasons  
-        $seasons = array();
-        $missingDurations = array();
-        $durations = $manager->getRepository(Duration::class)->findAll();
-
-        //Search seasons used by periods
-        foreach ($advert->getPeriods() as $key => $value) 
-        {
-
-            $seasons[] = $value->getSeason();
-
-        }
-
-        $unique_seasons = array_unique($seasons);
-        //End of search seasons used by periods
-
         $prices = $advert->getPrices();
-        
 
-        if (count($prices) > 0) {
+        if($prices)
+        {
 
             $editMode = true;
 
-            foreach ($prices as $price) 
+        }
+        
+        // Collection creation of seasons used in the periods 
+        $seasons = new ArrayCollection();
+        $sortedSeasons = new ArrayCollection();
+
+        //Search seasons used by periods
+        foreach ($advert->getPeriods() as $period) 
+        {
+
+            $season = $period->getSeason();
+            
+            if (! $seasons->contains($season)) 
             {
-    
-                $idsSeasonsPrices[] = $price->getSeason()->getId();
+            
+                $seasons->add($season);
 
-            }
-
-            //For each season, searching missing duration compared to parameter to permit add only not existing durations
-            foreach ($unique_seasons as $unique_season) 
-            {
-    
-                $seasonPrices = $unique_season->getPrices();
-
-                $missingDurations[''. $unique_season->getSeason() . ''] = array();
-                $seasonDurations = array();
-    
-                foreach($seasonPrices as $seasonPrice) 
-                {
-                    
-                    $seasonDurations[] = $seasonPrice->getDuration();
-                
-                }
-                    
-                foreach ($durations as $duration) 
-                {
-                        
-                    if (! in_array($duration, $seasonDurations)) 
-                    {
-                            
-                        $missingDurations[''. $unique_season->getSeason() . ''][] = $duration;
-    
-                    }
-    
-              }
-           
             }
 
         }
-        else 
-        {
+
+        // Sort seasons by ascending cost 
+        $iterator = $seasons->getIterator();
+
+        $iterator->uasort(function ($a, $b) {
+
+            return $a->getCost() <=> $b->getCost();
+
+        });
+
+        $sortedSeasons = iterator_to_array($iterator);
+
+        // By season, search not used durations and store prices
+        $missingDurations = array();
+
+        // To filter prices by season in the template
+        $idsSeasonsPrices = array();
+        
+        $durations = $durationRepository->findAll();
+        $minimumDuration = $durationRepository->findMinimumDuration();
+
+        foreach($sortedSeasons as $season)
+        {        
+                    
+            $usedDurations = new ArrayCollection(); 
             
-            $editMode = false;
-
-            $numberSeasons = count($unique_seasons);
-
-            //Prices creation
-            foreach ($unique_seasons as $unique_season) 
+            if(! $editMode)
             {
- 
-                foreach ($durations as $duration) 
-                {
 
-                    $price = new Price;
-                    $price->setDuration($duration);
-                    $price->setSeason($unique_season);
-                    $advert->addPrice($price);                    
-                    $idsSeasonsPrices[] = $unique_season->getId();
+                $price = new Price();
+
+                $price
+                    ->setSeason($season)
+                    ->setDuration($minimumDuration)
+                ;
+
+                $advert->addPrice($price);
+                $idsSeasonsPrices[] = $season->getId();
+                $usedDurations->add($minimumDuration);
+
+            }
+            else
+            {
+
+                foreach ($prices as $price) 
+                {
+                    
+                    if($price->getSeason() == $season)
+                    {
+
+                        $usedDurations->add($price->getDuration());
+
+                    }
 
                 }
 
             }
+
+            foreach($durations as $duration)
+            {
+    
+                if(! $usedDurations->contains($duration))
+                {
+    
+                    $missingDurations[$season->getId()][] = $duration;
+    
+                }
+    
+            }
+
+        }
+
+        foreach($prices as $price)
+        {
+
+            $idsSeasonsPrices[] = $price->getSeason()->getId();
 
         }
     
         $form = $this->createForm(PricesAdvertType::class, $advert);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 
@@ -668,17 +689,17 @@ class AdvertController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Les prix ont été modifiés avec succès.');
+                $this->addFlash('success', 'Prices were successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Les prix ont été ajoutés à votre annonce avec succès.');
+                $this->addFlash('success', 'Prices were successfully created.');
 
             }
 
-            if ($onlyPriceManagement) 
+            if ($onlyPricesCreation) 
             {
 
                 return $this->redirectToRoute('advert.owner');
@@ -695,11 +716,11 @@ class AdvertController extends AbstractController
   
         return $this->render('advert/prices.html.twig', [
                                                             'form' => $form->createView(), 
-                                                            'unique_seasons' => $unique_seasons, 
-                                                            'idsSeasonsPrices' => $idsSeasonsPrices,  
+                                                            'usedSeasons' => $sortedSeasons,  
                                                             'editMode' => $editMode,
                                                             'missingDurations' => $missingDurations, 
                                                             'configuredDurations' => $durations,
+                                                            'idsSeasonsPrices' => $idsSeasonsPrices
                                                         ]
                             )
         ;
