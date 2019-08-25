@@ -22,13 +22,13 @@ class IncludedMileage
     /**
      * @ORM\Column(type="integer")
      * 
-     * @Assert\GreaterThan(
+     * @Assert\GreaterThanOrEqual(
      *     value = 500,
-     *     message = "Le kilométarge inclus doit être supérieur à 500 km."
+     *     message = "The milage must be greather or equal than {value} km."
      * )
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 10000,
-     *     message = "Le kilométarge inclus ne peut être supérieur à 10000 km."
+     *     message = "The milage must be less or equal than {value} km."
      * )
      */
     private $mileage;
@@ -51,44 +51,97 @@ class IncludedMileage
      */
     private $duration;
 
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the milage
+     *
+     * @return integer|null
+     */
     public function getMileage(): ?int
     {
+
         return $this->mileage;
+
     }
 
+    /**
+     * Set the milage
+     *
+     * @param integer $mileage
+     * @return self
+     */
     public function setMileage(int $mileage): self
     {
+
         $this->mileage = $mileage;
 
         return $this;
+
     }
 
+    /**
+     * Get the advert
+     *
+     * @return Advert|null
+     */
     public function getAdvert(): ?Advert
     {
+
         return $this->advert;
+
     }
 
+    /**
+     * Set the advert
+     *
+     * @param Advert|null $advert
+     * @return self
+     */
     public function setAdvert(?Advert $advert): self
     {
+
         $this->advert = $advert;
 
         return $this;
+
     }
 
+    /**
+     * Get the duration
+     *
+     * @return Duration|null
+     */
     public function getDuration(): ?Duration
     {
+
         return $this->duration;
+
     }
 
+    /**
+     * Set the duration
+     *
+     * @param Duration|null $duration
+     * @return self
+     */
     public function setDuration(?Duration $duration): self
     {
+
         $this->duration = $duration;
 
         return $this;
+
     }
+    
 }

@@ -6,9 +6,7 @@ use App\Entity\backend\VAT;
 use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
 use App\Entity\advert\Vehicle;
-use App\Form\advert\CostsType;
 use App\Entity\advert\Insurance;
-use App\Entity\backend\Duration;
 use App\Form\advert\VehicleType;
 use App\Entity\communication\Mail;
 use App\Entity\advert\AdvertSearch;
@@ -19,16 +17,17 @@ use App\Form\communication\MailType;
 use App\Entity\advert\InsurancePrice;
 use App\Form\advert\AdvertSearchType;
 use App\Form\advert\PricesAdvertType;
+use App\Form\advert\VariousCostsType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
-use App\Repository\backend\DurationRepository;
 use App\Repository\user\FavoriteRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\backend\SeasonRepository;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\backend\DurationRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -319,10 +318,13 @@ class AdvertController extends AbstractController
      * @param SeasonRepository $seasonRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function periodsForm(Advert $advert, bool $onlyPeriodsCreation = false, SeasonRepository $seasonRepository, Request $request, 
-                                ObjectManager $manager): Response
+    public function periodsForm(
+                                    Advert $advert, bool $onlyPeriodsCreation = false, SeasonRepository $seasonRepository, Request $request, 
+                                    ObjectManager $manager
+                                ): Response
     {
         
         $intl_date_formatter = new \IntlDateFormatter(
@@ -561,12 +563,19 @@ class AdvertController extends AbstractController
 
     /**
      *  @Route("/advert/prices/create/{id}/{onlyPricesCreation}", name="advert.prices.create")
+     *
      * @param Advert $advert
+     * @param boolean $onlyPricesCreation
+     * @param DurationRepository $durationRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function pricesForm(Advert $advert, bool $onlyPricesCreation = false, DurationRepository $durationRepository, Request $request, ObjectManager $manager) 
+    public function pricesForm(
+                                    Advert $advert, bool $onlyPricesCreation = false, DurationRepository $durationRepository, 
+                                    Request $request, ObjectManager $manager
+                                ): Response 
     { 
         
         $editMode = false;
@@ -708,7 +717,7 @@ class AdvertController extends AbstractController
             else 
             {
 
-                return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+                return $this->redirectToRoute('advert.various_costs.create', array('id' => $advert->getId()));
 
             }
 
@@ -728,7 +737,7 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/costs/management/{id}", name="advert.costs.management")
+     *  @Route("/advert/various_costs/create/{id}", name="advert.various_costs.create")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
@@ -742,23 +751,38 @@ class AdvertController extends AbstractController
         $numberMileages = count($advert->getIncludedMileages());
         $editMode = true;
 
-        if ((! $insurance) && ($numberMileages == 0) && (!$advert->getExtraKilometerCost()) && (!$advert->getIncludedCleaning()) && (!$advert->getCleaningCost())) 
+        if (
+                (! $insurance) && ($numberMileages == 0) && (!$advert->getExtraKilometerCost()) && (!$advert->getIncludedCleaning()) && 
+                (!$advert->getCleaningCost())
+           ) 
         {
 
             $editMode = false;
 
         }
 
-        foreach ($prices as $price) 
-        {
+        $unique_durations = new ArrayCollection();
 
-            $durations[] = $price->getDuration();
+        if($prices)
+        {
+            foreach ($prices as $price) 
+            {
+
+                $duration = $price->getDuration();
+                
+                if(! $unique_durations->contains($duration))
+                {
+
+                    $unique_durations->add($price->getDuration());
+
+                }
+
+            }
 
         }
-
-        $unique_durations = array_unique($durations);
         
-        if (! $insurance) {
+        if (! $insurance) 
+        {
 
             $insurance = new Insurance();
             $advert->setInsurance($insurance);
@@ -814,14 +838,14 @@ class AdvertController extends AbstractController
 
         }
         
-       $form = $this->createForm(CostsType::class, array(
-                                                            'insurance' => $insurance,
-                                                            'insurancePrices' => $insurancePrices,
-                                                            'includedMileages' => $includedMileages,
-                                                            'extraKilometerCost' => $advert, 
-                                                            'cleaning' => $advert, 
-                                                        )
-                                )
+        $form = $this->createForm(VariousCostsType::class, array(
+                                                                    'insurance' => $insurance,
+                                                                    'insurancePrices' => $insurancePrices,
+                                                                    'includedMileages' => $includedMileages,
+                                                                    'extraKilometerCost' => $advert, 
+                                                                    'cleaning' => $advert
+                                                                )
+                                  )
         ;
 
         $form->handleRequest($request);
@@ -838,7 +862,8 @@ class AdvertController extends AbstractController
             foreach ($insurancePrices as $insurancePrice) 
             {
 
-                if ($insuranceIncluded) {
+                if ($insuranceIncluded) 
+                {
 
                     $insurance->removeInsurancePrice($insurancePrice);
 
@@ -890,17 +915,19 @@ class AdvertController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Les coûts ont été modifiés avec succès.');
+                $this->addFlash('success', 'Costs were successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Les coûts ont été ajoutés à votre annonce avec succès.');
+                $this->addFlash('success', 'Costs were successfully added.');
 
             } 
 
-            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_OWNER') || $advert->getOwner())
+            $user = $this->getUser();
+
+            if ($user && $user->getOwner())
             {
 
                 return $this->redirectToRoute('advert.subscription.management', array('id' => $advert->getId()));
@@ -911,15 +938,15 @@ class AdvertController extends AbstractController
 
         }
 
-        return $this->render('advert/costs.html.twig', [
-                                                            'form' => $form->createView(), 
-                                                            'unique_durations' => $unique_durations, 
-                                                            'insurancePrices' => $insurancePrices, 
-                                                            'includedMileages' => $includedMileages, 
-                                                            'idInsurancePricesDurations' => $idInsurancePricesDurations, 
-                                                            'idIncludedMileagesDurations' => $idIncludedMileagesDurations, 
-                                                            'editMode' => $insurance->getId() !== null,
-                                                       ]
+        return $this->render('advert/variousCosts.html.twig', [
+                                                                'form' => $form->createView(), 
+                                                                'unique_durations' => $unique_durations, 
+                                                                'insurancePrices' => $insurancePrices, 
+                                                                'includedMileages' => $includedMileages, 
+                                                                'idInsurancePricesDurations' => $idInsurancePricesDurations, 
+                                                                'idIncludedMileagesDurations' => $idIncludedMileagesDurations, 
+                                                                'editMode' => $insurance->getId() !== null
+                                                              ]
                             )
         ;        
     }

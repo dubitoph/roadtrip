@@ -69,7 +69,7 @@
 
                 {% for duration in configuredDurations %}                        
 
-                    {% if duration in missingDurations[season.id] %}    
+                    {% if missingDurations[season.id] is defined and duration in missingDurations[season.id] %}    
                 
                         <button type="button" class="btn btn-primary add-price-btn" id="add_price_btn_{{ duration.id }}_{{ season.id }}"  
                                 data-target="ulSeason_{{ season.id }}"  data-duration="{{ duration.id }}">

@@ -10,18 +10,25 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class InsurancePriceType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('price', NumberType::class)
-        ;
+
+        $builder->add('price', NumberType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => InsurancePrice::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => InsurancePrice::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }

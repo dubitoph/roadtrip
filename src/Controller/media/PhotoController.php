@@ -24,6 +24,7 @@ class PhotoController extends AbstractController
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function photosForm(Advert $advert, Request $request, ObjectManager $manager): Response 
@@ -126,6 +127,7 @@ class PhotoController extends AbstractController
      * @param Photo $photo
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function delete(Photo $photo, Request $request, ObjectManager $manager): Response 
