@@ -20,7 +20,7 @@ class IncludedMileage
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 100,
