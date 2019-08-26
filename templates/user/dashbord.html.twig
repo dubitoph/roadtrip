@@ -15,28 +15,52 @@
             <div class="vertical-navbar">
         
                 <ul class="navbar-nav mr-auto">
-    
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('user.user.edit') }}">Edit my profile</a>
-
-                    </li>
-    
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">Reset my password</a>
-
-                    </li>
 
                     {% if user.owner is not null %}
     
                         <li class="nav-item">
 
-                            <a class="nav-link"  href="#last_adverts">Edit my owner contact informations</a>
+                            <a class="nav-link"  href="{{ path('booking.booking.requests') }}">My booking requests</a>
+
+                        </li>
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="{{ path('advert.owner') }}">My adverts</a>
+
+                        </li>
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="{{ path('user.owner.edit') }}">My owner contact informations</a>
+
+                        </li>
+    
+                        <li class="nav-item">
+
+                            <a class="nav-link"  href="{{ path('payment.owner.bills') }}">My bills</a>
 
                         </li>
                         
                     {% endif %}
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('user.user.edit') }}">My user data</a>
+
+                    </li>
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('user.profile.update') }}">My profile ({{ profileCompletion }}% completed)</a>
+
+                    </li>
+    
+                    <li class="nav-item">
+
+                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">My password</a>
+
+                    </li>
 
                     <li class="nav-item">
 
@@ -46,13 +70,13 @@
 
                     <li class="nav-item">
 
-                        <a class="nav-link"  href="#subscriptions">My opened bookings</a>
-
+                        <a class="nav-link"  href="{{ path('communication.messages') }}">My messages</a>
+                        
                     </li>
 
                     <li class="nav-item">
 
-                        <a class="nav-link"  href="#last_ratings">My messages</a>
+                        <a class="nav-link"  href="{{ path('rating.dashbord') }}">My ratings</a>
                         
                     </li>
     

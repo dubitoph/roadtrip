@@ -4,7 +4,6 @@ namespace App\Form\rating;
 
 use App\Entity\rating\Rating;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -24,18 +23,6 @@ class RatingType extends AbstractType
                                                                        '5' => 5
                                                                       )
                                                    )
-                 )
-            ->add('rentalBeginning', DateType::class, array(
-                                                            'widget' => 'single_text', 
-                                                            'html5' => false, 
-                                                            'attr' => ['class' => 'js-datepicker'],
-                                                           )
-                 )
-            ->add('rentalEnd', DateType::class, array(
-                                                        'widget' => 'single_text', 
-                                                        'html5' => false, 
-                                                        'attr' => ['class' => 'js-datepicker'],
-                                                     )
                  )
         ;
     }

@@ -2,9 +2,10 @@
 
 namespace App\Entity\communication;
 
-use App\Entity\advert\Advert;
 use App\Entity\user\User;
+use App\Entity\booking\Booking;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\communication\Thread;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -18,23 +19,6 @@ class Mail
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
-     */
-    private $template;
-
-    /**
-     * @ORM\Column(type="text")
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
-     * @Assert\Length(min=10)
-     */
-    private $message;
 
     /**
      * @var User
@@ -55,19 +39,37 @@ class Mail
     private $receiver;
 
     /**
-     * @var Advert|null
-     * 
-     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="mails")
-     */
-    private $advert;
-
-    /**
      * @ORM\Column(type="string", length=50)
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\NotBlank()
      */
     private $subject;
+
+    /**
+     * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $message;
+
+    /**
+     * @ORM\Column(type="text")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank()
+     */
+    private $body;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\communication\Thread", inversedBy="mails")
+     */
+    private $thread;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\booking\Booking", inversedBy="mails")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $booking;
 
     /**
      * @ORM\Column(type="datetime")
@@ -78,12 +80,9 @@ class Mail
     private $createdAt;
 
     /**
-     * @var int|null
-     * 
-     * @ORM\Column(type="bigint")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $conversation;
+    private $isRead;
 
     public function __construct() 
 	{
@@ -94,30 +93,6 @@ class Mail
     {
         return $this->id;
 
-    }
-
-    public function getTemplate(): ?string
-    {
-        return $this->template;
-    }
-
-    public function setTemplate(string $template): self
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    public function getMessage(): ?string
-    {
-        return $this->message;
-    }
-
-    public function setMessage(string $message): self
-    {
-        $this->message = $message;
-
-        return $this;
     }
 
     public function getSender(): ?User
@@ -142,18 +117,6 @@ class Mail
         $this->receiver = $receiver;
 
         return $this;
-    }
-
-    public function getAdvert(): ?Advert
-    {
-        return $this->advert;
-    }
-
-    public function setAdvert(?Advert $advert): self
-    {
-        $this->advert = $advert;
-
-        return $this;
     } 
 
     public function getSubject(): ?string
@@ -168,9 +131,62 @@ class Mail
         return $this;
     }
 
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getThread(): ?Thread
+    {
+
+        return $this->thread;
+
+    }
+
+    public function setThread(?Thread $thread): self
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+
+        return $this->booking;
+
+    }
+
+    public function setBooking(?Booking $booking): self
+    {
+        $this->booking = $booking;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
+
         return $this->createdAt;
+
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
@@ -178,19 +194,19 @@ class Mail
         $this->createdAt = $createdAt;
 
         return $this;
+    } 
+
+    public function getIsRead(): ?bool
+    {
+        return $this->isRead;
     }
 
-    public function getConversation(): ?int
+    public function setIsRead(bool $isRead): self
     {
-        return $this->conversation;
-    }
-
-    public function setConversation(int $conversation): self
-    {
-        $this->conversation = $conversation;
+        $this->isRead = $isRead;
 
         return $this;
-    }   
+    }  
 
     public function sendEmail(\Swift_Mailer $mailer)
     {
@@ -200,7 +216,7 @@ class Mail
         $email->setFrom([$this->sender->getEmail() => $this->sender->getUserName()])
               ->setTo($this->receiver->getEmail())
               ->setBody(
-                            $this->message,
+                            $this->body,
                             'text/html'
                        )
         ;
@@ -208,6 +224,13 @@ class Mail
         $result = $mailer->send($email);
 
         return $result;
+
+    }
+
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y H:m');
 
     }
 }

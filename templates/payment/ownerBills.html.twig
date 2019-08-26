@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bills{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>My bills</h1>
+
+        <div>
+            
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                
+                    {% for bill in bills %}
+
+                        <tr>
+
+                            <td>{{ bill.getFormattedCreatedAt }}</td>
+                            <td>{{ bill.name }}</td>
+                            <td>
+                                <a href="{{ path('payment.bill.show', { 'id': bill.id }) }}" class="btn btn-primary">Show</a>
+                                <a href="{{ path('payment.bill.download', { 'id': bill.id }) }}" class="btn btn-primary">Download</a>
+                            </td>
+
+                        </tr>
+                
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+{% endblock %}

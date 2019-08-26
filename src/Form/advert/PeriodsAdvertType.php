@@ -21,7 +21,8 @@ class PeriodsAdvertType extends AbstractType
                                                             'allow_delete' => true,
                                                             'by_reference' => false,
                                                             'required' => false,
-                                                            'label' => false,
+                                                            'label' => false,                                                              
+                                                            'entry_options'  => array('endDate' => $options['endDate']),
                                                          )
                  )
         ;
@@ -31,6 +32,7 @@ class PeriodsAdvertType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Advert::class,
+            'endDate' => null,
             'translation_domain' => 'forms',
         ]);
     }

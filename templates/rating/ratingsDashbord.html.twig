@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} My ratings {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>My ratings</h1>
+
+        {% if bookingsWithoutRating %}
+
+            <h2>Pending ratings</h2>
+
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Photo</th>
+                        <th>Vehicle</th>
+                        <th>Title</th>
+                        <th>Owner</th>
+                        <th>Location beginning</th>
+                        <th>Location end</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% set i = 1 %}
+
+                    {% for booking in bookingsWithoutRating %}
+
+                        <tr>
+
+                            <td>
+
+                                {% if mainPhotos[booking.vehicle.advert.id] is defined %}
+                                
+                                    <img id="photo_{{ mainPhotos[booking.vehicle.advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[booking.vehicle.advert.id], 'file') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;">
+                            
+                                {% else %}
+                            
+                                    <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
+                                            
+                                {% endif %}
+                            
+                            </td>
+                            <td>{{ booking.vehicle.mark.mark }} - {{ booking.vehicle.sort.sort }} ({{ booking.vehicle.getFormattedManufactureDate }})</td>
+                            <td>{{ booking.vehicle.advert.owner.user.firstname }} {{ booking.vehicle.advert.owner.user.name }}</td>
+                            <td>{{ booking.vehicle.advert.title }}</td>
+                            <td>{{ booking.getFormattedBeginAt }}</td>
+                            <td>{{ booking.getFormattedEndAt }}</td>
+                            <td><a href="{{ path('rating.create', { 'id': booking.id }) }}" class="btn btn-secondary">Leave a rating</a></td>
+
+                        </tr>
+
+                        {% set i = i + 1 %}
+                        
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+            
+        {% endif %}
+
+        {% if receivedUserRatings %}        
+
+            <h2>Received ratings from owners</h2>
+
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rating date</th>
+                        <th>Owner</th>
+                        <th>Advert</th>
+                        <th>Vehicle</th>
+                        <th>Location period</th>
+                        <th>Score</th>
+                        <th>Comment</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for userRating in receivedUserRatings %}
+
+                        <tr>
+
+                            <td>{{ userRating.getFormattedCreatedAt }}</td>
+                            <td>{{ userRating.booking.vehicle.advert.owner.user.firstname }} {{ userRating.booking.vehicle.advert.owner.user.name }}</td>
+                            <td>{{ userRating.booking.vehicle.advert.title }}</td>
+                            <td>{{ userRating.booking.vehicle.sort.sort }} {{ userRating.booking.vehicle.mark.mark }}</td>
+                            <td>{{ userRating.booking.getFormattedBeginAt }} - {{ userRating.booking.getFormattedEndAt }}</td>
+                            <td>{{ userRating.score }}</td>
+                            <td>{{ userRating.comment|nl2br }}</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                {% if not userRating.responseToRating %}
+                        
+                                    <form action="{{ path('rating.create.response', { 'id': userRating.id }) }}" id="responseFrom_{{ userRating.id }}" method="POST">
+                        
+                                        <textarea name="response_{{ userRating.id }}" id="response_{{ userRating.id }}" cols="30" rows="10"></textarea>
+                        
+                                        <button type="submit">Answer</button>
+                        
+                                    </form>
+                        
+                                {% else %}
+                                        
+                                    {% if userRating.responseToRating.approved %}                                            
+                                
+                                        On {{ userRating.getFormattedCreatedAt }}, {{ userRating.responseToRating.user.firstname }} wrote :<br><br>
+                                
+                                        {{  userRating.responseToRating.response|nl2br }}
+
+                                    {% else %}
+
+                                        Response pending administrator approval.                                       
+                                        
+                                    {% endif %}
+                                        
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% endif %}
+
+        {% if receivedOwnerRatings %}
+
+            <h2>Received ratings from tenants</h2>
+
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rating date</th>
+                        <th>Tenant</th>
+                        <th>Advert</th>
+                        <th>Vehicle</th>
+                        <th>Location period</th>
+                        <th>Score</th>
+                        <th>Comment</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for ownerRating in receivedOwnerRatings %}
+
+                        <tr>
+
+                            <td>{{ ownerRating.getFormattedCreatedAt }}</td>
+                            <td>{{ ownerRating.booking.user.firstname }} {{ ownerRating.booking.user.name }}</td>
+                            <td>{{ ownerRating.booking.vehicle.advert.title }}</td>
+                            <td>{{ ownerRating.booking.vehicle.sort.sort }} {{ ownerRating.booking.vehicle.mark.mark }}</td>
+                            <td>{{ ownerRating.booking.getFormattedBeginAt }} - {{ ownerRating.booking.getFormattedEndAt }}</td>
+                            <td>{{ ownerRating.score }}</td>
+                            <td>{{ ownerRating.comment|nl2br }}</td>
+
+                        </tr>
+                        
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% endif %}
+        
+    </div>
+
+{% endblock %}

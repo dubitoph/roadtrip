@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My messages{% endblock %}
+
+{% block body %}
+
+    {{ include('_messages.html.twig') }}
+
+    {% if user.threads|length > 0 %}
+
+        <div>
+
+            <div> 
+
+                With owners
+
+            </div>
+
+            {% for thread in user.threads %}
+
+                {{ include('user/_thread.html.twig', { 'notReadMessages': notReadUserMessages }) }}
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+    {% if user.owner is not null and user.owner.threads|length > 0 %}
+
+        <div>
+
+            <div> 
+
+                With users
+
+            </div>
+
+            {% for thread in user.owner.threads %}
+
+                {{ include('user/_thread.html.twig', { 'notReadMessages': notReadOwnerMessages }) }}
+
+            {% endfor %}
+
+        </div> 
+        
+    {% endif %}
+
+    {% if adminMails|length > 0 %}
+
+        <div>
+
+            <div> 
+
+                Mails from Roadtripr
+
+            </div>
+
+            <div>
+
+                {% for mail in adminMails %}
+
+                    <pre>    
+                        {{ mail.getFormattedCreatedAt }} - {{ mail.sender.firstname }}
+
+                        {{ mail.message | nl2br }}
+                    </pre>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    <div id="ajaxUrlDiv" style="display: none" data-url="{{ path('communication.mail.update.read') }}"></div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('threads') }}
+
+    {% endblock %}
+
+{% endblock body %}

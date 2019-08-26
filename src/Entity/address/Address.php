@@ -4,8 +4,6 @@ namespace App\Entity\address;
 
 use App\Entity\advert\Vehicle;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -123,14 +121,14 @@ class Address
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Vehicle", mappedBy="situation")
+     * @ORM\OneToOne(targetEntity="App\Entity\advert\Vehicle", mappedBy="situation")
      */
-    private $vehicles;
+    private $vehicle;
 
-    public function __construct()
-    {
-        $this->vehicles = new ArrayCollection();
-    }
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $defaultUserLocation;
 
     public function getId(): ?int
     {
@@ -245,22 +243,14 @@ class Address
         return $this;
     }
 
-
-
-    /**
-     * @return Collection|Vehicle[]
-     */
-    public function getVehicles(): Collection
+    public function getVehicle(): ?Vehicle
     {
-        return $this->vehicles;
+        return $this->vehicle;
     }
 
-    public function addVehicle(Vehicle $vehicle): self
+    public function setVehicle(Vehicle $vehicle): self
     {
-        if (!$this->vehicles->contains($vehicle)) {
-            $this->vehicles[] = $vehicle;
-            $vehicle->setSituation($this);
-        }
+        $this->vehicle = $vehicle;
 
         return $this;
     }
@@ -274,6 +264,18 @@ class Address
                 $vehicle->setSituation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDefaultUserLocation(): ?bool
+    {
+        return $this->defaultUserLocation;
+    }
+
+    public function setDefaultUserLocation(?bool $defaultUserLocation): self
+    {
+        $this->defaultUserLocation = $defaultUserLocation;
 
         return $this;
     }

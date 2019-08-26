@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\rating\RatingRepository;
 
 class UserUserController extends AbstractController
 {
@@ -92,14 +93,33 @@ class UserUserController extends AbstractController
      * @param User $user
      * @return Response
      */
-    public function dashbord(): Response
+    public function dashbord(RatingRepository $ratingRepository): Response
     {
      
-        $user = $this->getUser();  
+        $user = $this->getUser();
+
+        $profile = $user->getProfile();
+        $profileCompletion = 0;
+
+        if($profile)
+        {
+
+            $profileTab[0] = $profile->getSex();
+            $profileTab[1] = $profile->getBirthday();
+            $profileTab[2] = $profile->getPhoto();
+            $profileTab[3] = $profile->getAddress();
+            $profileTab[4] = $profile->getAboutMe();
+
+            $numberItems = 0;
+
+            $profileCompletion = ($numberItems / count($profileTab)) * 100;
+
+        }
         
         return $this->render('user/dashbord.html.twig', [
                                                             'user' => $user,
-                                                            'current_menu' => 'dashbord'
+                                                            'current_menu' => 'dashbord',
+                                                            'profileCompletion' => number_format($profileCompletion, 0)
                                                         ]
                             )
         ; 

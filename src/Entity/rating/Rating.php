@@ -4,7 +4,9 @@ namespace App\Entity\rating;
 
 use App\Entity\user\User;
 use App\Entity\advert\Advert;
+use App\Entity\booking\Booking;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\rating\ResponseToRating;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,13 +22,14 @@ class Rating
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="sentRatings")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
+     * 
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 1000,
+     *      minMessage = "The comment must contain at least {{ limit }} characters",
+     *      maxMessage = "The comment cannot contain more than {{ limit }} characters"
+     * )
      */
     private $comment;
 
@@ -43,38 +46,9 @@ class Rating
     private $score;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="ratings")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $advert;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * 
-     * @Assert\DateTime()
-     * @Assert\LessThanOrEqual("today")
-     */
-    private $rentalBeginning;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * 
-     * @Assert\DateTime()
-     * @Assert\GreaterThanOrEqual(propertyPath="rentalBeginning")
-     */
-    private $rentalEnd;
-
-    /**
-     * @ORM\Column(type="string", length=3, nullable=true)
-     * 
-     * @Assert\Choice({"Yes", "No"})
-     */
-    private $rentalConfirmation;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -82,31 +56,31 @@ class Rating
     private $ratingApproved;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\booking\Booking", inversedBy="ratings")
      */
-    private $responseApproved;
+    private $booking;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\rating\ResponseToRating", mappedBy="rating", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $response;
+    private $responseToRating;
 
     /**
-     * @ORM\Column(type="string", length=6)
-     * 
-     * @Assert\Choice({"User", "Advert"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\advert\Advert", inversedBy="ratings")
      */
-    private $type;
+    private $advert;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="createdRatings")
+     */
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\user\User", inversedBy="receivedRatings")
      */
     private $tenant;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $automaticallyConfirmedRental;
 
     public function __construct() 
 	{
@@ -118,18 +92,6 @@ class Rating
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getComment(): ?string
@@ -156,62 +118,23 @@ class Rating
         return $this;
     }
 
-    public function getAdvert(): ?Advert
-    {
-        return $this->advert;
-    }
-
-    public function setAdvert(?Advert $advert): self
-    {
-        $this->advert = $advert;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
+
         return $this->createdAt;
+
+    }
+
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y');
+
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getRentalBeginning(): ?\DateTimeInterface
-    {
-        return $this->rentalBeginning;
-    }
-
-    public function setRentalBeginning(\DateTimeInterface $rentalBeginning): self
-    {
-        $this->rentalBeginning = $rentalBeginning;
-
-        return $this;
-    }
-
-    public function getRentalEnd(): ?\DateTimeInterface
-    {
-        return $this->rentalEnd;
-    }
-
-    public function setRentalEnd(\DateTimeInterface $rentalEnd): self
-    {
-        $this->rentalEnd = $rentalEnd;
-
-        return $this;
-    }
-
-    public function getRentalConfirmation(): ?string
-    {
-        return $this->rentalConfirmation;
-    }
-
-    public function setRentalConfirmation(?string $rentalConfirmation): self
-    {
-        $this->rentalConfirmation = $rentalConfirmation;
 
         return $this;
     }
@@ -228,43 +151,60 @@ class Rating
         return $this;
     }
 
-    public function getResponseApproved(): ?bool
+    public function getBooking(): ?Booking
     {
-        return $this->responseApproved;
+        return $this->booking;
     }
 
-    public function setResponseApproved(?bool $responseApproved): self
+    public function setBooking(?Booking $booking): self
     {
-        $this->responseApproved = $responseApproved;
+        $this->booking = $booking;
 
         return $this;
     }
 
-    public function getResponse(): ?string
+    public function getResponseToRating(): ?ResponseToRating
     {
-        return $this->response;
+        return $this->responseToRating;
     }
 
-    public function setResponse(?string $response): self
+    public function setResponseToRating(?ResponseToRating $responseToRating): self
     {
-        $this->response = $response;
+        $this->responseToRating = $responseToRating;
+/*
+        // set the owning side of the relation if necessary
+        if ($this !== $responseToRating->getRating()) {
+            $responseToRating->setRating($this);
+        }
+*/
+        return $this;
+    }
+
+    public function getAdvert(): ?Advert
+    {
+        return $this->advert;
+    }
+
+    public function setAdvert(?Advert $advert): self
+    {
+        $this->advert = $advert;
 
         return $this;
     }
 
-    public function getType(): ?string
+    public function getUser(): ?User
     {
-        return $this->type;
+        return $this->user;
     }
 
-    public function setType(string $type): self
+    public function setUser(?User $user): self
     {
-        $this->type = $type;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getTenant(): ?User
+    public function geTenant(): ?User
     {
         return $this->tenant;
     }
@@ -272,18 +212,6 @@ class Rating
     public function setTenant(?User $tenant): self
     {
         $this->tenant = $tenant;
-
-        return $this;
-    }
-
-    public function getAutomaticallyConfirmedRental(): ?bool
-    {
-        return $this->automaticallyConfirmedRental;
-    }
-
-    public function setAutomaticallyConfirmedRental(?bool $automaticallyConfirmedRental): self
-    {
-        $this->automaticallyConfirmedRental = $automaticallyConfirmedRental;
 
         return $this;
     }

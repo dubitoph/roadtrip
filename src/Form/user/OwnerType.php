@@ -15,8 +15,8 @@ class OwnerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('companyName', TextType::class)
-            ->add('companyNumber', TextType::class)
+            ->add('companyName', TextType::class, ['required' => false])
+            ->add('companyNumber', TextType::class, ['required' => false])
             ->add('billingAddress', AddressType::class)
         ;
 
@@ -34,6 +34,7 @@ class OwnerType extends AbstractType
         $resolver->setDefaults(
                                 [
                                     'data_class' => Owner::class,
+                                    'user' => null,
                                     'isAdmin' => null,
                                     'translation_domain' => 'forms'
                                 ]

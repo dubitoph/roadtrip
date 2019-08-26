@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class AddressType extends AbstractType
 {
@@ -18,23 +19,29 @@ class AddressType extends AbstractType
         $builder
             ->add('street', TextType::class)
             ->add('number', TextType::class)
-            ->add('box', NumberType::class)
+            ->add('box', NumberType::class, ['required' => false])
             ->add('zipCode', TextType::class)
             ->add('city', TextType::class)
-            ->add('state', TextType::class)
-            ->add('country', CountryType::class, array(
-                                                        'required' => true, 
-                                                      )
-                 )
-            ->add('latitude', HiddenType::class)
-            ->add('longitude', HiddenType::class)
+            ->add('state', TextType::class, ['required' => false])
+            ->add('country', CountryType::class)
+            ->add('latitude', HiddenType::class, ['required' => false])
+            ->add('longitude', HiddenType::class, ['required' => false])
         ;
+
+        if($options['userProfile'])
+        {
+
+            $builder->add('defaultUserLocation', CheckboxType::class);
+
+        }
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Address::class,
+            'userProfile' => false,
             'translation_domain' => 'forms',
         ]);
     }

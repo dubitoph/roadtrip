@@ -7,7 +7,7 @@ use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
 use App\Entity\advert\Vehicle;
 use App\Form\advert\CostsType;
-use App\Form\advert\AdvertType;
+use App\Form\advert\DescriptionType;
 use App\Entity\advert\Insurance;
 use App\Entity\backend\Duration;
 use App\Form\advert\VehicleType;
@@ -21,7 +21,8 @@ use App\Form\advert\PricesAdvertType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
-use App\Repository\advert\PhotoRepository;
+use App\Entity\communication\Thread;
+use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\user\FavoriteRepository;
+use App\Repository\backend\SeasonRepository;
 
 class AdvertController extends AbstractController
 {
@@ -123,52 +126,104 @@ class AdvertController extends AbstractController
         ;
 
     }
+    
+    /**
+     * @Route("/advert/owner", name="advert.owner")
+     * @return Response
+     */
+    public function ownerAdverts(PhotoRepository $photoRepository): Response
+    {
+     
+        $adverts = $this->getUser()->getOwner()->getAdverts();
+
+        $mainPhotos = array();
+
+        if (count($adverts) > 0) 
+        {
+        
+            $mainPhotos = $photoRepository->getMainPhotos($adverts);
+
+        }
+
+        return $this->render('advert/ownerAdverts.html.twig', [
+                                                                'adverts' => $adverts,
+                                                                'mainPhotos' => $mainPhotos
+                                                              ]
+                            )
+        ;  
+        
+    }
 
     /**
-     * @Route("/advert/create", name="advert.create")
+     * Creating and updating advert
+     *
+     * @Route("/advert/description/create", name="advert.description.create")
+     * @Route("/advert/description/edit/{id}", name="advert.description.edit")
+     * 
+     * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function new(Request $request, ObjectManager $manager): Response
+    public function descriptionForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
     {
 
-        $advert = new Advert();
+        $editMode = true;
+        
+        if(!$advert)
+        {
 
-        $form = $this->createForm(AdvertType::class, $advert);
+            $advert = new Advert();
+            $editMode = false;
+
+        }
+
+        $form = $this->createForm(DescriptionType::class, $advert);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) { 
-                
-            $advert->setCreatedAt(new \DateTime('now'));
-            $advert->setExpiresAt(new \DateTime($advert->getCreatedAt()->format('Y-m-d H:i:s') . " +" . $this->getParameter('advert_active_duration')));           
+        if ($form->isSubmitted() && $form->isValid()) 
+        {            
 
             $manager->persist($advert);
-            $manager->flush();   
-            $this->addFlash('success', 'La première partie de votre annonce a été créée avec succès.');       
+            $manager->flush(); 
+            
+            if($editMode)
+            {
+                
+                $this->addFlash('success', 'Your advert title and description were successfully updated.');
 
-            return $this->redirectToRoute('advert.vehicle.management', array('id' => $advert->getId()));
+            } 
+            else 
+            {
+                
+                $this->addFlash('success', 'Your advert title and description were successfully created.');
+
+            }
+
+            return $this->redirectToRoute('advert.vehicle.create', array('id' => $advert->getId()));
+
         }
      
-        return $this->render('advert/new.html.twig', [
-                                                        'advert' => $advert,
-                                                        'current_menu' => 'add_advert',
-                                                        'form' => $form->createView(),
-                                                     ]
+        return $this->render('advert/descriptionCreation.html.twig', [
+                                                            'editMode' => $editMode,
+                                                            'current_menu' => 'add_advert',
+                                                            'form' => $form->createView(),
+                                                        ]
                             )
         ; 
         
     }
 
     /**
-     *  @Route("/advert/vehicle/management/{id}", name="advert.vehicle.management")
+     *  @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager) {
+    public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager): Response 
+    {
 
         $vehicle = $advert->getVehicle();
         $editMode = true;
@@ -186,7 +241,8 @@ class AdvertController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) { 
+        if ($form->isSubmitted() && $form->isValid()) 
+        { 
 
             $equipments = $vehicle->getEquipments();
 
@@ -212,13 +268,13 @@ class AdvertController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Le véhicule a été modifié avec succès.');
+                $this->addFlash('success', 'Your vehicle data were successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Le véhicule a été ajouté à votre annonce avec succès.');
+                $this->addFlash('success', 'Your vehicle data were successfully created.');
 
             }             
             
@@ -226,7 +282,7 @@ class AdvertController extends AbstractController
 
         }
 
-        return $this->render('advert/vehicle.html.twig', [
+        return $this->render('advert/vehicleCreation.html.twig', [
                                                             'vehicle' => $vehicle,
                                                             'form' => $form->createView(),
                                                          ]
@@ -236,16 +292,34 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/periods/management/{id}", name="advert.periods.management")
+     *  @Route("/advert/periods/management/{id}/{onlyPeriodManagement}", name="advert.periods.management")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function periodsForm(Advert $advert, Request $request, ObjectManager $manager) {
+    public function periodsForm(Advert $advert, bool $onlyPeriodManagement = false, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
 
+        $format = 'Y-m-d H:i:s';
+        $date = date("Y-m-d 00:00:00");
+        $today = \DateTime::createFromFormat($format, $date);
+        
+        foreach($advert->getPeriods() as $period)
+        {
+
+            if ($period->getEnd() < $today) 
+            {
+
+                $advert->removePeriod($period);
+
+            }
+
+        }
+        
         $numberPeriods = count($advert->getPeriods());
         $editMode = false;
+        $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
+        $seasons = $seasonRepository->findAll();
 
         if ($numberPeriods > 0) 
         {
@@ -254,7 +328,7 @@ class AdvertController extends AbstractController
 
         }
 
-        $form = $this->createForm(PeriodsAdvertType::class, $advert);
+        $form = $this->createForm(PeriodsAdvertType::class, $advert, array('endDate' => $upLimitDate));
 
         $form->handleRequest($request);
 
@@ -267,19 +341,18 @@ class AdvertController extends AbstractController
             $overlap = false;
 
             //They will be used to check if the periods are valid (between today and the fixed limit in the parameters)
+/*
             $format = 'Y-m-d H:i:s';
             $date = date("Y-m-d 00:00:00");
             $toDay = \DateTime::createFromFormat($format, $date);
-            $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
+*/
             $previousLimit = false;
             $overLimit = false;
-            $oldestDate = new \DateTime("+ 10 years");
-            $mostDistantDate = new \DateTime("- 10 years");
 
             foreach ($periods as $period) {
 
                 //Checking if there is a date older than today
-                if ($period->getStart() < $toDay) {
+                if ($period->getStart() < $today) {
 
                     $previousLimit = true;
 
@@ -343,11 +416,11 @@ class AdvertController extends AbstractController
                     
                 $daterange = new \DatePeriod($startDate, $interval, $endDate);
                     
-                if (($startDate >= $toDay && $startDate <= $endCkeckedPeriod) || ($end >= $toDay && $end <= $endCkeckedPeriod)) {
+                if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) {
                     
                     foreach ($daterange as $periodDate) {
 
-                        if ( $periodDate >= $toDay && $periodDate <= $endCkeckedPeriod) {
+                        if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) {
 
                             $daysCovered[] = $periodDate;
 
@@ -359,7 +432,7 @@ class AdvertController extends AbstractController
 
             }
 
-            $dayDate = clone $toDay;
+            $dayDate = clone $today;
             $gaps = true;
 
             while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
@@ -388,7 +461,7 @@ class AdvertController extends AbstractController
             $manager->persist($advert);
             $manager->flush();  
 
-            if ($editMode) 
+            if ($editMode)
             {
 
                 $this->addFlash('success', 'Les périodes ont été modifiées avec succès.');
@@ -401,13 +474,27 @@ class AdvertController extends AbstractController
 
             }
 
-            return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+            if ($onlyPeriodManagement) 
+            {
+
+                return $this->redirectToRoute('advert.owner');
+
+            } 
+            else 
+            {
+
+                return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+
+            }
 
         }
   
         return $this->render('advert/periods.html.twig', [
                                                             'form' => $form->createView(), 
-                                                            'editMode' => $numberPeriods > 0
+                                                            'editMode' => $numberPeriods > 0, 
+                                                            'upLimitDate' => $upLimitDate,
+                                                            'seasons' => $seasons,
+                                                            'limitCreationPeriods' => $this->getParameter('limit_creation_periods')
                                                          ]
                             )
         ;
@@ -415,13 +502,13 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/prices/management/{id}", name="advert.prices.management")
+     *  @Route("/advert/prices/management/{id}/{onlyPriceManagement}", name="advert.prices.management")
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function pricesForm(Advert $advert, Request $request, ObjectManager $manager) { 
+    public function pricesForm(Advert $advert, bool $onlyPriceManagement, Request $request, ObjectManager $manager) { 
 
         $editMode = false;
         
@@ -533,7 +620,18 @@ class AdvertController extends AbstractController
 
             }
 
-            return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+            if ($onlyPriceManagement) 
+            {
+
+                return $this->redirectToRoute('advert.owner');
+
+            } 
+            else 
+            {
+
+                return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+
+            }
 
         }
   
@@ -808,7 +906,7 @@ class AdvertController extends AbstractController
     /**
      * @Route("/advert/show/{slug}-{id}", name="advert.show", requirements = {"slug": "[a-z0-9\-]*"})
      */
-    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response 
+    public function show(Advert $advert, String $slug, PhotoRepository $photoRepository, FavoriteRepository $favoriteRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response 
     {
         
         $user = $this->getUser();
@@ -827,14 +925,32 @@ class AdvertController extends AbstractController
 
         }
         
-        $mail = new Mail();
+        if($user)
+        {
+        
+            $thread = new Thread();
 
-        $mail->setSender($user)
-             ->setReceiver($receiver)
-             ->setSubject($this->getParameter('contact_owner_subject'))
-             ->setAdvert($advert)
-             ->setConversation(time() + $user->getId())
-             ->setTemplate('communication/contactAboutAdvert.html.twig');
+            $thread->setAdvert($advert)
+                ->setUser($user)
+                ->setOwner($advert->getOwner())
+            ;        
+
+            $mail = new Mail();
+
+            $mail->setSender($user)
+                ->setReceiver($receiver)
+                ->setSubject($this->getParameter('contact_owner_subject'))
+                ->setThread($thread)
+                ->setBody($this->renderView(
+                                            'communication/contactAboutAdvert.html.twig', 
+                                            [
+                                                'mail' => $mail
+                                            ]
+                                            )
+                        )
+            ;
+
+        }
 
         $minPrice = $this->getMinPrice($advert);
         $mainPhoto = $photoRepository->findOneBy(array('advert' => $advert, 'mainPhoto' => true));
@@ -860,91 +976,75 @@ class AdvertController extends AbstractController
 
         }
 
-        $form = $this->createForm(MailType::class, $mail);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
+        if($user)
         {
+
+            $favorite = $favoriteRepository->findOneBy(array('advert' => $advert, 'user' => $user));
             
-            $mail->setMessage($this->renderView(
-                                                $mail->getTemplate(), 
-                                                [
-                                                    'mail' => $mail
-                                                ]
-                                               )
-                             )
-            ;
+            $form = $this->createForm(MailType::class, $mail);
+            $form->handleRequest($request);
 
-            if ($mail->sendEmail($mailer))
-            {                
-
-                $manager->persist($mail);
-                $manager->flush();
-
-                $this->addFlash('success', "Your message was successfully send.");
-
-            }
-            else
+            if ($form->isSubmitted() && $form->isValid()) 
             {
+                
+                if ($mail->sendEmail($mailer))
+                {                
 
-                $this->addFlash('error', "Your message couldn't be sent");
+                    $manager->persist($thread);
+                    $manager->persist($mail);
+                    $manager->flush();
+
+                    $this->addFlash('success', "Your message was successfully send.");
+
+                }
+                else
+                {
+
+                    $this->addFlash('error', "Your message couldn't be sent");
+
+                }
+
+                return $this->redirectToRoute('advert.show', [
+                                                                'id' => $advert->getId(),
+                                                                'slug' => $advertSlug,
+                                                            ]
+                                            )
+                ;
 
             }
-
-            return $this->redirectToRoute('advert.show', [
-                                                            'id' => $advert->getId(),
-                                                            'slug' => $advertSlug,
-                                                         ]
-                                         )
+            
+            return $this->render('advert/show.html.twig', [
+                                                            'current_menu' => 'adverts', 
+                                                            'controller_name' => 'AdvertController', 
+                                                            'advert' => $advert,
+                                                            'minPrice' => $minPrice,
+                                                            'mainPhoto' => $mainPhoto,
+                                                            'cellEquipments' => $cellEquipments,
+                                                            'carrierEquipments' => $carrierEquipments,
+                                                            'favorite' => $favorite,
+                                                            'form' => $form->createView(),
+                                                        ]
+                                )
             ;
 
         }
-        
-        return $this->render('advert/show.html.twig', [
-                                                        'current_menu' => 'adverts', 
-                                                        'controller_name' => 'AdvertController', 
-                                                        'advert' => $advert,
-                                                        'minPrice' => $minPrice,
-                                                        'mainPhoto' => $mainPhoto,
-                                                        'cellEquipments' => $cellEquipments,
-                                                        'carrierEquipments' => $carrierEquipments,
-                                                        'form' => $form->createView(),
-                                                      ]
-                            )
-    ;
+        else 
+        {
 
-    }
+            return $this->render('advert/show.html.twig', [
+                                                            'current_menu' => 'adverts', 
+                                                            'controller_name' => 'AdvertController', 
+                                                            'advert' => $advert,
+                                                            'minPrice' => $minPrice,
+                                                            'mainPhoto' => $mainPhoto,
+                                                            'cellEquipments' => $cellEquipments,
+                                                            'carrierEquipments' => $carrierEquipments
+                                                        ]
+                                )
+            ;
 
-    /**
-     * @Route("/advert/edit/{id}", name="advert.edit")
-     * @param Advert $advert
-     * @param Request $request
-     * @param ObjectManager $manager
-     * @return Response
-     */
-    public function edit(Advert $advert, Request $request, ObjectManager $manager): Response
-    {
-
-        $form = $this->createForm(AdvertType::class, $advert);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
-        {           
-
-            $manager->flush();
-            $this->addFlash('success', 'Votre annonce a bien été modifiée');                   
-
-            return $this->redirectToRoute('advert.vehicle.management', array('id' => $advert->getId()));
         }
-     
-        return $this->render('advert/edit.html.twig', [
-                                                        'advert' => $advert,
-                                                        'form' => $form->createView(),
-                                                      ]
-                            )
-        ;  
-        
+
     }
 
     /**
@@ -966,7 +1066,56 @@ class AdvertController extends AbstractController
 
         } 
             
-        return $this->redirectToRoute('backend.advert.index');
+        return $this->redirectToRoute('advert.owner');
+        
+    }
+
+    /**
+     * @Route("/advert/clone/{id}", name="advert.clone")
+     * @param Advert $advert
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
+     */
+    public function clone(Advert $advert, Request $request, ObjectManager $manager): Response
+    {
+
+        $clonedAdvert = clone $advert;
+
+        $clonedAdvert->setCreatedAt(new \DateTime('now'));
+        $clonedAdvert->setExpiresAt(null);
+        $clonedAdvert->setVehicle(clone $advert->getVehicle());
+        $clonedAdvert->getVehicle()->setSituation(clone $advert->getVehicle()->getSituation());
+
+        foreach ($advert->getPrices() as $price) 
+        {
+
+            $clonedAdvert->addPrice(clone $price);
+
+        }
+
+        foreach ($advert->getPeriods() as $period) 
+        {
+
+            $clonedAdvert->addPeriod(clone $period);
+
+        }
+
+        $clonedAdvert->setInsurance(clone $advert->getInsurance());
+
+        foreach ($advert->getIncludedMileages() as $includedMileage) 
+        {
+
+            $clonedAdvert->addIncludedMileage(clone $includedMileage);
+
+        }
+
+        $clonedAdvert->setStripeIntentId(null);
+
+        $manager->persist($clonedAdvert);
+        $manager->flush();
+            
+        return $this->redirectToRoute('advert.edit', array('id' => $clonedAdvert->getId()));
         
     }
 

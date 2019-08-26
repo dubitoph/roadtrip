@@ -18,27 +18,94 @@ class RatingRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Rating::class);
     }
-
-    public function toConfirmRental($period)
+    
+    public function findByAdverts($adverts)
     {
 
-        $upLimit = new \DateTime("- " . $period);
-        $confirmation = 'Yes';
-
-        $query = $this->createQueryBuilder('r')
-                         ->update('App\Entity\advert\Rating', 'r')
-                         ->set('r.rentalConfirmation', ':confirmation')
-                         ->set('r.rentalAutomaticallyConfirmed', true)
-                         ->where('r.rentalConfirmation is NULL')
-                         ->andWhere('r.createdAt <= :upLimit')
-                         ->setParameter('upLimit', $upLimit)
-                         ->setParameter('confirmation', $confirmation)
-                         ->getQuery();
-
-        $result = $query->execute();
+        $now = date("Y-m-d");
+        
+        return $this->createQueryBuilder('r')
+                    ->addSelect('a.id')
+                    ->join('r.booking', 'b')
+                    ->join('App\Entity\advert\Advert', 'a')
+                    ->andWhere('a = b.vehicle')
+                    ->andWhere('a in (:adverts)')
+                    ->andWhere('r.ratingApproved = true')
+                    ->andWhere('b.endAt <= :now')
+                    ->groupBy('a.id')
+                    ->setParameter('adverts', $adverts)
+                    ->setParameter('now', $now)
+                    ->getQuery()
+                    ->getResult()
+        ;
 
     }
     
+    public function findReceivedUserRatings($user)
+    {
+
+        return $this->createQueryBuilder('r')
+                    ->join('r.booking', 'b')
+                    ->where('b.user = :user')
+                    ->andWhere('r.user <> :user')
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
+    
+    public function findReceivedOwnerRatings($owner)
+    {
+
+        return $this->createQueryBuilder('r')
+                    ->join('r.booking', 'b')
+                    ->join('b.vehicle', 'v')
+                    ->join('v.advert', 'a')
+                    ->where('a.owner = :owner')
+                    ->andWhere('r.user <> :user')
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setParameter('owner', $owner)
+                    ->setParameter('user', $owner->getUser())
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
+    
+    public function findGivenUserRatings($owner)
+    {
+
+        return $this->createQueryBuilder('r')
+                    ->join('r.booking', 'b')
+                    ->join('b.vehicle', 'v')
+                    ->join('v.advert', 'a')
+                    ->where('a.owner = :owner')
+                    ->andWhere('r.user = :user')
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setParameter('owner', $owner)
+                    ->setParameter('user', $owner->getUser())
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
+    
+    public function findGivenOwnerRatings($user)
+    {
+
+        return $this->createQueryBuilder('r')
+                    ->join('r.booking', 'b')
+                    ->where('b.user = :user')
+                    ->andWhere('r.user = :user')
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
 
     /*
     public function findOneBySomeField($value): ?Rating

@@ -17,34 +17,53 @@
 
         {% if editMode %}
 
-            <h1>Modification des périodes</h1>
+            <h1>Periods updating</h1>
 
         {% else %}
 
-            <h1>Création des périodes</h1>
+            <h1>Periods creation</h1>
 
         {% endif %}
 
-        {{ form_start(form) }}
-                
-        <h4>Périodes</h4>
-                
-        <ul class= "periods" data-prototype= " {{ form_widget ( form.periods.vars.prototype )| e ( 'html_attr' ) }} " >
+        You have different seasons at your disposal : 
+        <br>
+        <br>
+        <ul>
 
-            {# iterate over each existing period #}
-            {% for period in form.periods %}
-                <li> 
-                                
-                    {{ form_row(period.start) }}
-                    {{ form_row( period.end ) }}
-                    {{ form_row( period.season ) }}
+            {% for season in seasons %}
+
+                <li>{{ season.season }}</li>
                 
-                </li>
             {% endfor %}
 
-        </ul> 
-            
-        <button class="btn btn-primary">{{ button | default('Enregistrer') }}</button>
+        </ul>
+        <br>
+        For each period you will create, you will must choose a season. If you don't want create different periods, create only one for {{ limitCreationPeriods }}.
+        <br>
+        <br>
+        In the next step, for each or for the unique season you will use, you will can specify prices.
+        <br>
+        <br>                
+        <h4>From today to {{ upLimitDate|date("d/m/Y") }}</h4>
+
+        {{ form_start(form) }}
+                
+            <ul class= "periods" data-prototype= " {{ form_widget ( form.periods.vars.prototype )| e ( 'html_attr' ) }} " >
+
+                {# iterate over each existing period #}
+                {% for period in form.periods %}
+                    <li> 
+                                    
+                        {{ form_row(period.start) }}
+                        {{ form_row( period.end ) }}
+                        {{ form_row( period.season ) }}
+                    
+                    </li>
+                {% endfor %}
+
+            </ul> 
+                
+            <button class="btn btn-primary">{{ button | default('Save') }}</button>
             
         {{ form_end(form) }}
 

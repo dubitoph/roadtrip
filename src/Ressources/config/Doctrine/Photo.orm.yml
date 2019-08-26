@@ -1,4 +1,4 @@
-App\Entity\advert\Photo :
+App\Entity\media\Photo :
     type : entity
     repositoryClass : App\Entity\Repositories\PhotoRepository
     table : photo

@@ -8,7 +8,16 @@
 
         <div class="container">
 
-            {{ include('_messages.html.twig', { 'form': form }) }}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                {{ include('_messages.html.twig', { 'form': form }) }}
+
+            {% else %}
+
+                {{ include('_messages.html.twig') }}
+
+            {% endif %}
+                
 
             <div class='row'>
 
@@ -49,28 +58,52 @@
                         <div class="text-primary" style"font-size: 4rem; font-weight: bold">{{ minPrice.formattedPrice }} €</div>
 
                     {% endif %}
-                    
-                    <a href="#" class="btn btn-primary" id="contactButton"{% if form.vars.submitted %} style="display: none;"{% endif %}>Contact the owner</a>
-                    
-                    <div id="contactForm" class="mt-4"{% if not form.vars.submitted %} style="display: none;"{% endif %}>
 
-                        {{ form_start(form) }}
-                        
-                        <div>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-                            {{ form_row( form.message ) }} 
+                    <div>
+
+                        {% if favorite %}
+
+                            In my favorites
                             
-                        </div>
-                        
-                        <div>
-        
-                            <button class="btn btn-primary">{{ button | default('Send') }}</button>
-                            
-                        </div>
+                            <form method = "post" action="{{ path('user.favorite.delete', { 'id': favorite.id }) }}" style="display: inline-block">
 
-                        {{ form_end(form) }}
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ favorite.id ) }}">
+                                <button class="btn btn-danger">Remove</button>
+
+                            </form>
+                            
+                        {% else %}
+                        
+                            <a href="{{ path('user.favorite.create', { 'id': advert.id }) }}" class="btn btn-primary">Add to my favorites</a>
+                            
+                        {% endif %}
 
                     </div>
+
+                        <div>
+
+                            <a href="{{ path('communication.mail.create', { 'id': advert.id, 'receiver': advert.owner.user.id }) }}" class="btn btn-primary">Contact the owner</a>
+
+                        </div>
+
+                        <div>
+
+                            <a href="{{ path('booking.booking.request', { 'id': advert.vehicle.id }) }}" class="btn btn-primary">Request a booking</a>
+
+                        </div>
+
+                    {% else %}
+                        
+                        <div>
+
+                            <a href="{{ path('security.login') }}">Login to contact the owner, request a booking or add this advert in your favorites</a>
+
+                        </div>
+
+                    {% endif %}
         
                 </div>
         
@@ -176,7 +209,7 @@
 
                 </div>
 
-                <div class="row">
+                <div id="vehicleCalendar" class="row">
                 
                     {% include '@Calendar/calendar.html' %}
 
@@ -245,16 +278,6 @@
                         </div>
                             
                     {% endfor %}
-                    
-                {% endif %}
-
-                {% if app.user %}
-
-                    <a href="{{ path('rating.advert.create', { 'id': advert.id }) }}">Propose your rating</a>
-                    
-                {% else %}
-
-                    <a href="{{ path('security.login') }}">Login to propose your rating</a>
                     
                 {% endif %}
 

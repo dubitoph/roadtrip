@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Ratings management {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Ratings management</h1>
+
+        <h2>Ratings pending apporval</h2>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Advert</th>
+                    <th>Comment</th>
+                    <th>Score</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for rating in ratings %}
+
+                    <tr>
+
+                        <td>{{ rating.getFormattedCreatedAt }}</td>
+                        <td>{{ rating.user.userName }} ({{ rating.user.id }})</td>
+                        <td><a href="{{ path('advert.show', { 'id': rating.booking.vehicle.advert.id, 'slug': rating.booking.vehicle.advert.slug }) }}">{{ rating.booking.vehicle.advert.title }}</a></td>
+                        <td>{{ rating.comment }}</td>
+                        <td>{{ rating.score }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.rating.approve', { 'id': rating.id }) }}" class="btn btn-secondary">Approve</a>
+
+                            <form method = "post" action="{{ path('backend.rating.delete', { 'id': rating.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ rating.id ) }}">
+                                <button class="btn deleteRating btn-danger">Delete</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <h2>Responses pending apporval</h2>
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+                    <th>Author</th>
+                    <th>Advert</th>
+                    <th>Comment</th>
+                    <th>Score</th>
+                    <th>Response</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for response in responses %}
+
+                    <tr>
+
+                        <td>{{ response.getFormattedCreatedAt }}</td>
+                        <td>{{ response.user.userName }} ({{ response.user.id }})</td>
+                        <td><a href="{{ path('advert.show', { 'id': response.rating.booking.vehicle.advert.id, 'slug': response.rating.booking.vehicle.advert.slug }) }}">{{ response.rating.booking.vehicle.advert.title }}</a></td>
+                        <td>{{ response.rating.comment }}</td>
+                        <td>{{ response.rating.score }}</td>
+                        <td>{{ response.response }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.rating.response.approve', { 'id': response.id }) }}" class="btn btn-secondary">Approve</a>
+
+                            <form method = "post" action="{{ path('backend.rating.response.delete', { 'id': response.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ response.id ) }}">
+                                <button class="btn deleteReponse btn-danger">Delete</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexRating') }}
+        
+    {% endblock %}
+
+{% endblock %}

@@ -2,18 +2,22 @@
 
 namespace App\Controller\rating;
 
-use App\Entity\advert\Advert;
 use App\Entity\rating\Rating;
+use App\Entity\booking\Booking;
 use App\Form\rating\RatingType;
 use App\Entity\communication\Mail;
+use App\Entity\rating\ResponseToRating;
 use App\Form\rating\RatingResponseType;
+use App\Repository\user\UserRepository;
+use App\Repository\media\PhotoRepository;
 use App\Repository\rating\RatingRepository;
+use App\Repository\booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\user\UserRepository;
 
 class RatingController extends AbstractController
 {
@@ -30,15 +34,79 @@ class RatingController extends AbstractController
     
         return $this->render('rating/index.html.twig', compact('ratings'));  
         
+    } 
+
+    /**
+     * @Route("/rating/dashbord", name="rating.dashbord")
+     * @param RatingRepository $ratingRepository
+     * @return Response
+     */
+    public function dashbord(BookingRepository $bookingRepository, PhotoRepository $photoRepository, RatingRepository $ratingRepository): Response
+    {
+     
+        $user = $this->getUser();
+        $owner = $user->getOwner();
+        
+        $bookingsWithoutRating = $bookingRepository->findBookingsWithoutRating($user);
+        
+        $adverts = array();
+
+        if (count($bookingsWithoutRating) > 0) 
+        {
+        
+            foreach ($bookingsWithoutRating as $booking) 
+            {
+
+                $adverts[] = $booking->getVehicle()->getAdvert();
+
+            }
+
+        }
+
+        $mainPhotos = array();
+
+        if (count($adverts) > 0) 
+        {
+        
+            $mainPhotos = $photoRepository->getMainPhotos($adverts);
+
+        }
+
+        $receivedUserRatings = $ratingRepository->findReceivedUserRatings($user);
+        
+        $receivedOwnerRatings = array();
+        $givenUserRatings = array();
+
+        if ($owner) 
+        {
+
+            $receivedOwnerRatings = $ratingRepository->findReceivedOwnerRatings($owner);
+            $givenUserRatings = $ratingRepository->findGivenUserRatings($owner);
+
+        }
+
+        $givenOwnerRatings = $ratingRepository->findGivenOwnerRatings($user);
+    
+        return $this->render('rating/ratingsDashbord.html.twig',[
+                                                                 'bookingsWithoutRating' => $bookingsWithoutRating,
+                                                                 'receivedUserRatings' => $receivedUserRatings,
+                                                                 'receivedOwnerRatings' => $receivedOwnerRatings,
+                                                                 'givenUserRatings' => $givenUserRatings,
+                                                                 'givenOwnerRatings' => $givenOwnerRatings,
+                                                                 'mainPhotos' => $mainPhotos
+                                                                ]
+                            )
+        ;  
+        
     }
 
     /**
-     * @Route("/rating/advert/create/{id}", name="rating.advert.create")
+     * @Route("/rating/create/{id}", name="rating.create")
      * @param Request $request
      * @param ObjectManager $manager
      * @return Response
      */
-    public function new(Advert $advert, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
+    public function new(Booking $booking, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
     {
 
         $user = $this->getUser();
@@ -56,9 +124,22 @@ class RatingController extends AbstractController
         
             $rating = new Rating;
 
-            $rating->setAdvert($advert);
-            $rating->setType('Advert');
+            $rating->setBooking($booking);
             $rating->setUser($user);
+
+            if ($user == $booking->getUser()) 
+            {
+
+                $rating->setAdvert($booking->getVehicle()->getAdvert());
+
+            } 
+            else 
+            {
+
+                $rating->setTenant($booking->getUser());
+
+            }
+            
 
             $form = $this->createForm(RatingType::class, $rating);
 
@@ -70,38 +151,13 @@ class RatingController extends AbstractController
                 $manager->persist($rating);
                 $manager->flush();    
 
-                $this->addFlash('success', "L'évaluation a été créée avec succès et est en attente d'approbation par un administrateur pour sa publication"); 
+                $this->addFlash('success', "The evaluation was successfully created and is awaiting approval by an administrator for publication."); 
 
-                $mail = $this->sendRatingMail($rating, $mailer);
-
-                if($mail)
-                {                
-
-                    $manager->persist($mail);
-                    $manager->flush();
-
-                    $this->addFlash('success', "Un email a été envoyé à l'adresse email indiquée afin d'activer votre compte.");
-
-                }
-                else
-                {
-
-                    $this->addFlash('notice', "Un email n'a pas pu être envoyé à l'adresse email indiquée afin d'activer votre compte.");
-
-                }                    
-
-                if ($advert) 
-                {
-
-                    return $this->redirectToRoute('advert.show', ['slug' => $advert->getSlug(), 'id' => $advert->getId()]);
-
-                }
-                else 
-                {
-
-                    return $this->redirectToRoute('rating.user', ['id' => $user->getId()]);
-
-                }
+                $message = "A new rating is pending approval. Please manage it in the <a href=\"" . $this->generateUrl('backend.rating.toApprove', array(), UrlGeneratorInterface::ABSOLUTE_URL) . "\">dashboard</a>.";
+                
+                $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
+                
+                return $this->redirectToRoute('rating.dashbord');
 
             }
         
@@ -192,174 +248,65 @@ class RatingController extends AbstractController
     }
 
     /**
-     * @Route("/rating/owner/approval{id}", name="rating.owner.approval")
+     * @Route("/rating/create/response/{id}", name="rating.create.response")
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @return Response
      */
-    public function ownerApproval(Rating $rating, ObjectManager $manager)
+    public function response(Rating $rating, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
     {
 
-        $rating->setOwnerApproval(true);
-            
-        $manager->persist($rating);
-        $manager->flush(); 
-
-        return $this->redirectToRoute('rating.show', ['id' => $rating->getId()]);
-    
-    }
-
-    /**
-     * @Route("/rating/rental/confirmation/{id}/{confirmation}", name="rating.rental.confirmation", defaults={"id": 1, "confirmation": null})
-     */
-    public function rentalConfirmation(Rating $rating, $confirmation, ObjectManager $manager, \Swift_Mailer $mailer, UserRepository $userRepository)
-    {
-
-        if (! $rating->getRentalConfirmation()) 
+        $response = trim($request->request->get('response_' . $rating->getId()));
+        
+        if($response)
         {
-            
-            $rating->setRentalConfirmation($confirmation);
-            
+        
+            $responseToRating = new ResponseToRating();
+
+            $responseToRating->setUser($this->getUser())
+                             ->setRating($rating)
+                             ->setResponse($response);
+
+            $rating->setResponseToRating($responseToRating);
+
             $manager->persist($rating);
             $manager->flush();
 
-            if($confirmation == 'Yes')
-            {
+            $this->addFlash('success', "Your response was successfully created and it's pending to administrator approval.");
 
-                $mail = $this->sendConfirmedRentalMail($rating, $mailer, $userRepository);
-
-            }
-            else
-            {
-
-                $mail = $this->sendNotConfirmedRentalMail($rating, $mailer);
-
-                if($mail)
-                {                
-
-                    $manager->persist($mail);
-                    $manager->flush();
-
-                }
-     
-                return $this->render('Rating/notConfirmedRental.html.twig', ['rating' => $rating]);
-
-            }
-        }
-        else
-        {
-
-            $this->addFlash('notice', "Un suivi a déjà été apporté par rapport la location. Il n'est donc plus possible de le modifier."); 
-
-        }
-
-        return $this->redirectToRoute('rating.show', ['id' => $rating->getId()]);
+            $message = "A new response to rating is pending approval. Please manage it in the <a href=\"" . $this->generateUrl('backend.rating.toApprove', array(), UrlGeneratorInterface::ABSOLUTE_URL) . "\">dashboard</a>.";
+            
+            $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
     
-    }
-
-    private function sendRatingMail($rating, $mailer)
-    { 
-
-        $mail = new Mail;
-        $advert = null;
-
-        if ($rating->getType() == 'Advert') 
+        }
+        else 
         {
 
-            $advert = $rating->getAdvert();
-            $receiver = $advert->getOwner()->getUser();
-            
-        }
-        else
-        {
-
-            $receiver = $rating->getTenant();
+            $this->addFlash('error', "You caun't send an empty response");
 
         }
-            
-        $mail->setReceiver($receiver)
-             ->setSubject($this->getParameter('rating_email_subject'))
-             ->setFirstname($this->getParameter('administrateur_firstname'))
-             ->setName($this->getParameter('administrateur_name'))
-             ->setEmailFrom($this->getParameter('administrateur_email'))
-             ->setTemplate('communication\ratingEmail.html.twig')
-             ->setMessage($this->renderView(
-                                                $mail->getTemplate(), 
-                                                [
-                                                    'tenant' => $this->getUser(), 
-                                                    'receiver' => $receiver, 
-                                                    'rating' => $rating, 
-                                                    'advert' => $advert
-                                                ]
-                                            )
-                         )
-        ;
 
-        if($mail->sendEmail($mailer))
-        {
-
-            return $mail;
-
-        }
-        else
-        {
-
-            return null;
-
-        }
+        return $this->redirectToRoute('rating.dashbord');
 
     }
 
-    private function sendConfirmedRentalMail($rating, $mailer, $userRepository)
+    private function sendPendingApprovalRatingMail($mailer, $userRepository, $message)
     { 
 
-        $mail = new Mail;
-        $receiver = $userRepository->findOneBy(array('username' => $this->getParameter('backend_admin_user')));
-            
-        $mail->setReceiver($receiver)
-             ->setSubject($this->getParameter('rating_approval_subject'))
-             ->setFirstname($this->getParameter('administrateur_firstname'))
-             ->setName($this->getParameter('administrateur_name'))
-             ->setEmailFrom($this->getParameter('administrateur_email'))
-             ->setTemplate('backend\rating\ratingToApproveEmail.html.twig')
-             ->setMessage($this->renderView(
-                                                $mail->getTemplate(), 
-                                                ['rating' => $rating]
-                                            )
-                         )
-        ;
+        $mail = new Mail;  
 
-        if($mail->sendEmail($mailer))
-        {
+        $sender = $userRepository->findOneBy(array('username' => 'administrator'));
+        $receiver = $userRepository->findOneBy(array('username' => 'ratingsAdministrator')); 
 
-            return $mail;
-
-        }
-        else
-        {
-
-            return null;
-
-        }
-
-    }
-
-    private function sendNotConfirmedRentalMail($rating, $mailer)
-    { 
-
-        $mail = new Mail;
-            
-        $mail->setReceiver($rating->getUser())
-             ->setSubject($this->getParameter('rating_not_confirmed_rental_email_subject'))
-             ->setFirstname($this->getParameter('administrateur_firstname'))
-             ->setName($this->getParameter('administrateur_name'))
-             ->setEmailFrom($this->getParameter('administrateur_email'))
-             ->setTemplate('communication\notConfirmedRentalEmail.html.twig')
-             ->setMessage($this->renderView(
-                                                $mail->getTemplate(), 
-                                                [
-                                                    'rating' => $rating,
-                                                    'contestationEmail' => $this->getParameter('contestation_email')
-                                                ]
-                                            )
-                         )
+        $mail->setSender($sender)
+             ->setReceiver($receiver)
+             ->setSubject($this->getParameter('rating_pending_approval_subject'))
+             ->setMessage($message)
+             ->setBody($this->renderView(
+                                            'communication\administrationEmail.html.twig', 
+                                            ['mail' => $mail]
+                                        )
+                      )
         ;
 
         if($mail->sendEmail($mailer))

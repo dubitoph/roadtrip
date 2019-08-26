@@ -5,15 +5,19 @@ namespace App\Controller\payment;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Entity\backend\VAT;
-use App\Entity\backend\Bill;
+use App\Entity\payment\Bill;
 use App\Entity\advert\Advert;
 use App\Entity\communication\Mail;
+use App\Repository\payment\BillRepository;
 use App\Repository\advert\AdvertRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 
 class PaymentController extends AbstractController
 {
@@ -220,6 +224,72 @@ class PaymentController extends AbstractController
             exit();
 
         }        
+
+    }
+
+    /**
+     * @Route("/payment/owner/bills", name="payment.owner.bills")
+     * @return Response
+     */
+    public function ownerBills(BillRepository $billRepository): Response
+    {
+
+        $bills = $billRepository->findOwnerBills($this->getUser()->getOwner()->getAdverts());
+     
+        return $this->render('payment/ownerBills.html.twig', ['bills' => $bills]);
+
+    }
+
+    /**
+     * @Route("/payment/bill/show/{id}", name="payment.bill.show")
+     * @return Response
+     */
+    public function show(Bill $bill): Response
+    {
+
+        $fileName = $bill->getName();
+        
+        $billFile = $directory = $this->getParameter('bills_directory') . '/' . substr($fileName, 0, 4) . '/' . substr($fileName, 5, 2) . '/' . 
+                    $bill->getAdvert()->getOwner()->getId() . '/' . $bill->getName(); 
+     
+        return new BinaryFileResponse($billFile);
+
+    }
+
+    /**
+     * @Route("/payment/bill/download/{id}", name="payment.bill.download")
+     * @return Response
+     */
+    public function download(Bill $bill): Response
+    {
+
+        $fileName = $bill->getName();
+        
+        $billFile = $directory = $this->getParameter('bills_directory') . '/' . substr($fileName, 0, 4) . '/' . substr($fileName, 5, 2) . '/' . 
+                    $bill->getAdvert()->getOwner()->getId() . '/' . $bill->getName(); 
+     
+        $response = new BinaryFileResponse($billFile);
+
+        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+
+        if($mimeTypeGuesser->isSupported())
+        {
+            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($billFile));
+
+        }
+        else
+        {
+            $response->headers->set('Content-Type', 'text/plain');
+
+        }
+
+        $response->setContentDisposition(
+                                            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                                            $bill->getName()
+                                        )
+        ;
+
+        return $response;
 
     }
 

@@ -35,6 +35,7 @@
                         <td>
                             
                             <a href="{{ path('backend.duration.edit', { 'id': duration.id }) }}" class="btn btn-secondary">Editer</a>
+                            
                             <form method = "post" action="{{ path('backend.duration.delete', { 'id': duration.id }) }}" style="display: inline-block">
 
                                 <input type="hidden"  name="_method" value="DELETE">

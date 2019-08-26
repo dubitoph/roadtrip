@@ -3,7 +3,7 @@
 namespace App\Form\advert;
 
 use App\Entity\advert\Advert;
-use App\Form\advert\PhotoType;
+use App\Form\media\PhotoType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,13 +17,13 @@ class PhotosAdvertType extends AbstractType
         
         $builder
             ->add('photos', CollectionType::class, array(
-                                                      'entry_type' => PhotoType::class,  
-                                                      'prototype' => true,
-                                                      'allow_add' => true,
-                                                      'allow_delete' => true,
-                                                      'by_reference' => false,
-                                                      'required' => false,
-                                                      'label' => false, 
+                                                            'entry_type' => PhotoType::class,  
+                                                            'prototype' => true,
+                                                            'allow_add' => true,
+                                                            'allow_delete' => true,
+                                                            'by_reference' => false,
+                                                            'required' => false,
+                                                            'label' => false
                   ))
             ->add('deletedPhotos', HiddenType::class, array('mapped' => false,))
         ;

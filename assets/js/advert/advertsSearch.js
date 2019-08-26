@@ -1,8 +1,10 @@
-import Places from 'places.js';
-import { setSessionLocation } from '../app';
+//import Places from 'places.js';
+import { autocompleteAddress } from '../app';
 
 jQuery( document ).ready( function( $ ) {
 
+  autocompleteAddress('profile_address_street', 'profile_address_city', 'profile_address_zipCode', 'profile_address_country', 'profile_address_latitude', 'profile_address_longitude');
+/*
   var places = require('places.js');
   var inputAddress = document.querySelector('#search_address');
 
@@ -47,5 +49,5 @@ jQuery( document ).ready( function( $ ) {
     });
 
   }
-
+*/
 });

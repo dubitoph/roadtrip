@@ -4,7 +4,7 @@ namespace App\Controller\home;
 
 use App\Entity\advert\AdvertSearch;
 use App\Form\advert\AdvertSearchType;
-use App\Repository\advert\PhotoRepository;
+use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use App\Repository\rating\RatingRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,16 +62,15 @@ class HomeController extends AbstractController
         
             $mainPhotos = $photoRepository->getMainPhotos($lastAdverts);
 
-        }
-        
-        
+        }       
         
         $lastAdvertRatings = $ratingRepository->findBy(
-                                                        array('type'=> 'Advert', 'ratingApproved' => true),
+                                                        array('ratingApproved' => true),
                                                         array('createdAt' => 'DESC'),
                                                         $limit  = 10
                                                       )
         ;
+
         $subscriptions = $subscriptionRepository->findAll();
            
         $search = new AdvertSearch();

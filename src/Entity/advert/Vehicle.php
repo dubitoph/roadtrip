@@ -6,7 +6,7 @@ use App\Entity\backend\Fuel;
 use App\Entity\backend\Mark;
 use App\Entity\backend\Sort;
 use App\Entity\advert\Advert;
-use App\Entity\advert\Booking;
+use App\Entity\booking\Booking;
 use App\Entity\address\Address;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\backend\Equipment;
@@ -182,7 +182,7 @@ class Vehicle
     private $equipments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\address\Address", inversedBy="vehicles", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToOne(targetEntity="App\Entity\address\Address", inversedBy="vehicle", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\Type(type="App\Entity\address\Address")
@@ -191,7 +191,7 @@ class Vehicle
     private $situation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\advert\Booking", mappedBy="vehicle", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\booking\Booking", mappedBy="vehicle", orphanRemoval=true)
      */
     private $bookings;
 
@@ -443,7 +443,8 @@ class Vehicle
 
     public function addCellEquipment(Equipment $cellEquipment): self
     {
-        if (!$this->cellEquipments->contains($cellEquipment)) {
+        if (!$this->cellEquipments->contains($cellEquipment)) 
+        {
             $this->cellEquipments[] = $cellEquipment;
             $cellEquipment->addVehicle($this);
         }
@@ -453,7 +454,8 @@ class Vehicle
 
     public function removeCellEquipment(Equipment $cellEquipment): self
     {
-        if ($this->cellEquipments->contains($cellEquipment)) {
+        if ($this->cellEquipments->contains($cellEquipment)) 
+        {
             $this->cellEquipments->removeElement($cellEquipment);
             $cellEquipment->removeVehicle($this);
         }
@@ -472,7 +474,7 @@ class Vehicle
     {
 
         $this->situation = $situation;
-        $situation->addVehicle($this);
+        $situation->setVehicle($this);
 
         return $this;
 

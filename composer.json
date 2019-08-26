@@ -17,6 +17,7 @@
         "fzaninotto/faker": "^1.8",
         "knplabs/knp-paginator-bundle": "^3.0",
         "liip/imagine-bundle": "^2.1",
+        "moment/moment": "^2.24",
         "sensio/framework-extra-bundle": "^5.2",
         "stripe/stripe-php": "^6.35",
         "symfony/console": "4.3.*",
@@ -35,7 +36,7 @@
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "4.3.*",
         "tattali/calendar-bundle": "^1.1",
-        "vich/uploader-bundle": "^1.9"
+        "vich/uploader-bundle": "^1.10"
     },
     "config": {
         "preferred-install": {

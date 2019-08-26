@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\Entity\User\User:
+        App\Entity\user\User:
             algorithm: bcrypt
             cost: 12
     role_hierarchy:
@@ -17,7 +17,7 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\User\User
+                class: App\Entity\user\User
                 property: email
 
     firewalls:
