@@ -136,3 +136,14 @@ Plusieurs options sont possibles :
 -- nomDuFichier : le fichier à partir duquel charger les données, si on ne désire pas exécuter toutes les fixtures
 -- append : ajoute les données sans supprimer les données pré-existantes.
 -- purge-with-truncate : supprime les données en utilisant la commande sql truncate permettant une nouvelle indexation.
+
+
+##7. A ne pas oublier lors de la mise en production
+
+- Activer l'extension intl dans le php.ini
+
+##8. A ne pas oublier d'ajouter comme extensions
+
+- Symfony intl
+- Twig intl
+- moment.js

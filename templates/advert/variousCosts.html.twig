@@ -1,0 +1,124 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+
+    Roadtripr - Management of your various costs
+    
+{% endblock %}
+
+{% block stylesheets %} 
+
+     {{ parent () }} 
+
+ {% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        {% if editMode %}
+
+            <h1>Various costs update</h1>
+
+        {% else %}
+
+            <h1>Various costs creation</h1>
+
+        {% endif %}
+
+        {{ form_start(form) }}
+
+            <h3>Insurance</h3>
+                                    
+            {{ form_row(form.insurance.included) }}
+            {{ form_row(form.insurance.deductible) }}
+
+            <h3>Insurance price and included mileages</h3>    
+
+            {%  for unique_duration in unique_durations %}
+
+                <h4> {{unique_duration.duration}} </h4>
+
+                {% set i = 0 %}
+
+                {% for insurancePrice in form.insurancePrices %}
+
+                    {%  if idInsurancePricesDurations[i] == unique_duration.id %} 
+
+                        <div class='divNotIncludedPrice'>
+                    
+                            {{ form_row(insurancePrice.price, {'attr': {'class': 'price' }}) }}
+
+                        </div> 
+
+                        <div class='divIncludedPrice'>
+                    
+                            Insurance price included in the rental price
+
+                        </div>
+
+                    {% endif %}                
+
+                    {% set i = i + 1 %}
+
+                {% endfor %}
+
+                {% set j = 0 %}
+
+                {% for includedMileage in form.includedMileages %}
+
+                    {%  if idIncludedMileagesDurations[j] == unique_duration.id %} 
+
+                    {# This div is used in the javascript processing #}    
+                    <div class="mileage_div">
+                    
+                        {{ form_row(includedMileage.unlimited) }}
+                        
+                        {# This div is used in the javascript processing #}
+                        <div class="input_mileage_div">
+
+                            {{ form_row(includedMileage.mileage) }}
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}                
+
+                    {% set j = j + 1 %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+            <h3>Extra kilometer price</h3>
+
+            {{ form_widget(form.extraKilometerCost.extraKilometerCost) }}
+
+            <h3>Vehicle cleaning</h3>
+                                        
+            {{ form_row(form.cleaning.includedCleaning) }}
+
+            <div class='divPriceCleaning'>
+            
+                {{ form_row(form.cleaning.cleaningCost) }}
+
+            </div>
+        
+            <button type="submit" class="btn btn-success">Next</button>
+        
+        {{ form_end(form) }}
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('VariousCostsCreation') }}
+
+    {% endblock %}
+   
+{% endblock body %}

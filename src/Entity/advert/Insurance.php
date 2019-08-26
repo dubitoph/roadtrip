@@ -23,15 +23,15 @@ class Insurance
     /**
      * @ORM\Column(type="integer")
      * 
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 2500,
-     *     message = "La franchise doit être inférieure à 2500 €."
+     *     message = "The deductible must be less or equal than {{value}} €."
      * )
      */
     private $deductible;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean") 
      */
     private $included;
 
@@ -48,80 +48,168 @@ class Insurance
      */
     private $insurancePrices;
 
+    /**
+     * Operations when creating
+     */
     public function __construct()
     {
+
         $this->insurancePrices = new ArrayCollection();
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getDeductible(): ?int
-    {
-        return $this->deductible;
-    }
-
-    public function setDeductible(int $deductible): self
-    {
-        $this->deductible = $deductible;
-
-        return $this;
-    }
-
-    public function getIncluded(): ?bool
-    {
-        return $this->included;
-    }
-
-    public function setIncluded(bool $included): self
-    {
-        $this->included = $included;
-
-        return $this;
-    }
-
-    public function getAdvert(): ?Advert
-    {
-        return $this->advert;
-    }
-
-    public function setAdvert(Advert $advert): self
-    {
-        $this->advert = $advert;
-
-        return $this;
     }
 
     /**
+     * Get the id
+     *
+     * @return integer|null
+     */
+    public function getId(): ?int
+    {
+
+        return $this->id;
+
+    }
+
+    /**
+     * Get the deductible
+     *
+     * @return integer|null
+     */
+    public function getDeductible(): ?int
+    {
+
+        return $this->deductible;
+
+    }
+
+    /**
+     * Set the deductible
+     *
+     * @param integer $deductible
+     * @return self
+     */
+    public function setDeductible(int $deductible): self
+    {
+
+        $this->deductible = $deductible;
+
+        return $this;
+
+    }
+
+    /**
+     * Get if the insurance is included in the location price
+     *
+     * @return boolean|null
+     */
+    public function getIncluded(): ?bool
+    {
+
+        return $this->included;
+
+    }
+
+    /**
+     * Set if the insurance is included in the location price
+     *
+     * @param boolean $included
+     * @return self
+     */
+    public function setIncluded(bool $included): self
+    {
+
+        $this->included = $included;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the advert
+     *
+     * @return Advert|null
+     */
+    public function getAdvert(): ?Advert
+    {
+
+        return $this->advert;
+
+    }
+
+    /**
+     * Set the advert
+     *
+     * @param Advert $advert
+     * @return self
+     */
+    public function setAdvert(Advert $advert): self
+    {
+
+        $this->advert = $advert;
+
+        return $this;
+
+    }
+
+    /**
+     * Get insurance price for the different durations
+     *
      * @return Collection|InsurancePrice[]
      */
     public function getInsurancePrices(): Collection
     {
+
         return $this->insurancePrices;
+
     }
 
+    /**
+     * Set an insurance price for a duration
+     *
+     * @param InsurancePrice $insurancePrice
+     * @return self
+     */
     public function addInsurancePrice(InsurancePrice $insurancePrice): self
     {
-        if (!$this->insurancePrices->contains($insurancePrice)) {
+
+        if (!$this->insurancePrices->contains($insurancePrice)) 
+        {
+
             $this->insurancePrices[] = $insurancePrice;
             $insurancePrice->setInsurance($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove an insurance price for a duration
+     *
+     * @param InsurancePrice $insurancePrice
+     * @return self
+     */
     public function removeInsurancePrice(InsurancePrice $insurancePrice): self
     {
-        if ($this->insurancePrices->contains($insurancePrice)) {
+
+        if ($this->insurancePrices->contains($insurancePrice)) 
+        {
+
             $this->insurancePrices->removeElement($insurancePrice);
+
             // set the owning side to null (unless already changed)
-            if ($insurancePrice->getInsurance() === $this) {
+            if ($insurancePrice->getInsurance() === $this) 
+            {
+
                 $insurancePrice->setInsurance(null);
+
             }
+
         }
 
         return $this;
+
     }
+    
 }

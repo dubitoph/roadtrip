@@ -9,6 +9,7 @@
 8: 8
 9: 9
 10: 10
+11: 11
 5 km: 5 km
 10 km: 10 km
 20 km: 20 km
@@ -20,6 +21,7 @@
 Abbreviation: Abréviation
 About me: A propos de moi
 Address: Adresse
+Automatic: Automatique
 Bed: Couchage
 Beds number: Nombre de couchages
 Begin at: Date de début
@@ -53,6 +55,7 @@ End at: Date de fin
 Equipment: Equipement
 Email: Email
 Email address...: Adresse email...
+Equipments: Equipements
 Extra: Supplémentaire
 Female: Femme
 File: Fichier
@@ -61,6 +64,7 @@ Firstname...: Prénom...
 Fuel: Carburant
 Gearbox: Boîte de vitesse
 Height: Hauteur
+Unlimited: Illimité
 Included: Inclus
 Included cleaning: Nettoyage inclus
 Insurance: Assurance
@@ -71,6 +75,7 @@ Login: S'identifier
 Mail: Mail
 Main photo: Photo principale
 Male: Homme
+Manual: Manuelle
 Manufacture date: Date de fabrication
 Mileage: Kilométrage
 Main: Principale

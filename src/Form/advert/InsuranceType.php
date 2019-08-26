@@ -11,19 +11,28 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class InsuranceType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
-            ->add('included', CheckboxType::class)
+            ->add('included', CheckboxType::class, array('required' => false))
             ->add('deductible', NumberType::class)
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Insurance::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Insurance::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }

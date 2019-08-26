@@ -3,7 +3,7 @@ namespace App\Controller\media;
 
 use App\Entity\media\Photo;
 use App\Entity\advert\Advert;
-use App\Form\media\PhotosAdvertType;
+use App\Form\advert\PhotosAdvertType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -17,36 +17,31 @@ class PhotoController extends AbstractController
 {
 
     /**
-     *  @Route("/advert/photos/management/{id}", name="advert.photos.management")
+     * Creating and updating advert photos
+     *
+     *  @Route("/media/advert_photos/create/{id}", name="media.advert_photos.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function photosForm(Advert $advert, Request $request, ObjectManager $manager) 
+    public function photosForm(Advert $advert, Request $request, ObjectManager $manager): Response 
     {
 
-        $photos = $advert->getPhotos();
-        $numberOldPhotos = count($photos);
-
-        $recordedPhotos = array();
-        $recordedPhotosNames = array();
-        $recordedPhotosIds = array();
+        $recordedPhotos = $advert->getPhotos();
+        $numberRecordedPhotos = count($recordedPhotos);
 
         $editMode = false;
+        $current_menu = 'add_advert';
 
-        if ($numberOldPhotos > 0) 
+        if ($numberRecordedPhotos > 0) 
         {
 
             $editMode = true;
-            
-            $recordedPhotos = $advert->getPhotos();
+            $current_menu = 'dashbord';
 
-            foreach ($recordedPhotos as $recordedPhoto) {
-            
-                $recordedPhotosNames[] = $recordedPhoto->getName();
-                $recordedPhotosIds[] = $recordedPhoto->getId();
-            }
         }
 
         $form = $this->createForm(PhotosAdvertType::class, $advert);
@@ -82,14 +77,14 @@ class PhotoController extends AbstractController
             if ($numberPhotos > 0 && $checkedMain == 0) 
             {
 
-                $error = new FormError("Au moins une photo doit être cochée comme étant à afficher dans la liste des annonces");
+                $error = new FormError("At least one photo must be checked as the main: it will be displayed in the list of adverts.");
                 $form->addError($error);
 
             }
             elseif ($checkedMain > 1) 
             {
 
-                $error = new FormError("Il ne peut y avoir qu'une photo cochée comme étant à afficher dans la liste des annonces");
+                $error = new FormError("There can only be one photo checked as the main.");
                 $form->addError($error);
 
             }
@@ -100,26 +95,25 @@ class PhotoController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Les photos ont été modifiées avec succès.');
+                $this->addFlash('success', 'The photos have been successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Les photos ont été ajoutées à votre annonce avec succès.');
+                $this->addFlash('success', 'Photos have successfully been added to your advert.');
 
             }           
 
-            return $this->redirectToRoute('advert.periods.management', array('id' => $advert->getId()));
-        }
+            return $this->redirectToRoute('advert.periods.create', array('id' => $advert->getId()));
+        }        
 
-        return $this->render('advert/photos.html.twig', [
-                                                            'form' => $form->createView(),
-                                                            'recordedPhotos' => $recordedPhotos,
-                                                            'recordedPhotosNames' => $recordedPhotosNames,
-                                                            'recordedPhotosIds' => $recordedPhotosIds, 
-                                                            'editMode' => $numberOldPhotos > 0
-                                                        ]
+        return $this->render('advert/photosCreation.html.twig', [
+                                                                    'form' => $form->createView(),
+                                                                    'recordedPhotos' => $recordedPhotos, 
+                                                                    'editMode' => $editMode,
+                                                                    'current_menu' => $current_menu
+                                                                ]
                             )
         ;
 
@@ -128,11 +122,12 @@ class PhotoController extends AbstractController
     /**
      * Deleting a photo
      * 
-     * @Route("photo/delete/{id}", name="photo.delete")
+     * @Route("media/photo/delete/{id}", name="media.photo.delete")
      *
      * @param Photo $photo
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function delete(Photo $photo, Request $request, ObjectManager $manager): Response 
@@ -155,28 +150,6 @@ class PhotoController extends AbstractController
         
         return new JsonResponse(['success' => 1]);
 
-    }
-    
-    
-    /**
-      * Updating photo file
-      *
-      * @Route("photo/update/{id}", name="photo.update")
-      *
-      * @param Photo $photo
-      * @param Request $request
-      * @param ObjectManager $manager
-      * @return Response
-      */
-    public function update(Photo $photo, Request $request, ObjectManager $manager): Response
-    {
-        
-        return new JsonResponse([
-                                 'message' => 'Fonctionnement correct',
-                                 'photoId' => $photo->getId()
-                                ]
-                               )
-        ;
-    }    
+    }   
 
 }

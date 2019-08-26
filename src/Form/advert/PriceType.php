@@ -11,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class PriceType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('price', NumberType::class)
             ->add('duration', EntityType::class, array(
@@ -26,13 +28,20 @@ class PriceType extends AbstractType
                                                     )
                  )
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Price::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Price::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+    
 }

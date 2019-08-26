@@ -1,0 +1,34 @@
+<li id="li_photo_{{ recordedPhotos[i].id }}"> 
+        
+    {% if editMode %}
+            
+        <div style='display: none'>
+
+            {{ form_row(photo.file) }}
+                
+        </div>
+
+    {% else %}
+
+        {{ form_row(photo.file) }}
+
+    {% endif %}
+
+    {% if editMode and form.photos %}
+
+        <img id="photo_{{ recordedPhotos[i].id }}"  src="{{ vich_uploader_asset(recordedPhotos[i], 'file') | imagine_filter('thumb') }}" 
+             width="100" alt="Photo{{ recordedPhotos[i].id }}">
+
+    {% endif %}                        
+        
+    {{ form_row ( photo.mainPhoto ) }}
+    {{ form_row ( photo.name ) }}
+
+    <a href="{{ path('media.photo.delete', {id: recordedPhotos[i].id}) }}" class="btn btn-danger" 
+       data-redirection="{{ path('media.advert_photos.create', {id: recordedPhotos[i].advert.id}) }}">
+       
+       Remove this photo
+    
+    </a>
+
+</li>

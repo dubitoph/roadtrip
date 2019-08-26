@@ -18,6 +18,7 @@
         "knplabs/knp-paginator-bundle": "^3.0",
         "liip/imagine-bundle": "^2.1",
         "moment/moment": "^2.24",
+        "phpfastcache/riak-client": "^3.4",
         "sensio/framework-extra-bundle": "^5.2",
         "stripe/stripe-php": "^6.35",
         "symfony/console": "4.3.*",
@@ -26,6 +27,7 @@
         "symfony/flex": "^1.1",
         "symfony/form": "4.3.*",
         "symfony/framework-bundle": "4.3.*",
+        "symfony/intl": "4.3.*",
         "symfony/maker-bundle": "dev-master",
         "symfony/orm-pack": "^1.0",
         "symfony/security-bundle": "4.3.*",
@@ -36,6 +38,7 @@
         "symfony/webpack-encore-bundle": "^1.6",
         "symfony/yaml": "4.3.*",
         "tattali/calendar-bundle": "^1.1",
+        "twig/extensions": "^1.5",
         "vich/uploader-bundle": "^1.10"
     },
     "config": {

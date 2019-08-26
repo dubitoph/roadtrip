@@ -32,10 +32,9 @@
                 {% for advert in adverts %}
 
                     {% set i = 1 %}
-
                     <tr>
 
-                        <td>{{ advert.getFormattedCreatedAt }}</td>
+                        <td>{{ advert.createdAt|localizeddate('medium', 'none', locale) }}</td>
                         <td>
 
                             {% if mainPhotos[advert.id] is defined %}
@@ -66,16 +65,16 @@
 
                             {% if advert.expiresAt and "now"|date('Y-m-d') < advert.expiresAt|date('Y-m-d') %}
 
-                                <a href="{{ path('advert.subscription.management', { 'id': advert.id }) }}" class="btn btn-secondary">Extend</a>
+                                <a href="{{ path('advert.subscription.create', { 'id': advert.id }) }}" class="btn btn-secondary">Extend</a>
                                 
                             {% else %}
 
-                                <a href="{{ path('advert.subscription.management', { 'id': advert.id }) }}" class="btn btn-secondary">Activate</a>
+                                <a href="{{ path('advert.subscription.create', { 'id': advert.id }) }}" class="btn btn-secondary">Activate</a>
                                 
                             {% endif %}
 
-                            <a href="{{ path('advert.periods.management', { 'id': advert.id, 'onlyPeriodManagement': true }) }}" class="btn btn-secondary">Manage periods</a>
-                            <a href="{{ path('advert.prices.management', { 'id': advert.id, 'onlyPriceManagement': true }) }}" class="btn btn-secondary">Manage prices</a>
+                            <a href="{{ path('advert.periods.create', { 'id': advert.id, 'onlyPeriodsCreation': true }) }}" class="btn btn-secondary">Manage periods</a>
+                            <a href="{{ path('advert.prices.create', { 'id': advert.id, 'onlyPricesCreation': true }) }}" class="btn btn-secondary">Manage prices</a>
                             <a href="{{ path('advert.clone', { 'id': advert.id }) }}" class="btn btn-secondary">Clone to add a new advert</a>
 
                         </td>

@@ -35,13 +35,13 @@ class Duration
     /**
      * @ORM\Column(type="integer")
      * 
-     * @Assert\GreaterThan(
+     * @Assert\GreaterThanOrEqual(
      *     value = 1,
-     *     message = "Le nombre de jours doit être supérieur à 2."
+     *     message = "The days number must be greater or equal than {value}."
      * )
      * @Assert\LessThan(
      *     value = 32,
-     *     message = "Le nombre de jours doit être inférieur à 31."
+     *     message = "The days number must be less or equal than {value}."
      * )
      */
     private $daysNumber;

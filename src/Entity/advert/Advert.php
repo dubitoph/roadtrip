@@ -45,8 +45,8 @@ class Advert
      * @Assert\Length(
      *      min = 10,
      *      max = 80,
-     *      minMessage = "Le titre doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "Le titre ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The title must contain at least {{ limit }} characters",
+     *      maxMessage = "Title can't contain more than {{ limit }} characters"
      * )
      */
     private $title;
@@ -57,8 +57,8 @@ class Advert
      * @Assert\Length(
      *      min = 20,
      *      max = 5000,
-     *      minMessage = "La description doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "La description ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The description must contain at least {{ limit }} characters",
+     *      maxMessage = "Description can't contain more than {{ limit }} characters"
      * )
      */
     private $description;
@@ -176,8 +176,12 @@ class Advert
      */
     private $ratings;
 
-    public function __construct() 
+    /**
+     * Operations when creating
+     */
+    function __construct() 
 	{
+
         $this->createdAt = new \DateTime();
         $this->photos = new ArrayCollection();
         $this->prices = new ArrayCollection();
@@ -188,54 +192,107 @@ class Advert
         $this->favorites = new ArrayCollection();
         $this->discussions = new ArrayCollection();
         $this->ratings = new ArrayCollection();
+
 	}    
 
+    /**
+     * Get id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get title
+     *
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
+
         return $this->title;
+
     }
 
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return self
+     */
     public function setTitle(string $title): self
     {
+
         $this->title = $title;
 
         return $this;
+
     }
 
+    /**
+     * Get description
+     *
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
+
         return $this->description;
+
     }
 
+    /**
+     * Set description
+     *
+     * @param string|null $description
+     * @return self
+     */
     public function setDescription(?string $description): self
     {
+
         $this->description = $description;
 
         return $this;
+
     }
 
+    /**
+     * Get the advert creation date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
+
         return $this->createdAt;
+
     }
 
-public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    /**
+     * Set the advert creation date
+     *
+     * @param \DateTimeInterface|null $createdAt
+     * @return self
+     */
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
     {
+
         $this->createdAt = $createdAt;
 
         return $this;
+        
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
+    /**
+     * Get a string of the creation date
+     *
+     * @return string
+     */
     public function getFormattedCreatedAt(): string
     {
 
@@ -243,18 +300,62 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
+    /**
+     * Get the update date
+     *
+     * @return \DateTimeInterface|null
+     */
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+
+        return $this->updatedAt;
+
+    }
+
+    /**
+     * Get a string of the update date
+     *
+     * @return string
+     */
+    public function getFormattedUpdatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y');
+
+    }
+
+    /**
+     * Set the update date
+     *
+     * @param \DateTimeInterface|null $updatedAt
+     * @return self
+     */
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
+
         $this->updatedAt = $updatedAt;
 
         return $this;
+
     }
 
+    /**
+     * Get the expiration date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getExpiresAt(): ?\DateTimeInterface
     {
+
         return $this->expiresAt;
+
     }
 
+    /**
+     * Get a string of the expiration date
+     *
+     * @return string
+     */
     public function getFormattedExpiresAt(): string
     {
 
@@ -273,37 +374,71 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
-	public function setExpiresAt(?\DateTimeInterface $expiresAt): self
-                      {
-                          $this->expiresAt = $expiresAt;
-                                                                                                                                                                                                                                             
-                          return $this;
-                      }
-
-    public function getVehicle(): ?Vehicle
+    /**
+     * Set the expiration date
+     *
+     * @param \DateTimeInterface|null $expiresAt
+     * @return self
+     */
+    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
     {
-        return $this->vehicle;
+        $this->expiresAt = $expiresAt;
+                                                                                                                                                                                                                                             
+        return $this;
+
     }
 
+    /**
+     * Get the linked vehicle
+     *
+     * @return Vehicle|null
+     */
+    public function getVehicle(): ?Vehicle
+    {
+
+        return $this->vehicle;
+
+    }
+
+    /**
+     * Set the linked vehicle
+     *
+     * @param Vehicle $vehicle
+     * @return self
+     */
     public function setVehicle(Vehicle $vehicle = null): self
     {
+
         $this->vehicle = $vehicle;
         $this->vehicle->setAdvert($this);
 
         return $this;
+
     }
 
     /**
+     * Get photos
+     *
      * @return Collection|Photo[]
      */
     public function getPhotos(): Collection
     {
+
         return $this->photos;
+
     }
 
+    /**
+     * Set photos
+     *
+     * @param Collection $photos
+     * @return void
+     */
     public function setPhotos(Collection $photos = null)
     {
+
         $this->photos = $photos;
+
     }
     
     /**
@@ -314,6 +449,7 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
      */
     public function addPhoto(Photo $photo): self
     {
+
         if (!$this->photos->contains($photo)) 
         {
 
@@ -323,6 +459,7 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         }
 
         return $this;
+
     }
 
     /**
@@ -333,6 +470,7 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
      */
     public function removePhoto(Photo $photo): self
     {
+
         if ($this->photos->contains($photo)) 
         {
 
@@ -349,9 +487,12 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         }
 
         return $this;
+
     }
 
     /**
+     * Get rental prices
+     *
      * @return Collection|Price[]
      */
     public function getPrices(): Collection
@@ -361,18 +502,37 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         
     }
 
+    
+    /**
+     * Set rental prices
+     *
+     * @param Price $price
+     * @return self
+     */
     public function addPrice(Price $price): self
     {
-        if (!$this->prices->contains($price)) {
+
+        if (!$this->prices->contains($price)) 
+        {
+
             $this->prices[] = $price;
             $price->setAdvert($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a rental price
+     *
+     * @param Price $price
+     * @return self
+     */
     public function removePrice(Price $price): self
     {
+
         if ($this->prices->contains($price)) 
         {
 
@@ -389,18 +549,30 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         }
 
         return $this;
+
     }
 
     /**
+     * Get rental periods
+     *
      * @return Collection|Period[]
      */
     public function getPeriods(): Collection
     {
+
         return $this->periods;
+
     }
 
+    /**
+     * Add a rental period
+     *
+     * @param Period $period
+     * @return self
+     */
     public function addPeriod(Period $period): self
     {
+
         if (!$this->periods->contains($period)) 
         {
 
@@ -413,8 +585,15 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
+    /**
+     * Remove a rental period
+     *
+     * @param Period $period
+     * @return self
+     */
     public function removePeriod(Period $period): self
     {
+
         if ($this->periods->contains($period)) 
         {
 
@@ -434,43 +613,86 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
+    /**
+     * Get the insurance for rental
+     *
+     * @return Insurance|null
+     */
     public function getInsurance(): ?Insurance
     {
+
         return $this->insurance;
-    }
 
-    public function setInsurance(Insurance $insurance): self
-    {
-        $this->insurance = $insurance;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $insurance->getAdvert()) {
-            $insurance->setAdvert($this);
-        }
-
-        return $this;
-    }
-
-    public function getExtraKilometerCost(): ?float
-    {
-        return $this->extraKilometerCost;
-    }
-
-    public function setExtraKilometerCost(?float $extraKilometerCost): self
-    {
-        $this->extraKilometerCost = $extraKilometerCost;
-
-        return $this;
     }
 
     /**
+     * Set the insurance for rental
+     *
+     * @param Insurance $insurance
+     * @return self
+     */
+    public function setInsurance(Insurance $insurance): self
+    {
+
+        $this->insurance = $insurance;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $insurance->getAdvert()) 
+        {
+
+            $insurance->setAdvert($this);
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Get the extra kilometer cost when rental
+     *
+     * @return float|null
+     */
+    public function getExtraKilometerCost(): ?float
+    {
+
+        return $this->extraKilometerCost;
+
+    }
+
+    /**
+     * Set the extra kilometer cost when rental
+     *
+     * @param float|null $extraKilometerCost
+     * @return self
+     */
+    public function setExtraKilometerCost(?float $extraKilometerCost): self
+    {
+
+        $this->extraKilometerCost = $extraKilometerCost;
+
+        return $this;
+
+    }
+
+    /**
+     * Get included mileages for rental periods
+     *
      * @return Collection|IncludedMileage[]
      */
     public function getIncludedMileages(): Collection
     {
+
         return $this->includedMileages;
+
     }
 
+    /**
+     * Add an included mileage to rental periods
+     *
+     * @param IncludedMileage $includedMileage
+     * @return self
+     */
     public function addIncludedMileage(IncludedMileage $includedMileage): self
     {
         if (!$this->includedMileages->contains($includedMileage)) 
@@ -485,8 +707,15 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
+    /**
+     * Remove an included mileage from rental periods
+     *
+     * @param IncludedMileage $includedMileage
+     * @return self
+     */
     public function removeIncludedMileage(IncludedMileage $includedMileage): self
     {
+
         if ($this->includedMileages->contains($includedMileage)) 
         {
 
@@ -503,32 +732,66 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
         }
 
         return $this;
+
     }
 
+    /**
+     * Get if the cleaning is included in the cost rental
+     *
+     * @return boolean|null
+     */
     public function getIncludedCleaning(): ?bool
     {
+
         return $this->includedCleaning;
+
     }
 
+    /**
+     * Set if the cleaning is included in the cost rental
+     *
+     * @param boolean $includedCleaning
+     * @return self
+     */
     public function setIncludedCleaning(bool $includedCleaning): self
     {
+
         $this->includedCleaning = $includedCleaning;
 
         return $this;
+
     }
 
+    /**
+     * Get the cleaning cost
+     *
+     * @return integer|null
+     */
     public function getCleaningCost(): ?int
     {
         return $this->cleaningCost;
     }
 
+    /**
+     * Set the cleaning cost
+     *
+     * @param integer|null $cleaningCost
+     * @return self
+     */
     public function setCleaningCost(?int $cleaningCost): self
     {
+
         $this->cleaningCost = $cleaningCost;
 
         return $this;
+
     }
 
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
     public function getSlug(): string 
     {
 
@@ -536,164 +799,333 @@ public function setCreatedAt(?\DateTimeInterface $createdAt): self
 
     }
 
+    /**
+     * Get the owner
+     *
+     * @return Owner|null
+     */
     public function getOwner(): ?Owner
     {
+
         return $this->owner;
-    }
 
-    public function setOwner(?Owner $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    public function getSubscription(): ?Subscription
-    {
-        return $this->subscription;
-    }
-
-    public function setSubscription(?Subscription $subscription): self
-    {
-        $this->subscription = $subscription;
-
-        return $this;
-    }
-
-    public function getStripeIntentId(): ?string
-    {
-        return $this->stripeIntentId;
-    }
-
-    public function setStripeIntentId(?string $stripeIntentId): self
-    {
-        $this->stripeIntentId = $stripeIntentId;
-
-        return $this;
     }
 
     /**
+     * Set the owner
+     *
+     * @param Owner|null $owner
+     * @return self
+     */
+    public function setOwner(?Owner $owner): self
+    {
+
+        $this->owner = $owner;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the subscription
+     *
+     * @return Subscription|null
+     */
+    public function getSubscription(): ?Subscription
+    {
+
+        return $this->subscription;
+
+    }
+
+    /**
+     * Set the subscription
+     *
+     * @param Subscription|null $subscription
+     * @return self
+     */
+    public function setSubscription(?Subscription $subscription): self
+    {
+
+        $this->subscription = $subscription;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the Stripe intent id
+     *
+     * @return string|null
+     */
+    public function getStripeIntentId(): ?string
+    {
+
+        return $this->stripeIntentId;
+
+    }
+
+    /**
+     * Set the Stripe intent id
+     *
+     * @param string|null $stripeIntentId
+     * @return self
+     */
+    public function setStripeIntentId(?string $stripeIntentId): self
+    {
+
+        $this->stripeIntentId = $stripeIntentId;
+
+        return $this;
+
+    }
+
+    /**
+     * Get bills
+     *
      * @return Collection|Bill[]
      */
     public function getBills(): Collection
     {
+
         return $this->bills;
+
     }
 
+    /**
+     * Add a bill
+     *
+     * @param Bill $bill
+     * @return self
+     */
     public function addBill(Bill $bill): self
     {
-        if (!$this->bills->contains($bill)) {
+
+        if (!$this->bills->contains($bill)) 
+        {
+
             $this->bills[] = $bill;
             $bill->setOwner($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a bill
+     *
+     * @param Bill $bill
+     * @return self
+     */
     public function removeBill(Bill $bill): self
     {
-        if ($this->bills->contains($bill)) {
+
+        if ($this->bills->contains($bill)) 
+        {
+
             $this->bills->removeElement($bill);
+
             // set the owning side to null (unless already changed)
-            if ($bill->getOwner() === $this) {
+            if ($bill->getOwner() === $this) 
+            {
+
                 $bill->setOwner(null);
+
             }
+
         }
 
         return $this;
+
     }
 
     /**
      * @return Collection|Favorite[]
      */
+    
+    /**
+     * Get favorites having this advert
+     *
+     * @return Collection
+     */
     public function getFavorites(): Collection
     {
+
         return $this->favorites;
-    }
 
-    public function addFavorite(Favorite $favorite): self
-    {
-        if (!$this->favorites->contains($favorite)) {
-            $this->favorites[] = $favorite;
-            $favorite->setAdvert($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFavorite(Favorite $favorite): self
-    {
-        if ($this->favorites->contains($favorite)) {
-            $this->favorites->removeElement($favorite);
-            // set the owning side to null (unless already changed)
-            if ($favorite->getAdvert() === $this) {
-                $favorite->setAdvert(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
+     * Add a favorite having this advert
+     *
+     * @param Favorite $favorite
+     * @return self
+     */
+    public function addFavorite(Favorite $favorite): self
+    {
+        
+        if (!$this->favorites->contains($favorite)) 
+        {
+
+            $this->favorites[] = $favorite;
+            $favorite->setAdvert($this);
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Remove a favorite having this advert
+     *
+     * @param Favorite $favorite
+     * @return self
+     */
+    public function removeFavorite(Favorite $favorite): self
+    {
+
+        if ($this->favorites->contains($favorite)) 
+        {
+
+            $this->favorites->removeElement($favorite);
+
+            // set the owning side to null (unless already changed)
+            if ($favorite->getAdvert() === $this) 
+            {
+
+                $favorite->setAdvert(null);
+
+            }
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Get the threads linked to this advert
+     *
      * @return Collection|Thread[]
      */
     public function getThreads(): Collection
     {
+
         return $this->threads;
-    }
 
-    public function addThread(Thread $thread): self
-    {
-        if (!$this->threads->contains($thread)) {
-            $this->threads[] = $thread;
-            $thread->setAdvert($this);
-        }
-
-        return $this;
-    }
-
-    public function removeThread(Thread $thread): self
-    {
-        if ($this->threads->contains($thread)) {
-            $this->threads->removeElement($thread);
-            // set the owning side to null (unless already changed)
-            if ($thread->getAdvert() === $this) {
-                $thread->setAdvert(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
+     * Add a thread linked to this advert
+     *
+     * @param Thread $thread
+     * @return self
+     */
+    public function addThread(Thread $thread): self
+    {
+
+        if (!$this->threads->contains($thread)) 
+        {
+
+            $this->threads[] = $thread;
+            $thread->setAdvert($this);
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Remove a thread linked to this advert
+     *
+     * @param Thread $thread
+     * @return self
+     */
+    public function removeThread(Thread $thread): self
+    {
+
+        if ($this->threads->contains($thread)) 
+        {
+
+            $this->threads->removeElement($thread);
+
+            // set the owning side to null (unless already changed)
+            if ($thread->getAdvert() === $this) 
+            {
+
+                $thread->setAdvert(null);
+
+            }
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Get the ratings linked to this advert
+     *
      * @return Collection|Rating[]
      */
     public function getRatings(): Collection
     {
+
         return $this->ratings;
+
     }
 
+    /**
+     * Add a rating linked to this advert
+     *
+     * @param Rating $rating
+     * @return self
+     */
     public function addRating(Rating $rating): self
     {
-        if (!$this->ratings->contains($rating)) {
+
+        if (!$this->ratings->contains($rating)) 
+        {
+
             $this->ratings[] = $rating;
             $rating->setAdvert($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a rating linked to this advert
+     *
+     * @param Rating $rating
+     * @return self
+     */
     public function removeRating(Rating $rating): self
     {
-        if ($this->ratings->contains($rating)) {
+
+        if ($this->ratings->contains($rating)) 
+        {
+
             $this->ratings->removeElement($rating);
+
             // set the owning side to null (unless already changed)
-            if ($rating->getAdvert() === $this) {
+            if ($rating->getAdvert() === $this) 
+            {
+
                 $rating->setAdvert(null);
+
             }
+
         }
 
         return $this;
+        
     }
     
 }

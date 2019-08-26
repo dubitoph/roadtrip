@@ -26,6 +26,12 @@ class Photo implements \Serializable
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 255,
+     *      minMessage = "The name must contain at least {{ limit }} characters",
+     *      maxMessage = "The name can't contain more than {{ limit }} characters"
+     * )
      */
     private $name;
 

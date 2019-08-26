@@ -20,15 +20,15 @@ class IncludedMileage
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * 
-     * @Assert\GreaterThan(
-     *     value = 500,
-     *     message = "Le kilométarge inclus doit être supérieur à 500 km."
+     * @Assert\GreaterThanOrEqual(
+     *     value = 100,
+     *     message = "The milage must be greather or equal than {value} km."
      * )
-     * @Assert\LessThan(
+     * @Assert\LessThanOrEqual(
      *     value = 10000,
-     *     message = "Le kilométarge inclus ne peut être supérieur à 10000 km."
+     *     message = "The milage must be less or equal than {value} km."
      * )
      */
     private $mileage;
@@ -51,44 +51,129 @@ class IncludedMileage
      */
     private $duration;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $unlimited;
+
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the milage
+     *
+     * @return integer|null
+     */
     public function getMileage(): ?int
     {
+
         return $this->mileage;
+
     }
 
-    public function setMileage(int $mileage): self
+    /**
+     * Set the milage
+     *
+     * @param integer $mileage
+     * @return self
+     */
+    public function setMileage(?int $mileage): self
     {
+
         $this->mileage = $mileage;
 
         return $this;
+
     }
 
+    /**
+     * Get the advert
+     *
+     * @return Advert|null
+     */
     public function getAdvert(): ?Advert
     {
+
         return $this->advert;
+
     }
 
+    /**
+     * Set the advert
+     *
+     * @param Advert|null $advert
+     * @return self
+     */
     public function setAdvert(?Advert $advert): self
     {
+
         $this->advert = $advert;
 
         return $this;
+
     }
 
+    /**
+     * Get the duration
+     *
+     * @return Duration|null
+     */
     public function getDuration(): ?Duration
     {
+
         return $this->duration;
+
     }
 
+    /**
+     * Set the duration
+     *
+     * @param Duration|null $duration
+     * @return self
+     */
     public function setDuration(?Duration $duration): self
     {
+
         $this->duration = $duration;
 
         return $this;
+
     }
+
+    /**
+     * Get if the mileage is unlimited
+     *
+     * @return boolean|null
+     */
+    public function getUnlimited(): ?bool
+    {
+
+        return $this->unlimited;
+
+    }
+
+    /**
+     * Set if the mileage is unlimited
+     *
+     * @param boolean|null $unlimited
+     * @return self
+     */
+    public function setUnlimited(?bool $unlimited): self
+    {
+
+        $this->unlimited = $unlimited;
+
+        return $this;
+        
+    }
+    
 }

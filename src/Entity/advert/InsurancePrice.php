@@ -21,10 +21,14 @@ class InsurancePrice
 
     /**
      * @ORM\Column(type="float", scale=2, precision=6)
-     * 
-     * @Assert\LessThan(
+     *  
+     * @Assert\GreaterThanOrEqual(
+     *     value = 5,
+     *     message = "The price must be greater or equal than the {value}€."
+     * )
+     * @Assert\LessThanOrEqual(
      *     value = 3000,
-     *     message = "La longeur doit être inférieure à 3000€."
+     *     message = "The price must be less or equal than the {value}€."
      * )
      */
     private $price;
@@ -47,16 +51,34 @@ class InsurancePrice
      */
     private $insurance;
 
+    /**
+     * Set the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Get the price
+     *
+     * @return float|null
+     */
     public function getPrice(): ?float
     {
+
         return $this->price;
+
     }
 
+    /**
+     * Set the price
+     *
+     * @param float $price
+     * @return self
+     */
     public function setPrice(float $price): self
     {
         $this->price = $price;
@@ -64,27 +86,57 @@ class InsurancePrice
         return $this;
     }
 
+    /**
+     * Get the duration
+     *
+     * @return Duration|null
+     */
     public function getDuration(): ?Duration
     {
+
         return $this->duration;
+
     }
 
+    /**
+     * Set the duration
+     *
+     * @param Duration|null $duration
+     * @return self
+     */
     public function setDuration(?Duration $duration): self
     {
+
         $this->duration = $duration;
 
         return $this;
+
     }
 
+    /**
+     * Get the insurance
+     *
+     * @return Insurance|null
+     */
     public function getInsurance(): ?Insurance
     {
+
         return $this->insurance;
+
     }
 
+    /**
+     * Set the insurance
+     *
+     * @param Insurance|null $insurance
+     * @return self
+     */
     public function setInsurance(?Insurance $insurance): self
     {
+
         $this->insurance = $insurance;
 
         return $this;
+
     }
 }

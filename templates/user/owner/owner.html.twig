@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - Your owner data management
+    
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Your owner data</h1>
+
+        {{ form_start(form) }}
+    
+            {% if form.user is defined %}
+
+                <div class="col-md-4">{{ form_row(form.user.username) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.password) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.confirm_password) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.email) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.firstname) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.name) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.phoneNumber) }}</div>
+                
+            {% endif %}
+    
+            {% if app.user and not app.user.phoneNumber %}
+
+                <div class="col-md-4">
+                    
+                    <div class="form-group">
+                        
+                        <label for="phone_number">Téléphone</label>
+                        <input type="tel" id="phone_number" name="phone_number" maxlength="25" class="form-control">
+                    
+                    </div>
+                
+                </div>
+                
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}                   
+    
+                <div class="col-md-4">{{ form_row ( form.user.roles ) }}</div>
+        
+            {% endif %} 
+
+            <div class="col-md-4">{{ form_row(form.companyName) }}</div>
+            <div class="col-md-4">{{ form_row(form.companyNumber) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.street) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.number) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.box) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.zipCode) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.city) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.state) }}</div>
+            <div class="col-md-4">{{ form_row(form.billingAddress.country) }}</div>
+            <div class="col-md-4" style="display: none">{{ form_row(form.billingAddress.latitude) }}</div>
+            <div class="col-md-4" style="display: none">{{ form_row(form.billingAddress.longitude) }}</div>
+
+            <div style="display: none">
+
+                <input type="text" id="address_changed" name="address_changed">
+
+            </div>
+
+            {% if not app.user %}                   
+
+                <div class="col-md-4">
+    
+                    {{ form_row ( form.user.termsAccepted ) }}
+
+                </div>
+        
+            {% endif %}
+
+            <button type="submit" class="btn btn-success">Next</button>
+            
+        {{ form_end(form) }}
+
+    </div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+        
+        {{ encore_entry_script_tags('ownerManagement') }}
+
+    {% endblock %}
+
+{% endblock %}

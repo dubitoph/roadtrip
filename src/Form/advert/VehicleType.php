@@ -9,8 +9,8 @@ use App\Repository\backend\EquipmentRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class VehicleType extends AbstractType
 {
@@ -20,14 +20,17 @@ class VehicleType extends AbstractType
         $belongingCell = 'Cellule';
         
         $builder
-            ->add('manufactureDate', DateType::class, array(
-                                                            'widget' => 'single_text', 
-                                                            'html5' => false, 
-                                                            'format' => 'dd/MM/yyyy',
-                                                            'attr' => ['class' => 'js-datepicker'],
-                                                           )
+            ->add('manufactureDate', DateTimeType::class, array(
+                                                                'widget' => 'single_text', 
+                                                                'html5' => false,
+                                                                'attr' => [
+                                                                            'class' => 'js-datepicker',
+                                                                            'readonly' => true
+                                                                          ]
+                                                               )
                  )        
-            ->add('bedsNumber', ChoiceType::class, array('choices' => array('1' => 1, 
+            ->add('bedsNumber', ChoiceType::class, array('choices' => array(
+                                                                            '1' => 1, 
                                                                             '2' => 2, 
                                                                             '3' => 3, 
                                                                             '4' => 4, 
@@ -36,10 +39,12 @@ class VehicleType extends AbstractType
                                                                             '7' => 7, 
                                                                             '8' => 8, 
                                                                             '9' => 9, 
-                                                                            '10' => 10)
+                                                                            '10' => 10
+                                                                           )
                                                            )   
                  )        
-            ->add('seatsNumber', ChoiceType::class, array('choices' => array('1' => 1, 
+            ->add('seatsNumber', ChoiceType::class, array('choices' => array(
+                                                                             '1' => 1, 
                                                                              '2' => 2, 
                                                                              '3' => 3, 
                                                                              '4' => 4, 
@@ -48,7 +53,8 @@ class VehicleType extends AbstractType
                                                                              '7' => 7, 
                                                                              '8' => 8, 
                                                                              '9' => 9, 
-                                                                             '10' => 10)
+                                                                             '10' => 10
+                                                                             )
                                                          )
                  )
             ->add('sort', EntityType::class, array(
@@ -71,20 +77,24 @@ class VehicleType extends AbstractType
             ->add('weight')     
             ->add('power')       
             ->add('gearbox', ChoiceType::class, array('choices'  => array(
-                                                                          'Automatique' => 'Automatique', 
-                                                                          'Manuelle' => 'Manuelle'
+                                                                          'Automatic' => 'Automatic', 
+                                                                          'Manual' => 'Manual'
                                                                          ),
-                                                      )
+                                                     )
                  )
-            ->add('equipments', EntityType::class, array('class' => 'App\Entity\backend\Equipment', 
-                                                                    'multiple' => true, 
-                                                                    'expanded' => true, 
-                                                                    'choice_label' => 'equipment',
-                                                                    'by_reference' => false, 
-                                                                    'query_builder' => function(EquipmentRepository $er) use ($belongingCarrier) {
-                                                                                            return $er->queryFindByBelonging($belongingCarrier);
-                                                                                    }           
-                                                                )
+            ->add('equipments', EntityType::class, array(
+                                                            'class' => 'App\Entity\backend\Equipment', 
+                                                            'multiple' => true, 
+                                                            'expanded' => true, 
+                                                            'choice_label' => 'equipment',
+                                                            'by_reference' => false, 
+                                                            'query_builder' => function(EquipmentRepository $er) use ($belongingCarrier) 
+                                                                                {
+
+                                                                                    return $er->queryFindByBelonging($belongingCarrier);
+
+                                                                                }           
+                                                        )
                  )            
             ->add('cellEquipments', EntityType::class, array(
                                                              'class' => 'App\Entity\backend\Equipment', 
@@ -93,19 +103,29 @@ class VehicleType extends AbstractType
                                                              'expanded' => true, 
                                                              'choice_label' => 'equipment',
                                                              'by_reference' => false,
-                                                             'query_builder' => function(EquipmentRepository $er) use ($belongingCell) {
+                                                             'query_builder' => function(EquipmentRepository $er) use ($belongingCell) 
+                                                                                {
+
                                                                                     return $er->queryFindByBelonging($belongingCell);
+
                                                                                 }            
                                                             )
                  )
             ->add('situation', AddressType::class)
         ;
     }
+
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Vehicle::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Vehicle::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }

@@ -14,9 +14,12 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class BillRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Bill::class);
+
     }
 
     /**
@@ -24,6 +27,7 @@ class BillRepository extends ServiceEntityRepository
      */
     public function findOwnerBills($adverts)
     {
+
         return $this->createQueryBuilder('b')
                     ->andWhere('b.advert IN (:adverts)')
                     ->setParameter('adverts', $adverts)
@@ -31,34 +35,7 @@ class BillRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult()
         ;
-    }
 
-    // /**
-    //  * @return Bill[] Returns an array of Bill objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Bill
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

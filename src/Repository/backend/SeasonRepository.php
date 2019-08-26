@@ -19,6 +19,18 @@ class SeasonRepository extends ServiceEntityRepository
         parent::__construct($registry, Season::class);
     }
 
+    /**
+     * Return seasons order by cost ASC
+     *
+     * @return Season[]
+     */
+    public function findAll(): Array
+    {
+
+        return $this->findBy(array(), array('cost' => 'ASC'));
+        
+    }
+
     // /**
     //  * @return Season[] Returns an array of Season objects
     //  */

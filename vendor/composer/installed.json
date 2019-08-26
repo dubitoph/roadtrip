@@ -3133,6 +3133,80 @@
         ]
     },
     {
+        "name": "phpfastcache/riak-client",
+        "version": "3.4.3",
+        "version_normalized": "3.4.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PHPSocialNetwork/riak-php-client.git",
+            "reference": "d771f75d16196006604a30bb15adc1c6a9b0fcc9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PHPSocialNetwork/riak-php-client/zipball/d771f75d16196006604a30bb15adc1c6a9b0fcc9",
+            "reference": "d771f75d16196006604a30bb15adc1c6a9b0fcc9",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "php": ">=5.4"
+        },
+        "conflict": {
+            "basho/riak": "*"
+        },
+        "require-dev": {
+            "apigen/apigen": "4.1.*",
+            "phpunit/phpunit": "4.8.*"
+        },
+        "time": "2017-11-23T21:33:15+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Basho\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Georges.L",
+                "role": "Maintainer",
+                "email": "contact@geolim4.com",
+                "homepage": "https://github.com/Geolim4"
+            },
+            {
+                "name": "Christopher Mancini",
+                "role": "Former Lead Developer",
+                "email": "cmancini@basho.com",
+                "homepage": "https://github.com/christophermancini"
+            },
+            {
+                "name": "Alex Moore",
+                "role": "Former Developer",
+                "email": "amoore@basho.com",
+                "homepage": "https://github.com/alexmoore"
+            }
+        ],
+        "description": "Riak client for PHP (Fork of the official basho/riak due to maintainer significant inactivity)",
+        "homepage": "https://github.com/PHPSocialNetwork/riak-php-client",
+        "keywords": [
+            "basho",
+            "client",
+            "crdt",
+            "data",
+            "database",
+            "datatype",
+            "driver",
+            "kv",
+            "nosql",
+            "riak"
+        ]
+    },
+    {
         "name": "psr/cache",
         "version": "1.0.1",
         "version_normalized": "1.0.1.0",
@@ -5082,17 +5156,17 @@
     },
     {
         "name": "symfony/intl",
-        "version": "v4.3.1",
-        "version_normalized": "4.3.1.0",
+        "version": "v4.3.3",
+        "version_normalized": "4.3.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/intl.git",
-            "reference": "690c0a1ca9b02d2e79cb1e7fb01d04eae727765a"
+            "reference": "741376a9127841ffae39f197f8bd0ab2d4772157"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/intl/zipball/690c0a1ca9b02d2e79cb1e7fb01d04eae727765a",
-            "reference": "690c0a1ca9b02d2e79cb1e7fb01d04eae727765a",
+            "url": "https://api.github.com/repos/symfony/intl/zipball/741376a9127841ffae39f197f8bd0ab2d4772157",
+            "reference": "741376a9127841ffae39f197f8bd0ab2d4772157",
             "shasum": ""
         },
         "require": {
@@ -5105,7 +5179,7 @@
         "suggest": {
             "ext-intl": "to use the component with locales other than \"en\""
         },
-        "time": "2019-05-30T16:10:05+00:00",
+        "time": "2019-07-24T14:47:54+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

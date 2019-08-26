@@ -31,7 +31,7 @@
 
         <div class="container">
 
-            {{ include('_messages.html.twig', { 'form': form }) }}
+            {{ include('_messages.html.twig') }}
 
             {{ form_start(form) }}
 
@@ -188,7 +188,7 @@
                 Owner ? The good reasons to list your motorhome.
                 Tenant? The good reasons to rent via Roadtrip.
 
-                <a href="{{ path('advert.create') }}" class="btn btn-primary">I list my motorhome</a>
+                <a href="{{ path('advert.description.create') }}" class="btn btn-primary">I list my motorhome</a>
 
             </p>
 

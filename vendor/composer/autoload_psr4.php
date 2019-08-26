@@ -105,6 +105,7 @@ return array(
     'DoctrineExtensions\\' => array($vendorDir . '/beberlei/doctrineextensions/src'),
     'Cocur\\Slugify\\' => array($vendorDir . '/cocur/slugify/src'),
     'CalendarBundle\\' => array($vendorDir . '/tattali/calendar-bundle/src'),
+    'Basho\\' => array($vendorDir . '/phpfastcache/riak-client/src'),
     'App\\Tests\\' => array($baseDir . '/tests'),
     'App\\' => array($baseDir . '/src'),
     'ApiPlatform\\Core\\' => array($vendorDir . '/api-platform/core/src'),

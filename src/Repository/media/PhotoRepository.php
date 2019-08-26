@@ -14,74 +14,47 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PhotoRepository extends ServiceEntityRepository
 {
+    /**
+     * Constructor
+     *
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Photo::class);
+
     }
 
-         /**
-          * @param Advert[] $adverts
-          * @return Photo[]
-          */
-        public function getMainPhotos($adverts)
+    /**
+     * Get main photos from an advert collection
+     *
+     * @param Advert[] $adverts
+     * 
+     * @return Photo[]
+     */
+    public function getMainPhotos($adverts): ?array
+    {
+            
+        $query = $this->createQueryBuilder('p')
+                      ->andWhere("p.advert IN (:adverts)")
+                      ->andWhere("p.mainPhoto = 1")
+                      ->setParameter('adverts', $adverts)
+                      ->getQuery()
+                      ->getResult()
+        ;
+            
+        $photos = array();
+            
+        foreach ($query as $photo) 
         {
-            
-            $advertsIds = array();
 
-            foreach ($adverts as $advert) 
-            {
+            $photos[$photo->getAdvert()->getId()] = $photo;
 
-                $advertIds[] = $advert->getId();
-
-            }
-            
-            $query = $this->createQueryBuilder('p')
-                        ->andWhere("p.advert IN (:advertsIds)")
-                        ->andWhere("p.mainPhoto = 1")
-                        ->setParameter('advertsIds', $advertIds)
-                        ->getQuery()
-                        ->getResult()
-            ;
-            
-            $photos = array();
-            
-            foreach ($query as $photo) 
-            {
-
-                $photos[$photo->getAdvert()->getId()] = $photo;
-
-            }
-
-            return $photos;
-            
         }
 
-    // /**
-    //  * @return Photo[] Returns an array of Photo objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $photos;
+            
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Photo
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

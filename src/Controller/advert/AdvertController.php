@@ -6,32 +6,33 @@ use App\Entity\backend\VAT;
 use App\Entity\advert\Price;
 use App\Entity\advert\Advert;
 use App\Entity\advert\Vehicle;
-use App\Form\advert\CostsType;
-use App\Form\advert\DescriptionType;
 use App\Entity\advert\Insurance;
-use App\Entity\backend\Duration;
 use App\Form\advert\VehicleType;
 use App\Entity\communication\Mail;
 use App\Entity\advert\AdvertSearch;
 use App\Entity\backend\Subscription;
+use App\Entity\communication\Thread;
+use App\Form\advert\DescriptionType;
 use App\Form\communication\MailType;
 use App\Entity\advert\InsurancePrice;
 use App\Form\advert\AdvertSearchType;
 use App\Form\advert\PricesAdvertType;
+use App\Form\advert\VariousCostsType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
-use App\Entity\communication\Thread;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
+use App\Repository\user\FavoriteRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\backend\SeasonRepository;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\backend\DurationRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\user\FavoriteRepository;
-use App\Repository\backend\SeasonRepository;
 
 class AdvertController extends AbstractController
 {
@@ -131,7 +132,7 @@ class AdvertController extends AbstractController
      * @Route("/advert/owner", name="advert.owner")
      * @return Response
      */
-    public function ownerAdverts(PhotoRepository $photoRepository): Response
+    public function ownerAdverts(PhotoRepository $photoRepository, Request $request): Response
     {
      
         $adverts = $this->getUser()->getOwner()->getAdverts();
@@ -147,6 +148,7 @@ class AdvertController extends AbstractController
 
         return $this->render('advert/ownerAdverts.html.twig', [
                                                                 'adverts' => $adverts,
+                                                                'locale' => $request->getLocale(),
                                                                 'mainPhotos' => $mainPhotos
                                                               ]
                             )
@@ -163,18 +165,21 @@ class AdvertController extends AbstractController
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function descriptionForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
     {
 
         $editMode = true;
+        $current_menu = 'dashbord';
         
         if(!$advert)
         {
 
             $advert = new Advert();
             $editMode = false;
+            $current_menu = 'add_advert';
 
         }
 
@@ -191,6 +196,7 @@ class AdvertController extends AbstractController
             if($editMode)
             {
                 
+                $advert->setUpdatedAt(new \DateTime());
                 $this->addFlash('success', 'Your advert title and description were successfully updated.');
 
             } 
@@ -205,28 +211,35 @@ class AdvertController extends AbstractController
 
         }
      
+        
+        
         return $this->render('advert/descriptionCreation.html.twig', [
-                                                            'editMode' => $editMode,
-                                                            'current_menu' => 'add_advert',
-                                                            'form' => $form->createView(),
-                                                        ]
+                                                                        'editMode' => $editMode,
+                                                                        'current_menu' => $current_menu,
+                                                                        'form' => $form->createView(),
+                                                                     ]
                             )
         ; 
         
     }
 
     /**
-     *  @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
+     * Creating and updating vehicle data linked to the advert
+     *
+     * @Route("/advert/vehicle/create/{id}", name="advert.vehicle.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function vehicleForm(Advert $advert, Request $request, ObjectManager $manager): Response 
     {
-
+        
         $vehicle = $advert->getVehicle();
         $editMode = true;
+        $current_menu = 'dashbord';
         
         if (! $vehicle) 
         {
@@ -234,6 +247,7 @@ class AdvertController extends AbstractController
             $vehicle = new Vehicle();
             $advert->setVehicle($vehicle);
             $editMode = false;
+            $current_menu = 'add_advert';
 
         }
 
@@ -244,6 +258,8 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         { 
 
+            $advert->setUpdatedAt(new \DateTime());
+            
             $equipments = $vehicle->getEquipments();
 
             foreach ($equipments as $equipment) 
@@ -265,7 +281,7 @@ class AdvertController extends AbstractController
             $manager->persist($advert);
             $manager->flush();   
 
-            if ($editMode) 
+            if ($editMode)
             {
 
                 $this->addFlash('success', 'Your vehicle data were successfully updated.');
@@ -278,53 +294,76 @@ class AdvertController extends AbstractController
 
             }             
             
-            return $this->redirectToRoute('advert.photos.management', array('id' => $advert->getId()));
+            return $this->redirectToRoute('media.advert_photos.create', array('id' => $advert->getId()));
 
         }
 
         return $this->render('advert/vehicleCreation.html.twig', [
-                                                            'vehicle' => $vehicle,
-                                                            'form' => $form->createView(),
-                                                         ]
+                                                                    
+                                                                    'current_menu' => $current_menu,
+                                                                    'form' => $form->createView()
+                                                                 ]
                             )
         ;
 
     }
 
     /**
-     *  @Route("/advert/periods/management/{id}/{onlyPeriodManagement}", name="advert.periods.management")
+     * Creating and updating periods
+     *
+     *  @Route("/advert/periods/create/{id}/{onlyPeriodsCreation}", name="advert.periods.create")
+     * 
      * @param Advert $advert
+     * @param Bool $onlyPeriodsCreation
+     * @param SeasonRepository $seasonRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function periodsForm(Advert $advert, bool $onlyPeriodManagement = false, SeasonRepository $seasonRepository, Request $request, ObjectManager $manager) {
-
+    public function periodsForm(
+                                    Advert $advert, bool $onlyPeriodsCreation = false, SeasonRepository $seasonRepository, Request $request, 
+                                    ObjectManager $manager
+                                ): Response
+    {
+        
+        $intl_date_formatter = new \IntlDateFormatter(
+                                                        $request->getLocale(),
+                                                        \IntlDateFormatter::MEDIUM,
+                                                        \IntlDateFormatter::NONE
+                                                     )
+        ;
+        
+        $limitCreationPeriods = $this->getParameter('limit_creation_periods');
+        $periods = $advert->getPeriods();
+        $numberPeriods = count($periods);
+        $editMode = false;
+        $upLimitDate = new \DateTime("+ " . $limitCreationPeriods);
+        $seasons = $seasonRepository->findAll();
+        
+        $current_menu = 'add_advert';        
+        
         $format = 'Y-m-d H:i:s';
         $date = date("Y-m-d 00:00:00");
         $today = \DateTime::createFromFormat($format, $date);
-        
-        foreach($advert->getPeriods() as $period)
-        {
-
-            if ($period->getEnd() < $today) 
-            {
-
-                $advert->removePeriod($period);
-
-            }
-
-        }
-        
-        $numberPeriods = count($advert->getPeriods());
-        $editMode = false;
-        $upLimitDate = new \DateTime("+ " . $this->getParameter('limit_creation_periods'));
-        $seasons = $seasonRepository->findAll();
 
         if ($numberPeriods > 0) 
         {
+        
+            foreach($periods as $period)
+            {
+
+                if ($period->getEnd() < $today) 
+                {
+
+                    $advert->removePeriod($period);
+
+                }
+
+            }
 
             $editMode = true;
+            $current_menu = 'dasbord';
 
         }
 
@@ -335,166 +374,187 @@ class AdvertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
 
-            //They will be used to check if overlaps in the periods
             $periods = $advert->getPeriods();
 
-            $overlap = false;
+            if(count($periods) > 0)
+            {
 
-            //They will be used to check if the periods are valid (between today and the fixed limit in the parameters)
-/*
-            $format = 'Y-m-d H:i:s';
-            $date = date("Y-m-d 00:00:00");
-            $toDay = \DateTime::createFromFormat($format, $date);
-*/
-            $previousLimit = false;
-            $overLimit = false;
+                //Used to check if overlaps in the periods
+                $overlap = false;
 
-            foreach ($periods as $period) {
+                //Used to check if the periods are valid (between today and the fixed limit in the parameters)
+                $previousLimit = false;
+                $overLimit = false;
 
-                //Checking if there is a date older than today
-                if ($period->getStart() < $today) {
+                foreach ($periods as $period) 
+                {
 
-                    $previousLimit = true;
+                    //Checking if there is a date older than today
+                    if ($period->getStart() < $today) 
+                    {
 
-                }
+                        $previousLimit = true;
 
-                //Checking if there is a date most distant than the duration fixed in the parameters
-                if ($period->getEnd() > $upLimitDate) {
+                    }
 
-                    $overLimit = true;
+                    //Checking if there is a date most distant than the duration fixed in the parameters
+                    if ($period->getEnd() > $upLimitDate) 
+                    {
 
-                }
+                        $overLimit = true;
 
-                //Checking if there are overlaps in the periods
-                foreach ($periods as $periodChecked) {
+                    }
 
-                if ($period !== $periodChecked) {
+                    //Checking if there are overlaps in the periods
+                    foreach ($periods as $periodChecked) 
+                    {
 
-                    if (! ($period->getEnd() < $periodChecked->getStart() || $period->getStart() > $periodChecked->getEnd()))
+                        if ($period !== $periodChecked) 
                         {
 
-                            $overlap = true;
+                            if (! ($periodChecked->getEnd() < $period->getStart() || $periodChecked->getStart() > $period->getEnd()))
+                            {
 
-                        }
-                        
-                    }
+                                $overlap = true;
 
-                }
-
-            }  
-
-            if ($overlap) {
-                $error = new FormError("Des périodes se chevauchent. Veuillez vérifier les dates de début et de fin.");
-                $form->addError($error);
-            }
-
-            if ($previousLimit) {
-                $error = new FormError("Les périodes ne peuvent pas débuter avant ce jour. Veuillez vérifier les dates de début.");
-                $form->addError($error);
-            }
-
-            if ($overLimit) {
-                $error = new FormError("Les périodes ne peuvent pas être planifiées plus de " . $this->getParameter('limit_creation_periods') . 
-                                       " à l'avance. Veuillez vérifier les dates de début et de fin.");
-                $form->addError($error);
-            }
-
-            //End of overlaps and invalid periods check           
-
-            //Checking if they are gaps during the laps covered by the different periods
-
-            $endCkeckedPeriod = new \DateTime("+ " . $this->getParameter('minimum_creation_periods'));
-            $interval = new \DateInterval('P1D');
-            $daysCovered = array();
-
-            foreach ($periods as $period) {
-                
-                $startDate = $period->getStart();
-                $endDate = $period->getEnd();
-                $end = clone $endDate;
-                $modifiedEndDate = $endDate->modify( '+1 day' );
-                    
-                $daterange = new \DatePeriod($startDate, $interval, $endDate);
-                    
-                if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) {
-                    
-                    foreach ($daterange as $periodDate) {
-
-                        if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) {
-
-                            $daysCovered[] = $periodDate;
-
-                        }
+                            }
                             
+                        }
+
                     }
 
                 }
 
-            }
+                if ($overlap) 
+                {
 
-            $dayDate = clone $today;
-            $gaps = true;
+                    $error = new FormError("Periods overlap. Please check the start and end dates.");
+                    $form->addError($error);
 
-            while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
-            {
+                }
 
-                $dayDate->modify( '+1 day' );
+                if ($previousLimit)
+                {
 
-            }
+                    $error = new FormError("Periods can not begin before this day. Please check the start dates.");
+                    $form->addError($error);
 
-            if ($dayDate >= $endCkeckedPeriod) {
+                }
+
+                if ($overLimit) 
+                {
+
+                    $error = new FormError("Periods can not be scheduled more than " . $this->getParameter('limit_creation_periods') . 
+                                           " in advance. Please check the start and end dates.");
+                    $form->addError($error);
+
+                }           
+
+                //Checking if they are gaps until the minimum date
+                $endCkeckedPeriod = new \DateTime("+ " . $this->getParameter('minimum_creation_periods'));
+                $interval = new \DateInterval('P1D');
+                $daysCovered = array();
+
+                foreach ($periods as $period) 
+                {
+                    
+                    $startDate = $period->getStart();
+                    $endDate = $period->getEnd();
+                    $end = clone $endDate;
+                        
+                    $daterange = new \DatePeriod($startDate, $interval, $endDate);
+                        
+                    if (($startDate >= $today && $startDate <= $endCkeckedPeriod) || ($end >= $today && $end <= $endCkeckedPeriod)) 
+                    {
+                        
+                        foreach ($daterange as $periodDate) 
+                        {
+
+                            if ( $periodDate >= $today && $periodDate <= $endCkeckedPeriod) 
+                            {
+
+                                $daysCovered[] = $periodDate;
+
+                            }
+                                
+                        }
+
+                    }
+
+                }
+
+                $dayDate = clone $today;
+                $gaps = true;
+
+                while (in_array($dayDate, $daysCovered) && $dayDate <= $endCkeckedPeriod) 
+                {
+
+                    $dayDate->modify( '+1 day' );
+
+                }
+
+                if ($dayDate >= $endCkeckedPeriod) 
+                {
+                    
+                    $gaps = false;
+
+                }
                 
-                $gaps = false;
+                if (! $overlap && ! $previousLimit && ! $overLimit)
+                {
 
-            }
+                    $manager->persist($advert);
+                    $manager->flush();  
 
-            if ($gaps) 
-            {
+                    if ($editMode)
+                    {
 
-                $error = new FormError("Il existe des jours non couverts pour la prochaine période de " . $this->getParameter('minimum_creation_periods'));
-                $form->addError($error);
-                
-            }
+                        $message = 'The periods were successfully updated.';
 
-            //End of gaps check
+                    }
+                    else
+                    {
 
-            $manager->persist($advert);
-            $manager->flush();  
+                        $message = 'The periods were successfully created.';
 
-            if ($editMode)
-            {
+                    }
 
-                $this->addFlash('success', 'Les périodes ont été modifiées avec succès.');
+                    if($gaps)
+                    {
 
-            }
-            else
-            {
+                        $message .= ' However, there are gaps until ' . $intl_date_formatter->format($endCkeckedPeriod) . ". You will can add periods later";
+                    }
 
-                $this->addFlash('success', 'Les périodes ont été ajoutées à votre annonce avec succès.');
+                    $this->addFlash('success', $message);
 
-            }
+                    if ($onlyPeriodsCreation) 
+                     {
+     
+                         return $this->redirectToRoute('advert.owner');
+     
+                     } 
+                     else 
+                     {
+     
+                         return $this->redirectToRoute('advert.prices.create', array('id' => $advert->getId()));
+     
+                     }
 
-            if ($onlyPeriodManagement) 
-            {
-
-                return $this->redirectToRoute('advert.owner');
-
-            } 
-            else 
-            {
-
-                return $this->redirectToRoute('advert.prices.management', array('id' => $advert->getId()));
+                }
 
             }
 
         }
   
         return $this->render('advert/periods.html.twig', [
-                                                            'form' => $form->createView(), 
-                                                            'editMode' => $numberPeriods > 0, 
+                                                            'form' => $form->createView(),
+                                                            'current_menu' => $current_menu, 
+                                                            'editMode' => $editMode, 
                                                             'upLimitDate' => $upLimitDate,
                                                             'seasons' => $seasons,
-                                                            'limitCreationPeriods' => $this->getParameter('limit_creation_periods')
+                                                            'locale' => $request->getLocale(),
+                                                            'minimumCreationPeriods' => $this->getParameter('minimum_creation_periods'),
+                                                            'limitCreationPeriods' => $limitCreationPeriods
                                                          ]
                             )
         ;
@@ -502,103 +562,131 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/prices/management/{id}/{onlyPriceManagement}", name="advert.prices.management")
+     *  @Route("/advert/prices/create/{id}/{onlyPricesCreation}", name="advert.prices.create")
+     *
      * @param Advert $advert
+     * @param boolean $onlyPricesCreation
+     * @param DurationRepository $durationRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function pricesForm(Advert $advert, bool $onlyPriceManagement, Request $request, ObjectManager $manager) { 
-
+    public function pricesForm(
+                                    Advert $advert, bool $onlyPricesCreation = false, DurationRepository $durationRepository, 
+                                    Request $request, ObjectManager $manager
+                                ): Response 
+    { 
+        
         $editMode = false;
         
-        //Preparation of the prices list in function of the number different seasons  
-        $missingDurations = array();
-        $durations = $manager->getRepository(Duration::class)->findAll();
-
-        //Search seasons used by periods
-        foreach ($advert->getPeriods() as $key => $value) {
-
-            $seasons[] = $value->getSeason();
-
-        }
-
-        $unique_seasons = array_unique($seasons);
-        //End of search seasons used by periods
-
         $prices = $advert->getPrices();
-        
 
-        if (count($prices) > 0) {
+        if($prices)
+        {
 
             $editMode = true;
 
-            foreach ($prices as $price) 
+        }
+        
+        // Collection creation of seasons used in the periods 
+        $seasons = new ArrayCollection();
+        $sortedSeasons = new ArrayCollection();
+
+        //Search seasons used by periods
+        foreach ($advert->getPeriods() as $period) 
+        {
+
+            $season = $period->getSeason();
+            
+            if (! $seasons->contains($season)) 
             {
-    
-                $idsSeasonsPrices[] = $price->getSeason()->getId();
+            
+                $seasons->add($season);
 
-            }
-
-            //For each season, searching missing duration compared to parameter to permit add only not existing durations
-            foreach ($unique_seasons as $unique_season) 
-            {
-    
-                $seasonPrices = $unique_season->getPrices();
-
-                $missingDurations[''. $unique_season->getSeason() . ''] = array();
-                $seasonDurations = array();
-    
-                foreach($seasonPrices as $seasonPrice) 
-                {
-                    
-                    $seasonDurations[] = $seasonPrice->getDuration();
-                
-                }
-                    
-                foreach ($durations as $duration) 
-                {
-                        
-                    if (! in_array($duration, $seasonDurations)) 
-                    {
-                            
-                        $missingDurations[''. $unique_season->getSeason() . ''][] = $duration;
-    
-                    }
-    
-              }
-           
             }
 
         }
-        else 
-        {
+
+        // Sort seasons by ascending cost 
+        $iterator = $seasons->getIterator();
+
+        $iterator->uasort(function ($a, $b) {
+
+            return $a->getCost() <=> $b->getCost();
+
+        });
+
+        $sortedSeasons = iterator_to_array($iterator);
+
+        // By season, search not used durations and store prices
+        $missingDurations = array();
+
+        // To filter prices by season in the template
+        $idsSeasonsPrices = array();
+        
+        $durations = $durationRepository->findAll();
+        $minimumDuration = $durationRepository->findMinimumDuration();
+
+        foreach($sortedSeasons as $season)
+        {        
+                    
+            $usedDurations = new ArrayCollection(); 
             
-            $editMode = false;
-
-            $numberSeasons = count($unique_seasons);
-
-            //Prices creation
-            foreach ($unique_seasons as $unique_season) 
+            if(! $editMode)
             {
- 
-                foreach ($durations as $duration) 
-                {
 
-                    $price = new Price;
-                    $price->setDuration($duration);
-                    $price->setSeason($unique_season);
-                    $advert->addPrice($price);                    
-                    $idsSeasonsPrices[] = $unique_season->getId();
+                $price = new Price();
+
+                $price
+                    ->setSeason($season)
+                    ->setDuration($minimumDuration)
+                ;
+
+                $advert->addPrice($price);
+                $idsSeasonsPrices[] = $season->getId();
+                $usedDurations->add($minimumDuration);
+
+            }
+            else
+            {
+
+                foreach ($prices as $price) 
+                {
+                    
+                    if($price->getSeason() == $season)
+                    {
+
+                        $usedDurations->add($price->getDuration());
+
+                    }
 
                 }
 
             }
+
+            foreach($durations as $duration)
+            {
+    
+                if(! $usedDurations->contains($duration))
+                {
+    
+                    $missingDurations[$season->getId()][] = $duration;
+    
+                }
+    
+            }
+
+        }
+
+        foreach($prices as $price)
+        {
+
+            $idsSeasonsPrices[] = $price->getSeason()->getId();
 
         }
     
         $form = $this->createForm(PricesAdvertType::class, $advert);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 
@@ -610,17 +698,17 @@ class AdvertController extends AbstractController
             if ($editMode) 
             {
 
-                $this->addFlash('success', 'Les prix ont été modifiés avec succès.');
+                $this->addFlash('success', 'Prices were successfully updated.');
 
             }
             else
             {
 
-                $this->addFlash('success', 'Les prix ont été ajoutés à votre annonce avec succès.');
+                $this->addFlash('success', 'Prices were successfully created.');
 
             }
 
-            if ($onlyPriceManagement) 
+            if ($onlyPricesCreation) 
             {
 
                 return $this->redirectToRoute('advert.owner');
@@ -629,7 +717,7 @@ class AdvertController extends AbstractController
             else 
             {
 
-                return $this->redirectToRoute('advert.costs.management', array('id' => $advert->getId()));
+                return $this->redirectToRoute('advert.various_costs.create', array('id' => $advert->getId()));
 
             }
 
@@ -637,11 +725,11 @@ class AdvertController extends AbstractController
   
         return $this->render('advert/prices.html.twig', [
                                                             'form' => $form->createView(), 
-                                                            'unique_seasons' => $unique_seasons, 
-                                                            'idsSeasonsPrices' => $idsSeasonsPrices,  
+                                                            'usedSeasons' => $sortedSeasons,  
                                                             'editMode' => $editMode,
                                                             'missingDurations' => $missingDurations, 
                                                             'configuredDurations' => $durations,
+                                                            'idsSeasonsPrices' => $idsSeasonsPrices
                                                         ]
                             )
         ;
@@ -649,13 +737,15 @@ class AdvertController extends AbstractController
     }
 
     /**
-     *  @Route("/advert/costs/management/{id}", name="advert.costs.management")
+     *  @Route("/advert/various_costs/create/{id}", name="advert.various_costs.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function costsForm(Advert $advert = null, Request $request, ObjectManager $manager)
+    public function costsForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
     {
 
         $insurance = $advert->getInsurance();
@@ -663,23 +753,38 @@ class AdvertController extends AbstractController
         $numberMileages = count($advert->getIncludedMileages());
         $editMode = true;
 
-        if ((! $insurance) && ($numberMileages == 0) && (!$advert->getExtraKilometerCost()) && (!$advert->getIncludedCleaning()) && (!$advert->getCleaningCost())) 
+        if (
+                (! $insurance) && ($numberMileages == 0) && (!$advert->getExtraKilometerCost()) && (!$advert->getIncludedCleaning()) && 
+                (!$advert->getCleaningCost())
+           ) 
         {
 
             $editMode = false;
 
         }
 
-        foreach ($prices as $price) 
-        {
+        $unique_durations = new ArrayCollection();
 
-            $durations[] = $price->getDuration();
+        if($prices)
+        {
+            foreach ($prices as $price) 
+            {
+
+                $duration = $price->getDuration();
+                
+                if(! $unique_durations->contains($duration))
+                {
+
+                    $unique_durations->add($price->getDuration());
+
+                }
+
+            }
 
         }
-
-        $unique_durations = array_unique($durations);
         
-        if (! $insurance) {
+        if (! $insurance) 
+        {
 
             $insurance = new Insurance();
             $advert->setInsurance($insurance);
@@ -735,124 +840,131 @@ class AdvertController extends AbstractController
 
         }
         
-       $form = $this->createForm(CostsType::class, array(
-                                                            'insurance' => $insurance,
-                                                            'insurancePrices' => $insurancePrices,
-                                                            'includedMileages' => $includedMileages,
-                                                            'extraKilometerCost' => $advert, 
-                                                            'cleaning' => $advert, 
-                                                        )
-                                )
+        $form = $this->createForm(VariousCostsType::class, array(
+                                                                    'insurance' => $insurance,
+                                                                    'insurancePrices' => $insurancePrices,
+                                                                    'includedMileages' => $includedMileages,
+                                                                    'extraKilometerCost' => $advert, 
+                                                                    'cleaning' => $advert
+                                                                )
+                                  )
         ;
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 
         { 
-
-            $insurance->setIncluded($form['insurance']['included']->getData());
-            $insurance->setDeductible($form['insurance']['deductible']->getData());
             
-            $i = 0;
-            $insuranceIncluded = $insurance->getIncluded();
-
-            foreach ($insurancePrices as $insurancePrice) 
+            if($insurance->getIncluded())
             {
 
-                if ($insuranceIncluded) {
+                foreach ($insurancePrices as $insurancePrice) 
+                {
 
                     $insurance->removeInsurancePrice($insurancePrice);
 
                 }
-                else 
-                {
 
-                    $price = $form['insurancePrices'][$i]['price']->getData();
-                    $insurancePrice->setPrice($price);
-
-                }
-
-                $i++;
-
-            }
+            }            
             
-            $j = 0;
-
+            $mileagesCorrectlyCompleted = true;
+            
             foreach ($includedMileages as $includedMileage) 
             {
 
-                $mileage = $form['includedMileages'][$j]['mileage']->getData();
-                $includedMileage->setMileage($mileage);
-                $j++;
+                if($includedMileage->getUnlimited())
+                {
+                    
+                    $includedMileage->setMileage(null);
+
+                }
+                else
+                {
+
+                    if(! $includedMileage->getMileage())
+                    {
+
+                        $mileagesCorrectlyCompleted = false;
+
+                    }
+
+                }
 
             }
 
-            $advert->setExtraKilometerCost($form['extraKilometerCost']['extraKilometerCost']->getData());
-
-            $includedCleaning = $form['cleaning']['includedCleaning']->getData();
-            $advert->setIncludedCleaning($includedCleaning);
-
-            if ($includedCleaning) 
+            if ($advert->getIncludedCleaning()) 
             {
 
                 $advert->setCleaningCost(null);
 
-            }
-            else 
-            {
-
-                $advert->setCleaningCost($form['cleaning']['cleaningCost']->getData());
-
-            }            
+            } 
             
-            $manager->persist($advert);
-            $manager->flush();  
-
-            if ($editMode) 
+            if($mileagesCorrectlyCompleted)
             {
 
-                $this->addFlash('success', 'Les coûts ont été modifiés avec succès.');
+            
+                $manager->persist($advert);
+                $manager->flush();  
+
+                if ($editMode) 
+                {
+
+                    $this->addFlash('success', 'Costs were successfully updated.');
+
+                }
+                else
+                {
+
+                    $this->addFlash('success', 'Costs were successfully added.');
+
+                } 
+
+                $user = $this->getUser();
+
+                if ($user && $user->getOwner())
+                {
+
+                    return $this->redirectToRoute('advert.subscription.create', array('id' => $advert->getId()));
+
+                }
+
+                return $this->redirectToRoute('user.owner.create', array('id' => $advert->getId()));
 
             }
             else
             {
-
-                $this->addFlash('success', 'Les coûts ont été ajoutés à votre annonce avec succès.');
-
-            } 
-
-            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_OWNER') || $advert->getOwner())
-            {
-
-                return $this->redirectToRoute('advert.subscription.management', array('id' => $advert->getId()));
+                
+                $error = new FormError("Some kilometers included are neither unlimited nor informed as to the kilometers number.");
+                $form->addError($error);
 
             }
 
-            return $this->redirectToRoute('user.owner.create', array('id' => $advert->getId()));
-
         }
 
-        return $this->render('advert/costs.html.twig', [
-                                                            'form' => $form->createView(), 
-                                                            'unique_durations' => $unique_durations, 
-                                                            'insurancePrices' => $insurancePrices, 
-                                                            'includedMileages' => $includedMileages, 
-                                                            'idInsurancePricesDurations' => $idInsurancePricesDurations, 
-                                                            'idIncludedMileagesDurations' => $idIncludedMileagesDurations, 
-                                                            'editMode' => $insurance->getId() !== null,
-                                                       ]
+        return $this->render('advert/variousCosts.html.twig', [
+                                                                'form' => $form->createView(), 
+                                                                'unique_durations' => $unique_durations, 
+                                                                'insurancePrices' => $insurancePrices, 
+                                                                'includedMileages' => $includedMileages, 
+                                                                'idInsurancePricesDurations' => $idInsurancePricesDurations, 
+                                                                'idIncludedMileagesDurations' => $idIncludedMileagesDurations, 
+                                                                'editMode' => $insurance->getId() !== null
+                                                              ]
                             )
-        ;        
+        ;
+
     }
 
     /**
-     *  @Route("/advert/subscription/management/{id}", name="advert.subscription.management")
+     *  @Route("/advert/subscription/create/{id}", name="advert.subscription.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function subscriptionForm(Advert $advert = null, Request $request, ObjectManager $manager)
+    public function subscriptionForm(Advert $advert = null, ObjectManager $manager): Response
     {
 
         $subscriptions = $manager->getRepository(Subscription::class)->findAll(); 
@@ -866,6 +978,7 @@ class AdvertController extends AbstractController
                                                               ]
                             )
         ;
+
     }
 
     /**
