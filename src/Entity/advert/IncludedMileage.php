@@ -23,7 +23,7 @@ class IncludedMileage
      * @ORM\Column(type="integer")
      * 
      * @Assert\GreaterThanOrEqual(
-     *     value = 500,
+     *     value = 100,
      *     message = "The milage must be greather or equal than {value} km."
      * )
      * @Assert\LessThanOrEqual(
@@ -50,6 +50,11 @@ class IncludedMileage
      * @Assert\Valid()
      */
     private $duration;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $unlimited;
 
     /**
      * Get the id
@@ -81,7 +86,7 @@ class IncludedMileage
      * @param integer $mileage
      * @return self
      */
-    public function setMileage(int $mileage): self
+    public function setMileage(?int $mileage): self
     {
 
         $this->mileage = $mileage;
@@ -142,6 +147,33 @@ class IncludedMileage
 
         return $this;
 
+    }
+
+    /**
+     * Get if the mileage is unlimited
+     *
+     * @return boolean|null
+     */
+    public function getUnlimited(): ?bool
+    {
+
+        return $this->unlimited;
+
+    }
+
+    /**
+     * Set if the mileage is unlimited
+     *
+     * @param boolean|null $unlimited
+     * @return self
+     */
+    public function setUnlimited(?bool $unlimited): self
+    {
+
+        $this->unlimited = $unlimited;
+
+        return $this;
+        
     }
     
 }

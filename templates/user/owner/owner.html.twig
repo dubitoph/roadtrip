@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Administrer l'annonce{% endblock %}
+{% block title %}
+
+    Roadtripr - Your owner data management
+    
+{% endblock %}
 
 {% block body %}
 
@@ -8,7 +12,7 @@
 
         {{ include('_messages.html.twig') }}
 
-        <h1>Gérer les informations personnelles</h1>
+        <h1>Your owner data</h1>
 
         {{ form_start(form) }}
     
@@ -73,7 +77,7 @@
         
             {% endif %}
 
-            <button class="btn btn-primary">{{ button | default('Enregistrer') }}</button>
+            <button type="submit" class="btn btn-success">Next</button>
             
         {{ form_end(form) }}
 

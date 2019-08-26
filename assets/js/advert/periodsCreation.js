@@ -8,7 +8,7 @@ var collectionHolderPeriods;
 jQuery(document).ready(function() {
     
     //Dates formatting according user's locale
-    $('.js-datepicker-period').each(function () {
+    $('.js-datepicker-period').each(function() {
 
         $(this).val(moment($(this).val(), 'YYYY-MM-DD').format('L'));
 

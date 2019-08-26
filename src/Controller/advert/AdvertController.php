@@ -738,12 +738,14 @@ class AdvertController extends AbstractController
 
     /**
      *  @Route("/advert/various_costs/create/{id}", name="advert.various_costs.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function costsForm(Advert $advert = null, Request $request, ObjectManager $manager)
+    public function costsForm(Advert $advert = null, Request $request, ObjectManager $manager): Response
     {
 
         $insurance = $advert->getInsurance();
@@ -852,89 +854,90 @@ class AdvertController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) 
         { 
-
-            $insurance->setIncluded($form['insurance']['included']->getData());
-            $insurance->setDeductible($form['insurance']['deductible']->getData());
             
-            $i = 0;
-            $insuranceIncluded = $insurance->getIncluded();
-
-            foreach ($insurancePrices as $insurancePrice) 
+            if($insurance->getIncluded())
             {
 
-                if ($insuranceIncluded) 
+                foreach ($insurancePrices as $insurancePrice) 
                 {
 
                     $insurance->removeInsurancePrice($insurancePrice);
 
                 }
-                else 
-                {
 
-                    $price = $form['insurancePrices'][$i]['price']->getData();
-                    $insurancePrice->setPrice($price);
-
-                }
-
-                $i++;
-
-            }
+            }            
             
-            $j = 0;
-
+            $mileagesCorrectlyCompleted = true;
+            
             foreach ($includedMileages as $includedMileage) 
             {
 
-                $mileage = $form['includedMileages'][$j]['mileage']->getData();
-                $includedMileage->setMileage($mileage);
-                $j++;
+                if($includedMileage->getUnlimited())
+                {
+                    
+                    $includedMileage->setMileage(null);
+
+                }
+                else
+                {
+
+                    if(! $includedMileage->getMileage())
+                    {
+
+                        $mileagesCorrectlyCompleted = false;
+
+                    }
+
+                }
 
             }
 
-            $advert->setExtraKilometerCost($form['extraKilometerCost']['extraKilometerCost']->getData());
-
-            $includedCleaning = $form['cleaning']['includedCleaning']->getData();
-            $advert->setIncludedCleaning($includedCleaning);
-
-            if ($includedCleaning) 
+            if ($advert->getIncludedCleaning()) 
             {
 
                 $advert->setCleaningCost(null);
 
-            }
-            else 
-            {
-
-                $advert->setCleaningCost($form['cleaning']['cleaningCost']->getData());
-
-            }            
+            } 
             
-            $manager->persist($advert);
-            $manager->flush();  
-
-            if ($editMode) 
+            if($mileagesCorrectlyCompleted)
             {
 
-                $this->addFlash('success', 'Costs were successfully updated.');
+            
+                $manager->persist($advert);
+                $manager->flush();  
+
+                if ($editMode) 
+                {
+
+                    $this->addFlash('success', 'Costs were successfully updated.');
+
+                }
+                else
+                {
+
+                    $this->addFlash('success', 'Costs were successfully added.');
+
+                } 
+
+                $user = $this->getUser();
+
+                if ($user && $user->getOwner())
+                {
+
+                    return $this->redirectToRoute('advert.subscription.create', array('id' => $advert->getId()));
+
+                }
+
+                return $this->redirectToRoute('user.owner.create', array('id' => $advert->getId()));
 
             }
             else
             {
-
-                $this->addFlash('success', 'Costs were successfully added.');
-
-            } 
-
-            $user = $this->getUser();
-
-            if ($user && $user->getOwner())
-            {
-
-                return $this->redirectToRoute('advert.subscription.management', array('id' => $advert->getId()));
+                
+                $error = new FormError("Some kilometers included are neither unlimited nor informed as to the kilometers number.");
+                $form->addError($error);
 
             }
-
-            return $this->redirectToRoute('user.owner.create', array('id' => $advert->getId()));
 
         }
 
@@ -948,17 +951,20 @@ class AdvertController extends AbstractController
                                                                 'editMode' => $insurance->getId() !== null
                                                               ]
                             )
-        ;        
+        ;
+
     }
 
     /**
-     *  @Route("/advert/subscription/management/{id}", name="advert.subscription.management")
+     *  @Route("/advert/subscription/create/{id}", name="advert.subscription.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function subscriptionForm(Advert $advert = null, Request $request, ObjectManager $manager)
+    public function subscriptionForm(Advert $advert = null, ObjectManager $manager): Response
     {
 
         $subscriptions = $manager->getRepository(Subscription::class)->findAll(); 
@@ -972,6 +978,7 @@ class AdvertController extends AbstractController
                                                               ]
                             )
         ;
+
     }
 
     /**

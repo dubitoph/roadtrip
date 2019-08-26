@@ -19,12 +19,29 @@ class UserOwnerController extends AbstractController
     
     /**
      *  @Route("/user/owner/create/{id}", name="user.owner.create")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function new(Advert $advert = null, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    
+    /**
+     * @Route("/user/owner/create/{id}", name="user.owner.create")
+     *
+     * @param Advert $advert
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @param UserPasswordEncoderInterface $encoder
+     * @param \Swift_Mailer $mailer
+     * 
+     * @return Response
+     */
+     public function new(
+                            Advert $advert = null, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
+                            \Swift_Mailer $mailer
+                        ): Response
     {
 
         $user = $this->getUser();
@@ -61,11 +78,7 @@ class UserOwnerController extends AbstractController
         
         $owner->setBillingAddress($billingAddress);
         
-        $form = $this->createForm(OwnerType::class, $owner, array(
-                                                                    'isAdmin' => $isAdmin
-                                                                 ) 
-                                 )
-        ;
+        $form = $this->createForm(OwnerType::class, $owner, array('isAdmin' => $isAdmin));
  
         $form->handleRequest($request);
  
@@ -133,10 +146,10 @@ class UserOwnerController extends AbstractController
 
         }
 
-        return $this->render('advert/owner.html.twig', [
+        return $this->render('user/owner.html.twig', [
                                                         'form' => $form->createView(), 
                                                         'editMode' => $owner->getId() !== null,
-                                                       ]
+                                                     ]
                             )
         ;
         

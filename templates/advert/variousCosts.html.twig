@@ -71,7 +71,19 @@
 
                     {%  if idIncludedMileagesDurations[j] == unique_duration.id %} 
 
-                        {{ form_row(includedMileage.mileage) }}
+                    {# This div is used in the javascript processing #}    
+                    <div class="mileage_div">
+                    
+                        {{ form_row(includedMileage.unlimited) }}
+                        
+                        {# This div is used in the javascript processing #}
+                        <div class="input_mileage_div">
+
+                            {{ form_row(includedMileage.mileage) }}
+
+                        </div>
+
+                    </div>
 
                     {% endif %}                
 
