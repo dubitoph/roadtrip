@@ -24,6 +24,12 @@ import moment from 'moment';
 window['moment'] = moment;
 moment.locale(navigator.language);
 
+import intlTelInput from 'intl-tel-input';
+import '../../node_modules/intl-tel-input/build/css/intlTelInput.css';
+import 'intl-tel-input/build/js/utils.js'
+window['intlTelInput'] = intlTelInput;
+
+
 /*
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -119,7 +125,7 @@ export function deletePhoto($element)
 export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode, idInputCountry, idInputNumber, idInputBox, idInputState, 
                                     IdInputLatitude, idInputLongitude, defaultLocationQuestion, idInputDefaultAddress)
 {
-
+  
   var places = require('places.js');
   var inputAddress = document.querySelector('#' + idInputAddress);
   $('#' + idInputCountry).select2();
@@ -173,6 +179,7 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 
     placesAutocomplete.on('clear', function() {
       
+      document.querySelector('#' + idInputAddress).value = '';
       document.querySelector('#' + idInputCity).value = '';
       document.querySelector('#' + idInputPostcode).value = '';
       document.querySelector('#' + idInputNumber).value = ''; 

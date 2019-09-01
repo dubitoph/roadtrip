@@ -38,7 +38,7 @@ Encore
     .addEntry('pricesCreation', './assets/js/advert/pricesCreation.js')
     .addEntry('VariousCostsCreation', './assets/js/advert/VariousCostsCreation.js')
     .addEntry('bookingManagement', './assets/js/booking/bookingManagement.js')
-    .addEntry('ownerManagement', './assets/js/advert/ownerManagement.js')
+    .addEntry('ownerCreation', './assets/js/user/ownerCreation.js')
     .addEntry('ratingManagement', './assets/js/rating/ratingManagement.js')
     .addEntry('showAdvert', './assets/js/advert/showAdvert.js')
     .addEntry('advertsSearch', './assets/js/advert/advertsSearch.js')

@@ -11,13 +11,16 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UserType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
 
         $builder
                 ->add('firstname', TextType::class)
@@ -62,6 +65,7 @@ class UserType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+
         $resolver->setDefaults(
                                 [
                                     'data_class' => User::class,
@@ -70,5 +74,7 @@ class UserType extends AbstractType
                                 ]
                               )
         ;
+
     }
+    
 }

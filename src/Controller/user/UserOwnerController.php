@@ -7,6 +7,7 @@ use App\Entity\user\Owner;
 use App\Form\user\OwnerType;
 use App\Entity\advert\Advert;
 use App\Entity\communication\Mail;
+use App\Repository\user\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,16 +17,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserOwnerController extends AbstractController
 {
-    
-    /**
-     *  @Route("/user/owner/create/{id}", name="user.owner.create")
-     * 
-     * @param Advert $advert
-     * @param Request $request
-     * @param ObjectManager $manager
-     * 
-     * @return Response
-     */
     
     /**
      * @Route("/user/owner/create/{id}", name="user.owner.create")
@@ -38,9 +29,9 @@ class UserOwnerController extends AbstractController
      * 
      * @return Response
      */
-     public function new(
+    public function new(
                             Advert $advert = null, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
-                            \Swift_Mailer $mailer
+                            \Swift_Mailer $mailer, UserRepository $userRepository
                         ): Response
     {
 
@@ -50,7 +41,12 @@ class UserOwnerController extends AbstractController
         
         $owner = new Owner();
 
-        $advert->setOwner($owner);
+        if($advert)
+        {
+
+            $advert->setOwner($owner);
+
+        }
         
         if (! $user) 
         {
@@ -67,7 +63,6 @@ class UserOwnerController extends AbstractController
         $user->setRoles(['ROLE_OWNER']);
         
         $VehicleSituation = $advert->getVehicle()->getSituation();
-        $billingAddress = clone $VehicleSituation;
 
         if (! $VehicleSituation) 
         {
@@ -75,16 +70,22 @@ class UserOwnerController extends AbstractController
             $billingAddress = new Address();
 
         }
+        else
+        {
+
+            $billingAddress = clone $VehicleSituation;
+
+        }
         
         $owner->setBillingAddress($billingAddress);
         
-        $form = $this->createForm(OwnerType::class, $owner, array('isAdmin' => $isAdmin));
+        $form = $this->createForm(OwnerType::class, $owner, array('isAdmin' => $isAdmin, 'user' => $user));
  
         $form->handleRequest($request);
  
         if ($form->isSubmitted() && $form->isValid()) 
-        {                       
-
+        {  
+            
             $hash = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($hash);
@@ -95,61 +96,59 @@ class UserOwnerController extends AbstractController
                 $user->setPhoneNumber($request->request->get('phone_number'));
 
             }
-
-            if ($request->request->get('address_changed') != 1) 
-            {
-
-                $owner->setBillingAddress($VehicleSituation);
-
-            }
                         
             $manager->persist($owner);
             $manager->flush(); 
 
             if($newUser)
-            {
+            {  
 
                 $mail = new Mail;
-    
+
+                $administrator = $userRepository->findOneBy(array('name' => 'administrator'));
+
                 $mail->setReceiver($user)
                      ->setSubject($this->getParameter('registration_email_subject'))
-                     ->setFirstname($this->getParameter('administrateur_firstname'))
-                     ->setName($this->getParameter('administrateur_name'))
-                     ->setEmailFrom($this->getParameter('administrateur_email'))
-                     ->setTemplate('security/registrationEmail.html.twig')
-                     ->setMessage($this->renderView(
-                                                    $mail->getTemplate(), 
+                     ->setSender($administrator)
+                     ->setMessage('Account creation')
+                     ->setBody($this->renderView(
+                                                    'security/registrationEmail.html.twig', 
                                                     ['user' => $user]
-                                                   )
-                                 )
+                                                )
+                              )
                 ;
-    
+
                 if ($mail->sendEmail($mailer))
                 {                
-    
+
                     $manager->persist($mail);
                     $manager->flush();
-    
-                    $this->addFlash('success', "Un email a été envoyé à l'adresse email indiquée afin d'activer votre compte.");
-    
+
+                    $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
+
                 }
                 else
                 {
-    
-                    $this->addFlash('notice', "Un email n'a pas pu être envoyé à l'adresse email indiquée afin d'activer votre compte.");
-    
+
+                    $this->addFlash('error', "An email could not be sent to the completed email address to activate your account.");
+
                 }
 
             }
 
-            return $this->redirectToRoute('advert.subscription.management', array('id' => $advert->getId()));
+            if($advert)
+            {
+
+                return $this->redirectToRoute('advert.subscription.create', array('id' => $advert->getId()));
+
+            }
 
         }
 
-        return $this->render('user/owner.html.twig', [
-                                                        'form' => $form->createView(), 
-                                                        'editMode' => $owner->getId() !== null,
-                                                     ]
+        return $this->render('user/owner/owner.html.twig', [
+                                                            'form' => $form->createView(), 
+                                                            'editMode' => $owner->getId() !== null
+                                                           ]
                             )
         ;
         

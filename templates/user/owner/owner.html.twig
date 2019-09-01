@@ -20,7 +20,7 @@
 
                 <div class="col-md-4">{{ form_row(form.user.username) }}</div>
                 <div class="col-md-4">{{ form_row(form.user.password) }}</div>
-                <div class="col-md-4">{{ form_row(form.user.confirm_password) }}</div>
+                <div class="col-md-4">{{ form_row(form.user.confirmedPassword) }}</div>
                 <div class="col-md-4">{{ form_row(form.user.email) }}</div>
                 <div class="col-md-4">{{ form_row(form.user.firstname) }}</div>
                 <div class="col-md-4">{{ form_row(form.user.name) }}</div>
@@ -34,7 +34,7 @@
                     
                     <div class="form-group">
                         
-                        <label for="phone_number">Téléphone</label>
+                        <label for="phone_number">Phone number</label>
                         <input type="tel" id="phone_number" name="phone_number" maxlength="25" class="form-control">
                     
                     </div>
@@ -61,12 +61,6 @@
             <div class="col-md-4" style="display: none">{{ form_row(form.billingAddress.latitude) }}</div>
             <div class="col-md-4" style="display: none">{{ form_row(form.billingAddress.longitude) }}</div>
 
-            <div style="display: none">
-
-                <input type="text" id="address_changed" name="address_changed">
-
-            </div>
-
             {% if not app.user %}                   
 
                 <div class="col-md-4">
@@ -87,7 +81,7 @@
         
         {{ parent() }}
         
-        {{ encore_entry_script_tags('ownerManagement') }}
+        {{ encore_entry_script_tags('ownerCreation') }}
 
     {% endblock %}
 
