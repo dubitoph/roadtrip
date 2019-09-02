@@ -959,7 +959,6 @@ class AdvertController extends AbstractController
      *  @Route("/advert/subscription/create/{id}", name="advert.subscription.create")
      * 
      * @param Advert $advert
-     * @param Request $request
      * @param ObjectManager $manager
      * 
      * @return Response

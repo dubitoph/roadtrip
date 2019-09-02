@@ -9,15 +9,15 @@
         </h3>
 
         <p class="card-text">{{ subscription.description | nl2br }}</p>
-        <p class="card-text">Validité : {{ subscription.duration }} mois</p>
+        <p class="card-text">Validity : {{ subscription.duration }} months</p>
 
         {% if vat %}
 
-            <p class="card-text">Prix : {{ subscription.price + (subscription.price * (vat.vat / 100)) }} € TTC</p>
+            <p class="card-text">Price : {{ subscription.price + (subscription.price * (vat.vat / 100)) }} € TTC</p>
             
         {% else %}            
 
-            <p class="card-text">Prix : {{ subscription.price }} €</p>
+            <p class="card-text">Price : {{ subscription.price }} €</p>
             
         {% endif %}
 
@@ -28,7 +28,7 @@
             <input type="hidden"  name="_method" value="UPDATE">
             <input type="hidden"  name="_token" value="{{ csrf_token('update' ~ subscription.id ) }}">
             <input type="hidden"  name="subscriptionId" value="{{ subscription.id }}">
-            <button class="btn btn-success">Choisir cet abonnement</button>
+            <button class="btn btn-success">Choose this subscription</button>
 
         </form>
         
