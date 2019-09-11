@@ -20,6 +20,7 @@
                     <th>Description</th>
                     <th>Durée</th>
                     <th>Prix</th>
+                    <th>Active</th>
                     <th>Action</th>
 
                 </tr>
@@ -36,6 +37,7 @@
                         <td>{{ subscription.description }}</td>
                         <td>{{ subscription.duration }}</td>
                         <td>{{ subscription.price }}</td>
+                        <td>{{ subscription.isActive }}</td>
                         <td>
                             
                             <a href="{{ path('backend.subscription.edit', { 'id': subscription.id }) }}" class="btn btn-secondary">Editer</a>

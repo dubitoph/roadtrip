@@ -68,6 +68,11 @@ class VAT
      */
     private $vat;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripeTaxRateId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,4 +113,32 @@ class VAT
 
         return $this;
     }
+
+    /**
+     * Get the Stripe tax rate id
+     *
+     * @return string|null
+     */
+    public function getStripeTaxRateId(): ?string
+    {
+
+        return $this->stripeTaxRateId;
+
+    }
+
+    /**
+     * Set the Stripe tax rate id
+     *
+     * @param string $stripeTaxRateId
+     * @return self
+     */
+    public function setStripeTaxRateId(string $stripeTaxRateId): self
+    {
+
+        $this->stripeTaxRateId = $stripeTaxRateId;
+
+        return $this;
+
+    }
+
 }

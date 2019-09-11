@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BackendVATController extends AbstractController
@@ -34,7 +35,7 @@ class BackendVATController extends AbstractController
      * @param ObjectManager $manager
      * @return Response
      */
-    public function new(Request $request, ObjectManager $manager): Response
+    public function new(Request $request, ObjectManager $manager, TranslatorInterface $translator): Response
     {
 
         $VAT = new VAT;
@@ -43,14 +44,45 @@ class BackendVATController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {            
+        if ($form->isSubmitted() && $form->isValid()) 
+        {   
+            
+            // Create Stripe VAT
+            \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));            
 
-            $manager->persist($VAT);
-            $manager->flush();    
+            try
+            {
 
-            $this->addFlash('success', "La TVA a été créée avec succès.");      
+                $tax_rate = \Stripe\TaxRate::create(
+                                                        [
+                                                            'display_name' => 'VAT',
+                                                            'description' => 'VAT ' . $VAT->getState(),
+                                                            'jurisdiction' => $VAT->getAbbreviation(),
+                                                            'percentage' => $VAT->getVat(),
+                                                            'inclusive' => false
+                                                        ]
+                                                   )
+                ;
+                
+                $VAT->setStripeTaxRateId($tax_rate->id);
+            
+                $manager->persist($VAT);
+                $manager->flush();
 
-            return $this->redirectToRoute('backend.VAT.index');
+                $this->addFlash('success', "The VAT was successfully created.");      
+    
+                return $this->redirectToRoute('backend.VAT.index');
+
+            }
+            catch(Exception $e)
+            {
+
+                $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate creation.");
+                error_log("Unable to create the " . $VAT->getState() . " Stripe. Error:" . $e->getMessage());
+
+                exit();
+
+            }
         }
      
         return $this->render('backend/VAT/new.html.twig', [
@@ -71,15 +103,93 @@ class BackendVATController extends AbstractController
     public function edit(VAT $VAT, Request $request, ObjectManager $manager): Response
     {
 
+        $oldVAT = $VAT->getVat();
+        $oldState = $VAT->getState();
+        $oldAbbreviation = $VAT->getAbbreviation();
+
+        $error = false;
+        
         $form = $this->createForm(VATType::class, $VAT);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {           
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            
+            // Update the Stripe VAT
+            \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-            $manager->flush();
+            if($oldVAT !== $VAT->getVat())
+            {            
 
-            $this->addFlash('success', "La TVA a été modifiée avec succès.");                   
+                try
+                {
+    
+                    // Create new Stripe tax rate
+                    $tax_rate = \Stripe\TaxRate::create(
+                                                            [
+                                                                'display_name' => 'VAT',
+                                                                'description' => 'VAT ' . $VAT->getState(),
+                                                                'jurisdiction' => $VAT->getAbbreviation(),
+                                                                'percentage' => $VAT->getVat(),
+                                                                'inclusive' => false
+                                                            ]
+                                                    )
+                    ;
+                    
+                    $VAT->setStripeTaxRateId($tax_rate->id);
+
+
+                }
+                catch(Exception $e)
+                {
+    
+                    $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate creation.");
+                    error_log("Unable to create the " . $VAT->getState() . " Stripe. Error:" . $e->getMessage());
+                    $error = true;
+    
+                }
+            
+            }
+            elseif($oldState !== $VAT->getState() || $oldAbbreviation !== $VAT->getAbbreviation())
+            {            
+
+                
+                
+                try
+                {
+                    
+                    // Update the Stripe tax rate
+                    \Stripe\TaxRate::update(
+                                            $VAT->getStripeTaxRateId(),
+                                            [
+                                                'description' => 'VAT ' . $VAT->getState(),
+                                                'jurisdiction' => $VAT->getAbbreviation()
+                                            ]
+                                       )
+                    ;
+                    
+                }
+                catch(Exception $e)
+                {
+    
+                    $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate update.");
+                    error_log("Unable to update the Stripe tax rate n° " . $VAT->getStripeTaxRateId() . " Stripe. Error:" . $e->getMessage());
+                    $error = true;
+    
+                }
+
+            }            
+            
+            if(! $error)
+            {
+
+                $manager->persist($VAT);
+                $manager->flush();
+                
+                $this->addFlash('success', "The VAT was successfully updated.");
+                
+            }
 
             return $this->redirectToRoute('backend.VAT.index');
         }

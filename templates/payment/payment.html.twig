@@ -1,5 +1,11 @@
 {% extends "base.html.twig" %}
 
+{% block title %}
+
+    Roadtripr - Management of your vehicle data
+    
+{% endblock %}
+
 {% block stylesheets %} 
 
      {{ parent () }} 
@@ -13,49 +19,57 @@
 
         {{ include('_messages.html.twig') }}
 
-        <label for="subscription-informations">Récapitulatif du type d'abonnement</label>
+        <label for="subscription-informations">Chosen subscription summary</label>
 
         <div  id="subscription-informations" class="form-group">
 
             <div>{{ advert.subscription.title }}</div>
             <div>{{ advert.subscription.description }}</div>
-            <div>Validité : {{ advert.subscription.duration }} mois</div>
+            <div>Validity : {{ advert.subscription.duration }} months</div>
 
             {% if europeanCountry %}
 
-                <div>Prix : {{ intent.amount }} € TTC</div>
+                <div>Price : {{ price }} € VAT</div>
                 
             {% else %}
 
-                <div>Prix : {{ intent.amount }} € </div>
+                <div>Price : {{ price }} € </div>
                 
             {% endif %}            
 
         </div>
 
-        <form>
+        <div id="card-errors" role="alert" style="display: none"></div>
 
-            <label for="holer-informations">Données le titulaire de la carte</label>
+        <form action="{{ path('payment.StripeFlow', { 'id': advert.id }) }}" method="post" id="payment-form">
 
-            <div  id="holer-informations" class="form-group">
+            <label for="holder-informations">Cardholder data</label>
 
-                <label for="holder-name">Titulaire</label>
+            <div id="holder-informations" class="form-group">
+
+                <label for="holder-name">Holder</label>
                 <input id="holder-name" type="text" class="form-control" value="{{ advert.owner.user.firstname ~ ' ' ~  advert.owner.user.name }}">
 
                 <label for="holder-email">Email</label>
-                <input id="holder-email" type="email" class="form-control" value="{{ advert.owner.user.email }}">
+                <input id="holder-email" name="holder-email" type="email" class="form-control" value="{{ advert.owner.user.email }}">
 
             </div>
 
-            <label for="card-element">Données concernant la carte</label>
+            <label for="card-element">Card data</label>
 
-            <div id="card-element" class="form-group"></div>
+            <div id="card-element" class="form-group">
 
-            <button id="card-button" data-client="{{ intent.client_secret }}" class="btn btn-primary">Effectuer le paiement</button>
+                <!-- A Stripe Element will be inserted here. -->
 
-            <div id="stripe-response" class="help-block" role="alert"></div>
+            </div>
 
-            <div style="display: none"><input id="stripe_public_key" type="text" value="{{ stripe_public_key }}"></div>
+            <button id="card-button" class="btn btn-primary">Subscribe</button>
+
+            <div style="display: none">
+
+                <input id="stripe_public_key" type="hidden" value="{{ stripe_public_key }}">
+            
+            </div>
 
         </form>
 

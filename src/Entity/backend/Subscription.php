@@ -6,6 +6,7 @@ use App\Entity\advert\Advert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\backend\SubscriptionRepository")
@@ -30,7 +31,19 @@ class Subscription
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint")
+     * 
+     * @Assert\GreaterThanOrEqual(
+     *     value = 1,
+     *     message = "The duration must be greather or equal than {{ value }}."
+     * )
+     * @Assert\LessThanOrEqual(
+     *     value = 12,
+     *     message = "The duration must be less or equal than {{ value }}."
+     * )
+     * @Assert\NotBlank(
+     *      message = "The duration can't be empty."
+     * )
      */
     private $duration;
 
@@ -43,6 +56,21 @@ class Subscription
      * @ORM\OneToMany(targetEntity="App\Entity\advert\Advert", mappedBy="subscription")
      */
     private $adverts;
+ 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripeProductId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripePlanId;
 
     public function __construct()
     {
@@ -132,4 +160,86 @@ class Subscription
 
         return $this;
     }
+ 
+    /**
+     * Get isActive
+     *
+     * @return void
+     */
+    public function getIsActive()
+    {
+
+        return $this->isActive;
+
+    }
+ 
+    /**
+     * Set isActive
+     *
+     * @param [type] $isActive
+     * @return void
+     */
+    public function setIsActive($isActive)
+    {
+
+        $this->isActive = $isActive;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the Stripe product id
+     *
+     * @return string|null
+     */
+    public function getStripeProductId(): ?string
+    {
+
+        return $this->stripeProductId;
+
+    }
+
+    /**
+     * Set the Stripe product id
+     *
+     * @param string $stripeProductId
+     * @return self
+     */
+    public function setStripeProductId(string $stripeProductId): self
+    {
+
+        $this->stripeProductId = $stripeProductId;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the Stripe plan id
+     *
+     * @return string|null
+     */
+    public function getStripePlanId(): ?string
+    {
+
+        return $this->stripePlanId;
+
+    }
+
+    /**
+     * Set the Stripe plan id
+     *
+     * @param string $stripePlanId
+     * @return self
+     */
+    public function setStripePlanId(string $stripePlanId): self
+    {
+
+        $this->stripePlanId = $stripePlanId;
+
+        return $this;
+
+    }
+    
 }

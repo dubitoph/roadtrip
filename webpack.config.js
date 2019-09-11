@@ -31,6 +31,7 @@ Encore
     .addEntry('indexUser', './assets/js/backend/indexUser.js')
     .addEntry('indexSubscription', './assets/js/backend/indexSubscription.js')
     .addEntry('indexVAT', './assets/js/backend/indexVAT.js')
+    .addEntry('VAT', './assets/js/backend/VAT.js')
     .addEntry('indexRating', './assets/js/backend/indexRating.js')
     .addEntry('vehicleCreation', './assets/js/advert/vehicleCreation.js')
     .addEntry('photosCreation', './assets/js/advert/photosCreation.js')

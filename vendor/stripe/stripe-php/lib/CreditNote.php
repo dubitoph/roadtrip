@@ -8,6 +8,7 @@ namespace Stripe;
  * @property string $id
  * @property string $object
  * @property int $amount
+ * @property string $customer_balance_transaction
  * @property int $created
  * @property string $currency
  * @property string $customer
@@ -26,7 +27,6 @@ namespace Stripe;
  */
 class CreditNote extends ApiResource
 {
-
     const OBJECT_NAME = "credit_note";
 
     use ApiOperations\All;
@@ -60,6 +60,8 @@ class CreditNote extends ApiResource
     /**
      * @param array|null $params
      * @param array|string|null $opts
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
      *
      * @return CreditNote The voided credit note.
      */

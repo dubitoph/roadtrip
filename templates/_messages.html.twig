@@ -1,24 +1,28 @@
 {% if form is defined and not form.vars.valid %}
 
-    <ul class="alert alert-danger">
-                
-        {% for error in form.vars.errors %}
+    <div  class="alert alert-danger">
 
-            <li>{{error.message}}</li>
+        <ul class="alert alert-danger">
+                    
+            {% for error in form.vars.errors %}
 
-        {% endfor %}
-                
-        {% for child in form.children %}
+                <li>{{error.message}}</li>
 
-            {% for error in child.vars.errors %}
+            {% endfor %}
+                    
+            {% for child in form.children %}
 
-                <li>"{{child.vars.label}}" : {{error.message}} </li> 
+                {% for error in child.vars.errors %}
+
+                    <li>"{{child.vars.label}}" : {{error.message}} </li> 
+
+                {% endfor %}
 
             {% endfor %}
 
-        {% endfor %}
+        </ul>
 
-    </ul>
+    </div>
 
 {% endif %}
 

@@ -982,9 +982,11 @@ class AdvertController extends AbstractController
 
     /**
      * @Route("/advert/subscription/set/{id}", name="advert.subscription.set", methods = "UPDATE")
+     * 
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function setSubscription(Advert $advert, Request $request, ObjectManager $manager): Response
@@ -1003,15 +1005,15 @@ class AdvertController extends AbstractController
             $manager->persist($advert);
             $manager->flush();
 
-            $this->addFlash('success', "Le type d'abonnement a été enregistré avec succès.");  
+            $this->addFlash('success', "The subscription was successfully saved.");  
             
             return $this->redirectToRoute('payment.payment', array('id' => $advert->getId()));
 
         }        
 
-        $this->addFlash('error', "Un problème technique est survenu : le type d'abonnement n'a pas pu être enregistré.");  
+        $this->addFlash('error', "A technical problem occurred: the subscription type couldn't be saved.");  
             
-        return $this->redirectToRoute('advert.subscription.management', array('id' => $advert->getId()));
+        return $this->redirectToRoute('advert.subscription.create', array('id' => $advert->getId()));
         
     }
     

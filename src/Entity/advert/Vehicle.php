@@ -77,7 +77,7 @@ class Vehicle
     private $mark;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="smallint")
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 0,
@@ -85,7 +85,7 @@ class Vehicle
      * )
      * @Assert\LessThanOrEqual(
      *     value = 10,
-     *     message = "The beds number position must be less or equal than {{ value }}."
+     *     message = "The beds number must be less or equal than {{ value }}."
      * )
      * @Assert\NotBlank(
      *      message = "The beds number can't be empty."
@@ -94,7 +94,7 @@ class Vehicle
     private $bedsNumber;
 
     /**
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="smallint") 
      *  
      * @Assert\GreaterThanOrEqual(
      *     value = 0,
@@ -111,7 +111,7 @@ class Vehicle
     private $seatsNumber;
 
     /**
-     * @ORM\Column(type="float", scale=2, precision=3, nullable=true)
+     * @ORM\Column(type="decimal", scale=2, precision=3, nullable=true)
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 2,
@@ -125,7 +125,7 @@ class Vehicle
     private $length;
 
     /**
-     * @ORM\Column(type="float", scale=2, precision=3, nullable=true)
+     * @ORM\Column(type="decimal", scale=2, precision=3, nullable=true)
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 1.5,
@@ -139,7 +139,7 @@ class Vehicle
     private $height;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 200,
@@ -153,7 +153,7 @@ class Vehicle
     private $weight;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      * 
      * @Assert\GreaterThanOrEqual(
      *     value = 70,

@@ -157,6 +157,11 @@ class Advert
     private $stripeIntentId;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripeSubscriptionId;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\payment\Bill", mappedBy="advert")
      */
     private $bills;
@@ -875,6 +880,33 @@ class Advert
     {
 
         $this->stripeIntentId = $stripeIntentId;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the Stripe subscription id
+     *
+     * @return string|null
+     */
+    public function getStripeSubscriptionId(): ?string
+    {
+
+        return $this->stripeSubscriptionId;
+
+    }
+
+    /**
+     * Set the Stripe subscription id
+     *
+     * @param string|null $stripeSubscriptionId
+     * @return self
+     */
+    public function setStripeSubscriptionId(?string $stripeSubscriptionId): self
+    {
+
+        $this->stripeSubscriptionId = $stripeSubscriptionId;
 
         return $this;
 

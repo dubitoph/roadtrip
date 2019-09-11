@@ -60,6 +60,11 @@ class Owner
     private $threads;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $stripeCustomerId;
+
+    /**
      * Operations when creating
      */
     public function __construct()
@@ -305,6 +310,33 @@ class Owner
 
         return $this;
         
+    }
+
+    /**
+     * Get the Stripe customer id
+     *
+     * @return string|null
+     */
+    public function getStripeCustomerId(): ?string
+    {
+
+        return $this->stripeCustomerId;
+
+    }
+
+    /**
+     * Set the Stripe customer id
+     *
+     * @param string $stripeCustomerId
+     * @return self
+     */
+    public function setStripeCustomerId(string $stripeCustomerId): self
+    {
+
+        $this->stripeCustomerId = $stripeCustomerId;
+
+        return $this;
+
     }
     
 }
