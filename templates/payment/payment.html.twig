@@ -39,7 +39,7 @@
 
         </div>
 
-        <div id="card-errors" role="alert" style="display: none"></div>
+        <div id="stripe-response" role="alert"></div>
 
         <form action="{{ path('payment.StripeFlow', { 'id': advert.id }) }}" method="post" id="payment-form">
 
@@ -68,6 +68,12 @@
             <div style="display: none">
 
                 <input id="stripe_public_key" type="hidden" value="{{ stripe_public_key }}">
+                <input id="stripe_payment_method" name="stripe_payment_method" type="hidden">
+                <input id="stripe_charge_failed" name="stripe_charge_failed" type="hidden" value="{{ chargeFailed }}">
+                <input id="stripe_customer_id" name="stripe_customer_id" type="hidden" value="{{ customerId }}">
+                <input id="stripe_required_action" name="stripe_required_action" type="hidden" value="{{ requiredAction }}">
+                <input id="stripe_client_secret" name="stripe_client_secret" type="hidden" value="{{ clientSecret }}">
+                <input id="redirection_path" name="redirection_path" type="hidden" value="{{ path('advert.show', { 'id': advert.id, 'slug': advert.slug }) }}">
             
             </div>
 

@@ -37,7 +37,8 @@ parameters:
     stripe_account: acct_1EbuOxJ448Kc3t3S
     stripe_public_key: pk_test_lFbnmMuNBNktwcox9MhvdFnA00txD1vT93
     stripe_secret_key: sk_test_A04LvA0jEAUKuBZnez1afI4t00OrQwUAgN
-    stripe_endpoint_secret: whsec_4Ao9Yz2J9n6l4r9e3eb6pLHCFVlaj77K
+    stripe_payment_status_endpoint_secret: whsec_4Ao9Yz2J9n6l4r9e3eb6pLHCFVlaj77K
+    stripe_invoice_created_endpoint_secret: whsec_cVHIBYMuLNDxe850TwK6hZJ3Vwod37UA
     stripe_betas: payment_intent_beta_3
     bills_directory: '%kernel.project_dir%/bills'
     payment:

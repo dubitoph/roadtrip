@@ -2,17 +2,15 @@
 
 namespace App\Controller\payment;
 
-use App\Entity\backend\VAT;
+use Exception;
 use App\Entity\payment\Bill;
 use App\Entity\advert\Advert;
-use App\Repository\user\UserRepository;
 use App\Repository\payment\BillRepository;
-use App\Repository\advert\AdvertRepository;
+use App\Repository\backend\VATRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,19 +20,19 @@ class PaymentController extends AbstractController
 {
 
     /**
-     * @Route("/payment/payment/{id}", name="payment.payment")
+     * @Route("/payment/payment/{id}/{chargeFailed}/{customerId}/{requiredAction}/{clientSecret}", defaults={"chargeFailed" = 0, "customerId" = 0, "requiredAction" = 0, "clientSecret" = 0}, name="payment.payment")
      *
      * @param Advert $advert
      * @param ObjectManager $manager
      * 
      * @return Response
      */
-    public function payment(Advert $advert, ObjectManager $manager): Response
+    public function payment(Advert $advert, $chargeFailed, $customerId, $requiredAction, $clientSecret, VATRepository $VATRepository, ObjectManager $manager): Response
     {        
         
         $subscription = $advert->getSubscription();
         $amount = $subscription->getPrice();
-        $vat = $manager->getRepository(VAT::class)->findOneBy(array('abbreviation' => $advert->getOwner()->getBillingAddress()->getCountry()));
+        $vat = $VATRepository->findOneBy(array('abbreviation' => $advert->getOwner()->getBillingAddress()->getCountry()));
         
         if ($vat) 
         {
@@ -43,33 +41,21 @@ class PaymentController extends AbstractController
 
         } 
 
-        \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-        
-        $intent = \Stripe\PaymentIntent::create(
-                                                [
-                                                    'amount' => $amount,
-                                                    'currency' => 'eur',
-                                                    'setup_future_usage' => 'off_session'
-                                                ]
-                                               )
-        ;
-
-        $advert->setStripeIntentId($intent->id);
-
-        $manager->persist($advert);
-        $manager->flush();
-
         return $this->render('payment/payment.html.twig', [
-                                                            'stripe_account' => $this->getParameter('stripe_account'),
-                                                            'stripe_public_key' => $this->getParameter('stripe_public_key'),
-                                                            'stripe_betas' => $this->getParameter('stripe_betas'),
-                                                            'intent' => $intent,
-                                                            'price' => $amount / 100,
-                                                            'advert' => $advert, 
-                                                            'europeanCountry' => $vat !== null
+                                                                'stripe_account' => $this->getParameter('stripe_account'),
+                                                                'stripe_public_key' => $this->getParameter('stripe_public_key'),
+                                                                'stripe_betas' => $this->getParameter('stripe_betas'),
+                                                                'price' => $amount / 100,
+                                                                'advert' => $advert, 
+                                                                'europeanCountry' => $vat !== null,
+                                                                'chargeFailed' => $chargeFailed,
+                                                                'customerId' => $customerId,
+                                                                'requiredAction' => $requiredAction,
+                                                                'clientSecret' => $clientSecret
                                                           ]
                             )
         ;
+
     }    
 
     /**
@@ -77,173 +63,23 @@ class PaymentController extends AbstractController
      * 
      * @return Response
      */
-    public function test(Advert $advert, Request $request): Response
+    public function stripeFlow(Advert $advert, VATRepository $VATRepository, Request $request, ObjectManager $manager): Response
     {
         
-        \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-
-        $owner = $advert->getOwner();
-        $user = $owner->getUser();
-        $billingAddress = $owner->getBillingAddress();
-        $companyName = $owner->getCompanyName();
-
-        $name = $user->getFirstname() . ' ' . $user->getName();
-
-        if($companyName)
-        {
-
-            $name = $companyName . "\n To " . $name . "'s attention";
-
-        }
-
-        try
-        {
-            $customer = \Stripe\Customer::create(
-                                                    [
-                                                        'email' => $request->request->get('holder-email'),
-                                                        'source'  => $request->request->get('stripeToken'),
-                                                        'address' => [
-                                                                        'city' => $billingAddress->getCity(),
-                                                                        'country' => $billingAddress->getCountry(),
-                                                                        'line1' => $billingAddress->getStreet() . ', ' . $billingAddress->getNumber(),
-                                                                        'postal_code' => $billingAddress->getZipCode(),
-                                                                        'state' => $billingAddress->getStreet()
-                                                                     ],
-                                                        'name' => $name
-                                                    ]
-                                                )
-            ;
-
-            $subscription = \Stripe\Subscription::create(
-                                                            [
-                                                                'customer' => $customer->id,
-                                                                'items' => [['plan' => $advert->getSubscription()->getStripePlanId()]]
-                                                            ]
-                                                        )
-            ;
-
-            if ($subscription->status != 'incomplete')
-            {
-
-                $this->addFlash('success', "Your subscription was successfully created.");
-
-            }
-            else
-            {
-
-                $this->addFlash('danger', "Failed to collect initial payment for subscription. Please try again.");                
-                error_log("Failed to collect initial payment for subscription");
-
-                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId()));
-
-
-            }
-
-        }
-        catch(Exception $e)
-        {
-
-            $this->addFlash('danger', "A technical error was occurred. Please try again.");
-            error_log("Unable to sign up customer:" . $_POST['stripeEmail'] . ", error:" . $e->getMessage());
-
-            return $this->redirectToRoute('payment.payment', array('id' => $advert->getId()));
-
-        }
-
-        return $this->redirectToRoute('home');
-
-    }
-
-    /**
-     * @Route("/payment/status", name="payment.status")
-     */
-    public function paymentStatus(AdvertRepository $advertRepository, UserRepository $userRepository, ObjectManager $manager, \Swift_Mailer $mailer)
-    {  
+        $stripeChargeFailed = $request->request->get('stripe_charge_failed');
 
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-        
-        $endpoint_secret = $this->getParameter('stripe_endpoint_secret');
 
-        $payload = @file_get_contents('php://input');
-        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-        $event = null;
-
-        try 
+        // The initial subscription creation
+        if($stripeChargeFailed == 0)
         {
-
-            $event = \Stripe\Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
-
-        } 
-        catch(\UnexpectedValueException $e) 
-        {
-
-            // Invalid payload
-            http_response_code(400);
-            exit();
-        } 
-        
-        catch(\Stripe\Error\SignatureVerification $e) 
-        {
-
-            // Invalid signature
-            http_response_code(400);
-            exit();
-
-        }
-           
-        $intent = $event->data->object;
-        $advert = $advertRepository->findOneBy(array('stripeIntentId' => $intent->id));
-        $owner = $advert->getOwner();
-
-        if ($event->type == "payment_intent.succeeded") 
-        {
-            
-            //Setting the expiration date advert
-            $advert->setExpiresAt(new \DateTime("now +" . $advert->getSubscription()->getDuration() . ' months'));
-            
-            $manager->persist($advert);
-            $manager->flush();
-            
-            http_response_code(200);
-
-            exit();
-
-        } 
-        elseif ($event->type == "payment_intent.payment_failed") 
-        {
-
-            $error_message = $intent->last_payment_error ? $intent->last_payment_error->message : "";
-
-            printf("Failed: %s, %s", $intent->id, $error_message);
-            http_response_code(200);
-
-            exit();
-
-        }        
-
-    }
-
-    /**
-     * @Route("/payment/stripeSubscription/create", name="payment.stripeSubscription.create")
-     * 
-     * @return Response
-     */
-    public function ajaxCustomerCreation(Request $request, ObjectManager $manager)
-    {
-        if($request->isXmlHttpRequest())
-        {
-            \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
-
-            $email = $request->request->get('email');
-            $token = $request->request->get('token');
-            $advertId = $request->request->get('advertId');
-
-            $advert = $manager->getRepository(Advert::class)->find($advertId);
 
             $owner = $advert->getOwner();
             $user = $owner->getUser();
             $billingAddress = $owner->getBillingAddress();
             $companyName = $owner->getCompanyName();
+            $VAT = $VATRepository->findOneBy(array('abbreviation' => $billingAddress->getCountry()));
+            $paymentMethod = $request->request->get('stripe_payment_method');
 
             $name = $user->getFirstname() . ' ' . $user->getName();
 
@@ -254,51 +90,164 @@ class PaymentController extends AbstractController
 
             }
 
-            $stripeCustomer = \Stripe\Customer::create(
+            try
+            {
+                $customer = \Stripe\Customer::create(
                                                         [
-                                                            'email' => $email,
                                                             'address' => [
                                                                             'city' => $billingAddress->getCity(),
                                                                             'country' => $billingAddress->getCountry(),
                                                                             'line1' => $billingAddress->getStreet() . ', ' . $billingAddress->getNumber(),
                                                                             'postal_code' => $billingAddress->getZipCode(),
-                                                                            'state' => $billingAddress->getStreet()
-                                                                         ],
-                                                            'source' => $token,
-                                                            'name' => $name
+                                                                            'state' => $billingAddress->getState()
+                                                                        ],
+                                                            'name' => $name,
+                                                            'payment_method' =>  $paymentMethod,
+                                                            'invoice_settings' => ['default_payment_method' => $paymentMethod]
                                                         ]
-                                                      )
-            ;            
-           
-            $stripeSubscription = \Stripe\Subscription::create(
+                                                    )
+                ;
+
+                $owner->setStripeCustomerId($customer->id);
+
+                $manager->persist($owner);
+
+            }
+            catch(Exception $e)
+            {
+
+                $this->addFlash('danger', "A technical error was occurred. Please try again.");                
+                error_log("Unable to create Stripe customer corresponding to owner with id : " . $owner->getId() . ", error:" . $e->getMessage());
+        
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId()));
+
+            }
+
+            try
+            {
+
+                $subscription = \Stripe\Subscription::create(
                                                                 [
-                                                                    'customer' => $stripeCustomer->id,
-                                                                    'items' => [
-                                                                                    ['plan' => $advert->getSubscription()->getStripePlanId()]
-                                                                            ]
+                                                                    'customer' => $customer->id,
+                                                                    'items' => [['plan' => $advert->getSubscription()->getStripePlanId()]],
+                                                                    'default_tax_rates' => [$VAT->getStripeTaxRateId()],
+                                                                    'off_session' => true
                                                                 ]
-                                                              )
-            ;
+                                                            )
+                ;
 
-            $advert->setStripeSubscriptionId($stripeSubscription->id);
+                $invoiceId = $subscription->latest_invoice;
+                $invoice = \Stripe\Invoice::retrieve(['id' => $invoiceId]);
+                
+                $paymentIntentId = $invoice->payment_intent;
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
 
-            $manager->persist($advert);
-            $manager->flush();
-             
-            $response = new JsonResponse();
-            $response->setData(array('success'=> 'Stripe customer created.')); 
 
-            return $response;
+
+            }
+            catch(Exception $e)
+            {
+
+                $this->addFlash('danger', "A technical error was occurred. Please try again.");                
+                error_log("Unable to create Stripe subscription corresponding to advert with id : " . $advert->getId() . ", error:" . $e->getMessage());
+        
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId()));
+
+            }
+            
+            if ($subscription->status == 'active')
+            {
+                
+                $advert->setStripeSubscriptionId($subscription->id);
+        
+                $manager->persist($advert);
+                $manager->flush(); 
+        
+                $this->addFlash('success', "Your subscription was successfully created.");
+        
+                return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug()));
+
+            }
+            elseif($paymentIntent->status == 'requires_payment_method')
+            {
+
+                $this->addFlash('danger', "The charge attempt for the subscription failed. A new payment method is required to proceed.");
+                
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'chargeFailed' => 1, 'customerId' => $customer->id));
+
+            }
+            elseif($paymentIntent->status == 'requires_action')
+            {
+
+                $this->addFlash('danger', "An additional securisation action is required to finalize your subscription.");
+
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'requiredAction' => 1, 'clientSecret' => $paymentIntent->client_secret));
+
+            }           
+            
         }
+        // New method payment send following and initial wrong method
         else
         {
 
-            $response = new JsonResponse();
-            $response->setData(array('error'=> 'Not a xmlHttpRequest'));
-            return $response;
-         
-        }
+            try
+            {
 
+                $stripeCustomerId = $request->request->get('stripe_customer_id');
+                
+                \Stripe\Customer::update(
+                                            $stripeCustomerId,
+                                            [
+                                                'payment_method' =>  $paymentMethod,
+                                                'invoice_settings' => ['default_payment_method' => $paymentMethod]
+                                            ]
+                                        )
+                ;
+            }
+            catch(Exception $e)
+            {
+
+                $this->addFlash('danger', "A technical error was occurred. Please try again.");                
+                error_log("Unable to update Stripe customer with Stripe id : " . $stripeCustomerId . " and owner id " . $owner->getId() . ", error:" . $e->getMessage());
+        
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'chargeFailed' => 1, 'customerId' => $customer->id));
+
+            }            
+
+            $invoice = \Stripe\Invoice::retrieve(['id' => $subscription->latest_invoice->payment_intent->id]);
+            $invoice->pay();
+
+            if ($paymentIntent->status == 'succeeded')
+            {
+                
+                $advert->setStripeSubscriptionId($subscription->id);
+        
+                $manager->persist($advert);
+                $manager->flush(); 
+        
+                $this->addFlash('success', "Your subscription was successfully created.");
+        
+                return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug()));
+
+            }
+            elseif($paymentIntent->status == 'requires_payment_method')
+            {
+
+                $this->addFlash('danger', "The charge attempt for the subscription failed. A new payment method is required to proceed.");
+                
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'chargeFailed' => 1, 'customerId' => $customer->id));
+
+            }
+            elseif($paymentIntent->status == 'requires_action')
+            {
+
+                $this->addFlash('danger', "An additional securisation action is required to finalize your subscription.");
+
+                return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'requiredAction' => 1, 'clientSecret' => $paymentIntent->client_secret));
+                
+            }
+
+        }
 
     }
 
@@ -366,6 +315,15 @@ class PaymentController extends AbstractController
         ;
 
         return $response;
+
+    }
+
+    public function requiresPaymentMethod($advertId, $customerId)
+    {
+    
+        $this->addFlash('danger', "The charge attempt for the subscription failed. A new payment method is required to proceed.");
+        
+        return $this->redirectToRoute('payment.payment', array('id' => $advertId, 'chargeFailed' => 1, 'customerId' => $customerId));
 
     }
 

@@ -119,68 +119,33 @@ class BackendVATController extends AbstractController
             // Update the Stripe VAT
             \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
-            if($oldVAT !== $VAT->getVat())
-            {            
-
-                try
-                {
+            try
+            {
     
-                    // Create new Stripe tax rate
-                    $tax_rate = \Stripe\TaxRate::create(
-                                                            [
-                                                                'display_name' => 'VAT',
-                                                                'description' => 'VAT ' . $VAT->getState(),
-                                                                'jurisdiction' => $VAT->getAbbreviation(),
-                                                                'percentage' => $VAT->getVat(),
-                                                                'inclusive' => false
-                                                            ]
-                                                    )
-                    ;
+                // Create new Stripe tax rate
+                $tax_rate = \Stripe\TaxRate::create(
+                                                        [
+                                                            'display_name' => 'VAT',
+                                                            'description' => 'VAT ' . $VAT->getState(),
+                                                            'jurisdiction' => $VAT->getAbbreviation(),
+                                                            'percentage' => $VAT->getVat(),
+                                                            'inclusive' => false
+                                                        ]
+                                                   )
+                ;
                     
-                    $VAT->setStripeTaxRateId($tax_rate->id);
+                $VAT->setStripeTaxRateId($tax_rate->id);
 
-
-                }
-                catch(Exception $e)
-                {
-    
-                    $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate creation.");
-                    error_log("Unable to create the " . $VAT->getState() . " Stripe. Error:" . $e->getMessage());
-                    $error = true;
-    
-                }
-            
             }
-            elseif($oldState !== $VAT->getState() || $oldAbbreviation !== $VAT->getAbbreviation())
-            {            
-
-                
-                
-                try
-                {
-                    
-                    // Update the Stripe tax rate
-                    \Stripe\TaxRate::update(
-                                            $VAT->getStripeTaxRateId(),
-                                            [
-                                                'description' => 'VAT ' . $VAT->getState(),
-                                                'jurisdiction' => $VAT->getAbbreviation()
-                                            ]
-                                       )
-                    ;
-                    
-                }
-                catch(Exception $e)
-                {
+            catch(Exception $e)
+            {
     
-                    $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate update.");
-                    error_log("Unable to update the Stripe tax rate n° " . $VAT->getStripeTaxRateId() . " Stripe. Error:" . $e->getMessage());
-                    $error = true;
+                $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate creation.");
+                error_log("Unable to create the " . $VAT->getState() . " Stripe. Error:" . $e->getMessage());
+                $error = true;
     
-                }
+            }
 
-            }            
-            
             if(! $error)
             {
 
@@ -213,12 +178,32 @@ class BackendVATController extends AbstractController
     public function delete(VAT $VAT, Request $request, ObjectManager $manager): Response
     {
 
-        if ($this->isCsrfTokenValid('delete'. $VAT->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $VAT->getId(), $request->get('_token'))) 
+        {
+            
+            \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
+
+            try
+            {
+    
+                // Remove the Stripe VAT
+                $tax_rate = \Stripe\TaxRate::retrieve($VAT->getStripeTaxRateId());
+                $tax_rate->delete();
+
+            }
+            catch(Exception $e)
+            {
+    
+                $this->addFlash('danger', "A technical error was occurredduring the Stripe TaxRate remove.");
+                error_log("Unable to remove the Stripe tax rate with id " . $tax_rate->id . ". Error:" . $e->getMessage());
+                $error = true;
+    
+            }
 
             $manager->remove($VAT);
             $manager->flush();
 
-            $this->addFlash('success', "La TVA a été supprimée avec succès."); 
+            $this->addFlash('success', "VAT was successfully removed."); 
 
         } 
             
