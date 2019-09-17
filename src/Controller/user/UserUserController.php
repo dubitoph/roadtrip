@@ -17,8 +17,11 @@ class UserUserController extends AbstractController
 {
     
     /**
+     * Users list
+     * 
      * @Route("/user/users", name="user.user.index")
      * @param UserRepository $userRepository
+     * 
      * @return Response
      */
     public function index(UserRepository $userRepository): Response

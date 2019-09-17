@@ -25,15 +25,17 @@ class PaymentController extends AbstractController
     /**
      * Collect the card data
      * 
-     * @Route("/payment/payment/{id}/{chargeFailed}/{customerId}/{requiredAction}/{clientSecret}", defaults={"chargeFailed" = 0, "customerId" = 0, "requiredAction" = 0, "clientSecret" = 0}, name="payment.payment")
+     * @Route("/payment/payment/{id}/{chargeFailed}/{customerId}/{requiredAction}/{clientSecret}", defaults={"chargeFailed" = 0, "customerId" = 0, 
+     *        "requiredAction" = 0, "clientSecret" = 0}, name="payment.payment")
      *
      * @param Advert $advert
      * @param ObjectManager $manager
      * 
      * @return Response
      */
-    public function payment(Advert $advert, $chargeFailed, $customerId, $requiredAction, $clientSecret, VATRepository $VATRepository, ObjectManager $manager): Response
-    {        
+    public function payment(Advert $advert, $chargeFailed, $customerId, $requiredAction, $clientSecret, VATRepository $VATRepository, 
+                            ObjectManager $manager): Response
+    {         
         
         $subscription = $advert->getSubscription();
         $amount = $subscription->getPrice();
@@ -70,7 +72,8 @@ class PaymentController extends AbstractController
      * 
      * @return Response
      */
-    public function stripeFlow(Advert $advert, VATRepository $VATRepository, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
+    public function stripeFlow(Advert $advert, VATRepository $VATRepository, UserRepository $userRepository, Request $request, ObjectManager $manager, 
+                               \Swift_Mailer $mailer): Response
     {
         
         $stripeChargeFailed = $request->request->get('stripe_charge_failed');

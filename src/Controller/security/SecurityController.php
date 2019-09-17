@@ -20,14 +20,27 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use App\Repository\user\UserRepository;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurityController extends AbstractController
 {
     
     /**
+     * User registration
+     * 
      * @Route("/security/registration", name="security.registration")
+     *
+     * @param Request $request
+     * @param ObjectManager $manager
+     * @param UserPasswordEncoderInterface $encoder
+     * @param AuthorizationCheckerInterface $authChecker
+     * @param \Swift_Mailer $mailer
+     * @param UserRepository $userRepository
+     * 
+     * @return Response
      */
-    public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, AuthorizationCheckerInterface $authChecker, \Swift_Mailer $mailer, UserRepository $userRepository)
+     public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
+                                  AuthorizationCheckerInterface $authChecker, \Swift_Mailer $mailer, UserRepository $userRepository): Response
     {
 
         $administrator = $userRepository->findOneBy(array('name' => 'administrator'));
@@ -71,14 +84,14 @@ class SecurityController extends AbstractController
                 $mail = new Mail;
 
                 $mail->setReceiver($user)
-                    ->setSubject($this->getParameter('registration_email_subject'))
-                    ->setSender($administrator)
-                    ->setMessage('Account creation')
-                    ->setBody($this->renderView(
+                     ->setSubject($this->getParameter('registration_email_subject'))
+                     ->setSender($administrator)
+                     ->setMessage('Account creation')
+                     ->setBody($this->renderView(
                                                     'security/registrationEmail.html.twig', 
                                                     ['user' => $user]
-                                               )
-                             )
+                                                )
+                              )
                 ;
 
                 if ($mail->sendEmail($mailer))
@@ -101,7 +114,7 @@ class SecurityController extends AbstractController
 
         }
 
-        return $this->render('Security/registration.html.twig', [
+        return $this->render('security/registration.html.twig', [
                                                                     'current_menu' => 'registration',
                                                                     'form' => $form->createView()
                                                                 ]
@@ -111,9 +124,16 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * User activation
+     * 
      * @Route("/security/confirmation/{id}", name="security.confirmation")
+     *
+     * @param User $user
+     * @param ObjectManager $manager
+     * 
+     * @return Response
      */
-    public function registrationActivation(User $user, ObjectManager $manager)
+    public function registrationActivation(User $user, ObjectManager $manager): Response
     {
 
         $user->setIsActive(true);
@@ -130,6 +150,8 @@ class SecurityController extends AbstractController
         
         $this->get('security.token_storage')->setToken($token);
         $this->get('session')->set('_security_main', serialize($token));
+
+        $this->addFlash('success', 'Your account was successfully activated.');
         
         return $this->redirectToRoute('user.dashbord');
     

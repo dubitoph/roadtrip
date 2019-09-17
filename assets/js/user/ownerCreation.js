@@ -67,4 +67,5 @@ $(document).ready(function() {
     inputTel.value = iti.getNumber();
 
   }, false);
+  
 });
