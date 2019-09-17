@@ -142,11 +142,12 @@ class SecurityController extends AbstractController
         $manager->flush(); 
 
         $token = new UsernamePasswordToken(
-            $user,
-            $user->getPassword(),
-            'main',
-            $user->getRoles()
-        );
+                                            $user,
+                                            $user->getPassword(),
+                                            'main',
+                                            $user->getRoles()
+                                          )
+        ;
         
         $this->get('security.token_storage')->setToken($token);
         $this->get('session')->set('_security_main', serialize($token));
@@ -158,9 +159,15 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * User login
+     * 
      * @Route("/security/login", name="security.login")
+     *
+     * @param AuthenticationUtils $authenticationUtils
+     * 
+     * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils)
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) 
