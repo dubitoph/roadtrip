@@ -32,6 +32,7 @@ parameters:
     rating_not_confirmed_rental_email_subject: "Rent related to your unconfirmed evaluation"
     removed_rating_response_subject: "Response removed"
     approved_rating_response_subject: "Response approved"
+    new_subscription_subject: "Your subscription on Roadtripr"
     response_rating_subject: "A response to your rating was posted"
     succeed_payment_email_subject: 'Accepted payment'
     stripe_account: acct_1EbuOxJ448Kc3t3S

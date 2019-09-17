@@ -1052,16 +1052,16 @@ class AdvertController extends AbstractController
             $mail = new Mail();
 
             $mail->setSender($user)
-                ->setReceiver($receiver)
-                ->setSubject($this->getParameter('contact_owner_subject'))
-                ->setThread($thread)
-                ->setBody($this->renderView(
-                                            'communication/contactAboutAdvert.html.twig', 
-                                            [
-                                                'mail' => $mail
-                                            ]
+                 ->setReceiver($receiver)
+                 ->setSubject($this->getParameter('contact_owner_subject'))
+                 ->setThread($thread)
+                 ->setBody($this->renderView(
+                                                'communication/contactAboutAdvert.html.twig', 
+                                                [
+                                                    'mail' => $mail
+                                                ]
                                             )
-                        )
+                          )
             ;
 
         }

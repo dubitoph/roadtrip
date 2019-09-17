@@ -5,8 +5,11 @@ namespace App\Controller\payment;
 use Exception;
 use App\Entity\payment\Bill;
 use App\Entity\advert\Advert;
-use App\Repository\payment\BillRepository;
+use App\Entity\communication\Mail;
+use App\Entity\user\User;
+use App\Repository\user\UserRepository;
 use App\Repository\backend\VATRepository;
+use App\Repository\payment\BillRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +23,8 @@ class PaymentController extends AbstractController
 {
 
     /**
+     * Collect the card data
+     * 
      * @Route("/payment/payment/{id}/{chargeFailed}/{customerId}/{requiredAction}/{clientSecret}", defaults={"chargeFailed" = 0, "customerId" = 0, "requiredAction" = 0, "clientSecret" = 0}, name="payment.payment")
      *
      * @param Advert $advert
@@ -59,11 +64,13 @@ class PaymentController extends AbstractController
     }    
 
     /**
+     * Create the Stripe subscription and pichk up the first payment
+     * 
      * @Route("/payment/StripeFlow/{id}", name="payment.StripeFlow")
      * 
      * @return Response
      */
-    public function stripeFlow(Advert $advert, VATRepository $VATRepository, Request $request, ObjectManager $manager): Response
+    public function stripeFlow(Advert $advert, VATRepository $VATRepository, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
     {
         
         $stripeChargeFailed = $request->request->get('stripe_charge_failed');
@@ -90,6 +97,7 @@ class PaymentController extends AbstractController
 
             }
 
+            // Create the Stripe customer
             try
             {
                 $customer = \Stripe\Customer::create(
@@ -111,6 +119,7 @@ class PaymentController extends AbstractController
                 $owner->setStripeCustomerId($customer->id);
 
                 $manager->persist($owner);
+                $manager->flush();
 
             }
             catch(Exception $e)
@@ -123,6 +132,7 @@ class PaymentController extends AbstractController
 
             }
 
+            // Create the Stripe subscription
             try
             {
 
@@ -136,13 +146,16 @@ class PaymentController extends AbstractController
                                                             )
                 ;
 
+                $advert->setStripeSubscriptionId($subscription->id);
+
+                $manager->persist($owner);
+                $manager->flush();
+
                 $invoiceId = $subscription->latest_invoice;
                 $invoice = \Stripe\Invoice::retrieve(['id' => $invoiceId]);
                 
                 $paymentIntentId = $invoice->payment_intent;
                 $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
-
-
 
             }
             catch(Exception $e)
@@ -155,19 +168,18 @@ class PaymentController extends AbstractController
 
             }
             
+            // Stripe subscription creation response management
+
+            // The payment is ok
             if ($subscription->status == 'active')
             {
                 
-                $advert->setStripeSubscriptionId($subscription->id);
-        
-                $manager->persist($advert);
-                $manager->flush(); 
-        
-                $this->addFlash('success', "Your subscription was successfully created.");
-        
+                $this->succeddPaymentPostManagement($invoice, $advert, $manager, $userRepository, $user, $mailer);
+       
                 return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug()));
 
             }
+            // The method payment is refused
             elseif($paymentIntent->status == 'requires_payment_method')
             {
 
@@ -176,6 +188,7 @@ class PaymentController extends AbstractController
                 return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'chargeFailed' => 1, 'customerId' => $customer->id));
 
             }
+            // 3d secure ask an additional action
             elseif($paymentIntent->status == 'requires_action')
             {
 
@@ -186,10 +199,11 @@ class PaymentController extends AbstractController
             }           
             
         }
-        // New method payment send following and initial wrong method
+        // Resend form management
         else
         {
 
+            // Update the Stripe customer with the new ayment method
             try
             {
 
@@ -214,22 +228,20 @@ class PaymentController extends AbstractController
 
             }            
 
+            // Reattempt the payment
             $invoice = \Stripe\Invoice::retrieve(['id' => $subscription->latest_invoice->payment_intent->id]);
             $invoice->pay();
 
+            // The payment is ok
             if ($paymentIntent->status == 'succeeded')
             {
                 
-                $advert->setStripeSubscriptionId($subscription->id);
-        
-                $manager->persist($advert);
-                $manager->flush(); 
-        
-                $this->addFlash('success', "Your subscription was successfully created.");
+                $this->succeddPaymentPostManagement($invoice, $advert, $manager, $userRepository, $user, $mailer);
         
                 return $this->redirectToRoute('advert.show', array('id' => $advert->getId(), 'slug' => $advert->getSlug()));
 
             }
+            // The payment method is refused
             elseif($paymentIntent->status == 'requires_payment_method')
             {
 
@@ -238,6 +250,7 @@ class PaymentController extends AbstractController
                 return $this->redirectToRoute('payment.payment', array('id' => $advert->getId(), 'chargeFailed' => 1, 'customerId' => $customer->id));
 
             }
+            // 3d secure ask an additional action
             elseif($paymentIntent->status == 'requires_action')
             {
 
@@ -318,12 +331,56 @@ class PaymentController extends AbstractController
 
     }
 
-    public function requiresPaymentMethod($advertId, $customerId)
+    /**
+     * Post succeed subscription payment management
+     *
+     * @param \Stripe\Subscription $invoice
+     * @param Advert $advert
+     * @param ObjectManager $manager
+     * @param UserRepository $userRepository
+     * @param User $user
+     * @param \Swift_Mailer $mailer
+     * 
+     * @return void
+     */
+    public function succeddPaymentPostManagement($invoice, $advert, $manager, $userRepository, $user, $mailer)
     {
-    
-        $this->addFlash('danger', "The charge attempt for the subscription failed. A new payment method is required to proceed.");
-        
-        return $this->redirectToRoute('payment.payment', array('id' => $advertId, 'chargeFailed' => 1, 'customerId' => $customerId));
+                
+        $this->addFlash('success', "Your subscription was successfully created.");
+
+        // Create the bill in the database
+        $bill = new Bill();
+
+        $bill->setStripeUrl($invoice->invoice_pdf)
+             ->setAdvert($advert)
+        ;
+
+        $manager->persist($bill);
+        $manager->flush();
+
+        // Send an email to the user
+        $mail = new Mail;
+
+        $administrator = $userRepository->findOneBy(array('name' => 'administrator'));
+
+        $mail->setReceiver($user)
+             ->setSubject($this->getParameter('new_subscription_subject'))
+             ->setSender($administrator)
+             ->setMessage('Your subscription on Roadtripr')
+             ->setBody($this->renderView(
+                                            'communication/newSubscription.html.twig', 
+                                            ['mail' => $mail]
+                                        )
+                      )
+        ;
+
+        if ($mail->sendEmail($mailer))
+        {                
+
+            $manager->persist($mail);
+            $manager->flush();
+
+        }
 
     }
 

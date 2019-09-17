@@ -20,7 +20,7 @@ class Bill
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $stripeUrl;
 
     /**
      * @ORM\Column(type="datetime")
@@ -45,14 +45,14 @@ class Bill
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getStripeUrl(): ?string
     {
-        return $this->name;
+        return $this->stripeUrl;
     }
 
-    public function setName(string $name): self
+    public function setStripeUrl(string $stripeUrl): self
     {
-        $this->name = $name;
+        $this->stripeUrl = $stripeUrl;
 
         return $this;
     }

@@ -154,11 +154,6 @@ class Advert
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $stripeIntentId;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $stripeSubscriptionId;
 
     /**
@@ -853,33 +848,6 @@ class Advert
     {
 
         $this->subscription = $subscription;
-
-        return $this;
-
-    }
-
-    /**
-     * Get the Stripe intent id
-     *
-     * @return string|null
-     */
-    public function getStripeIntentId(): ?string
-    {
-
-        return $this->stripeIntentId;
-
-    }
-
-    /**
-     * Set the Stripe intent id
-     *
-     * @param string|null $stripeIntentId
-     * @return self
-     */
-    public function setStripeIntentId(?string $stripeIntentId): self
-    {
-
-        $this->stripeIntentId = $stripeIntentId;
 
         return $this;
 
