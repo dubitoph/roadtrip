@@ -191,16 +191,31 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * User logout
+     * 
      * @Route("/security/logout", name="security.logout")
+     *
+     * @return void
      */
     public function logout()
     {
     }
 
     /**
+     * User request to change its password
+     * 
      * @Route("/security/resetting/request", name="security.resetting.request")
+     *
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     * @param TokenGeneratorInterface $tokenGenerator
+     * @param ObjectManager $manager
+     * @param UserRepository $userRepository
+     * 
+     * @return Response
      */
-    public function resetingRequest(Request $request, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator, ObjectManager $manager, UserRepository $userRepository)
+    public function resetingRequest(Request $request, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator, ObjectManager $manager, 
+                                    UserRepository $userRepository): Response
     {
 
         $administrator = $userRepository->findOneBy(array('name' => 'administrator'));
@@ -219,48 +234,55 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
 
-            $user = $manager->getRepository(User::class)->loadUserByUsername($form->getData()['email']);
+            $user = $manager->getRepository(User::class)->loadUserByEmail($form->getData()['email']);
 
-            if (!$user) 
+            if (! $user) 
             {
 
-                $this->addFlash('warning', "The email address isn't linked with a Roadtrip user.");
-                return $this->redirectToRoute("security.resetting");
+                $this->addFlash('warning', "The email address isn't linked to a Roadtrip user.");
 
-            } 
-
-            $user->setToken($tokenGenerator->generateToken());
-            $user->setPasswordRequestedAt(new \Datetime());
-            $manager->flush(); 
-
-            $mail = new Mail;
-
-            $mail->setReceiver($user)
-                 ->setSubject($this->getParameter('password_Resetting_email_subject'))
-                 ->setSender($administrator)
-                 ->setMessage('Password renew')
-                 ->setBody($this->renderView(
-                                                'security/passwordResettingEmail.html.twig', 
-                                                ['user' => $user]
-                                               )
-                             )
-            ;
-
-            if ($mail->sendEmail($mailer))
-            { 
-                
-                $manager->persist($mail);
-                $manager->flush();
-                
-                $this->addFlash('success', "An email has been sent to the registered email address in your account so you can change your password.");
-                
-                return $this->redirectToRoute("security.login");
+                return $this->redirectToRoute("security.resetting.request");
 
             }
             else
-            {
+            { 
 
-                $this->addFlash('warning', "Impossible to send a confirmation email to change your password.");
+                $user->setToken($tokenGenerator->generateToken());
+                $user->setPasswordRequestedAt(new \Datetime());
+                $manager->flush(); 
+
+                $mail = new Mail;
+
+                $mail->setReceiver($user)
+                    ->setSubject($this->getParameter('password_Resetting_email_subject'))
+                    ->setSender($administrator)
+                    ->setMessage('Password renew')
+                    ->setBody($this->renderView(
+                                                    'security/passwordResettingEmail.html.twig', 
+                                                    ['mail' => $mail]
+                                                )
+                                )
+                ;
+
+                if ($mail->sendEmail($mailer))
+                { 
+                    
+                    $manager->persist($mail);
+                    $manager->flush();
+                    
+                    $this->addFlash('success', "An email has been sent to the registered email address in your account so you can change your password.");
+                    
+                    return $this->redirectToRoute("security.login");
+
+                }
+                else
+                {
+
+                    $this->addFlash('warning', "Impossible to send a confirmation email to change your password.");
+
+                    return $this->redirectToRoute("security.resetting.request");
+
+                }
 
             }
 
@@ -349,7 +371,18 @@ class SecurityController extends AbstractController
 
             $this->addFlash('success', "Your password has been renewed.");
 
-            return $this->redirectToRoute('user.dashbord');
+            if ($this->isGranted('ROLE_USER')) 
+            {
+
+                return $this->redirectToRoute('user.dashbord');
+
+            }
+            else
+            {
+
+                return $this->redirectToRoute('security.login');
+
+            }
 
         }
 

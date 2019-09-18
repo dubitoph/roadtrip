@@ -14,24 +14,29 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class UserRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, User::class);
+
     }
 
     /**
-     * Get the user by its email
+     * Get the user from its email
      *
-     * @param [type] $email
+     * @param string $email
      * @return void
      */
-    public function loadUserByUsername($email)
+    public function loadUserByEmail($email)
     {
+
         return $this->createQueryBuilder('u')
                     ->where('u.email = :email')
                     ->setParameter('email', $email)
                     ->getQuery()
                     ->getOneOrNullResult();
+
     }
     
 }

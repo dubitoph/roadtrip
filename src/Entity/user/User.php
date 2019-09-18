@@ -118,9 +118,7 @@ class User implements UserInterface
      * )
      * @Assert\NotBlank()
      */
-    private $password;  
-
-    public $confirmedPassword;
+    private $password;
  
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -443,33 +441,6 @@ class User implements UserInterface
     {
 
         $this->password = $password;
-
-        return $this;
-
-    }
-
-    /**
-     * Get confirmed password
-     *
-     * @return string
-     */
-    public function getConfirmedPassword(): string
-    {
-
-        return (string) $this->confirmedPassword;
-
-    }
-
-    /**
-     * Set confirmed password
-     *
-     * @param string $confirmedPassword
-     * @return self
-     */
-    public function setConfirmedPassword(string $confirmedPassword): self
-    {
-
-        $this->confirmedPassword = $confirmedPassword;
 
         return $this;
 

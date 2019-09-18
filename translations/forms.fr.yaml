@@ -18,7 +18,6 @@
 40 km: 40 km
 50 km: 50 km
 100 km: 100 km
--: -
 Abbreviation: Abréviation
 About me: A propos de moi
 Address: Adresse
@@ -106,7 +105,8 @@ Proximity: Proximité
 Proximity + price: Proximité + prix
 Power: Puissance
 Rental beginning: Date de début de la location
-Rental end: Date de fin de la location
+Rental end: Date de fin de la locationRepeat Password
+Repeat your password: Répétez votre mot de passe
 Repeat your password...: Répétez votre mot de passe...
 Repeat your new password...: Répétez votre nouveau mot de passe...
 Response: Réponse
@@ -124,6 +124,7 @@ State: Etat
 Street: Rue
 Subject: Sujet
 Terms accepted: J'accepte les conditions générales
+The password fields must match.: Les mots de passe doivent être identiques.
 Title: Titre
 User: Utilisateur
 Username: Nom d'utilisateur

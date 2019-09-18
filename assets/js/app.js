@@ -29,8 +29,6 @@ import '../../node_modules/intl-tel-input/build/css/intlTelInput.css';
 import 'intl-tel-input/build/js/utils.js'
 window['intlTelInput'] = intlTelInput;
 
-console.log(window);
-
 
 /*
 import { Calendar } from '@fullcalendar/core';

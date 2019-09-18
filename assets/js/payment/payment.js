@@ -50,6 +50,8 @@ if (requiredAction == 0)
   {
 
     ev.preventDefault();
+
+    cardButton.disabled = true;
     
     stripe.createPaymentMethod('card', cardElements, {
 
@@ -68,6 +70,7 @@ if (requiredAction == 0)
         var errorElement = document.getElementById('card-errors');
 
         errorElement.textContent = result.error.message;
+        cardButton.disabled = false;
 
       } 
       else 
@@ -87,6 +90,8 @@ else
 {
 
   var paymentIntentId = document.getElementById('stripe_client_secret').value;
+
+  cardButton.disabled = true;
   
   stripe.handleCardPayment(paymentIntentId).then(function(result) {
 
