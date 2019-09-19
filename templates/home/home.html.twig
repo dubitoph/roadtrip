@@ -8,21 +8,66 @@
       <div class="container">
         <div class="row">
         <div class="col">
-          <h1 class="display-4">The adventure in a wheel spin</h1>
+          <h1>The adventure in a wheel spin</h1>
           <p class="lead">Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
-          <form class="form-inline">
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">How many seats do you want ?</label>
-            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-              <option selected value="4">motorhome 4 seats</option>
-              <option value="5">motorhome 5 seats</option>
-              <option value="6">motorhome 6 seats</option>
-              <option value="7">motorhome 7 seats</option>
-              <option value="8">motorhome 8 seats</option>
-            </select>
 
-            <button type="submit" class="btn btn-primary mb-2">Search</button>
-          </form>
-          <p>Or <a href="#">rent your motorhome</a>.</p>
+          {{ form_start(form) }}
+              <div class="form-row align-items-end">
+                  <div class="col">
+                      {{ form_row(form.minimumBedsNumber) }}
+                  </div>
+
+                  <div class="col">
+                      <div class="form-group">
+                          <button class="btn btn-primary">Search</button>
+                      </div>
+                  </div>
+
+                  <div class="col" style="display: none;">
+                      {{ form_row(form.maximumPrice) }}
+                  </div>
+
+                  <div class="col" style="display: none;">
+                      {{ form_row(form.cellEquipments) }}
+                  </div>
+
+                  <div class="col" style="display: none;">
+                      {{ form_row(form.carrierEquipments) }}
+                  </div>
+
+                  <div class="col" style="display: none;">
+                      {{ form_row(form.distance) }}
+                  </div>
+
+              </div>
+
+              <div class="form-row" style="display: none;">
+                  <div class="col">
+                      {{ form_row(form.address, {'id': 'search_address'}) }}
+                  </div>
+              </div>
+
+              <div class="form-row" style="display: none;">
+                  <div class="col">
+                      <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+                  </div>
+              </div>
+
+              <div class="form-row" style="display: none;">
+                  <div class="col">
+                      {{ form_row(form.city, {'id': 'city'}) }}
+                  </div>
+              </div>
+
+              <div class="form-row" style="display: none;">
+                  <div class="col">
+                      {{ form_row(form.sorting) }}
+                  </div>
+              </div>
+
+          {{ form_end(form) }}
+
+          <p>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</p>
         </div>
         <div class="col">
         </div>
@@ -30,215 +75,119 @@
       </div>
     </section>
 
-
-    <div class="container">
-    <div class="vertical-navbar" style="float: left">
-
-            <ul class="navbar-nav mr-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link"  href="#last_adverts">Last adverts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"  href="#why_use">Why Roadtrip?</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"  href="#subscriptions">Subscriptions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link"  href="#last_ratings">Last ratings</a>
-                </li>
-
-            </ul>
-
-    </div>
-
-    <div class="jumbotron">
-
-        <div class="container">
-
-            {{ include('_messages.html.twig') }}
-
-            {{ form_start(form) }}
-
-                <div class="form-row align-items-end">
-
-                    <div class="col">
-
-                        {{ form_row(form.minimumBedsNumber) }}
-
-                    </div>
-
-                    <div class="col">
-
-                        <div class="form-group">
-
-                            <button class="btn btn-primary">Find</button>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col" style="display: none;">
-
-                        {{ form_row(form.maximumPrice) }}
-
-                    </div>
-
-                    <div class="col" style="display: none;">
-
-                        {{ form_row(form.cellEquipments) }}
-
-                    </div>
-
-                    <div class="col" style="display: none;">
-
-                        {{ form_row(form.carrierEquipments) }}
-
-                    </div>
-
-                    <div class="col" style="display: none;">
-
-                        {{ form_row(form.distance) }}
-
-                    </div>
-
-                </div>
-
-                <div class="form-row" style="display: none;">
-
-                    <div class="col">
-
-                        {{ form_row(form.address, {'id': 'search_address'}) }}
-
-                    </div>
-
-                </div>
-
-                <div class="form-row" style="display: none;">
-
-                    <div class="col">
-
-                        <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
-
-                    </div>
-
-                </div>
-
-                <div class="form-row" style="display: none;">
-
-                    <div class="col">
-
-                        {{ form_row(form.city, {'id': 'city'}) }}
-
-                    </div>
-
-                </div>
-
-                <div class="form-row" style="display: none;">
-
-                    <div class="col">
-
-                        {{ form_row(form.sorting) }}
-
-                    </div>
-
-                </div>
-
-            {{ form_end(form) }}
-
+    <!-- LAST ADVERTS -->
+    <section id="lastAdverts" class="pt-5 pb-5">
+      <div class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Discover recently added vehicules</h2>
         </div>
+      </div>
 
-        <input type="hidden" id="urlAjaxSession" name="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+      {% set i = 0 %}
+      <div class="row">
 
-    </div>
+        {% for advert in lastAdverts %}
 
-    <div data-slider>
+            <div class="col-md-4">
 
-        {% for fileName in filesNames %}
+                {% if distances[advert.id] is defined %}
 
-            <img src="{{ asset(fileName) | imagine_filter('medium') }}" alt="img" style="width: 100%; height:auto;"/>
+                    {% set distance = distances[advert.id] %}
 
-        {% endfor %}
+                {% else %}
 
+                    {% set distance = null %}
 
-    </div>
+                {% endif %}
 
-    <div id="lastAdverts">
+                {% if minPrices[advert.id] is defined %}
 
-        {% set i = 0 %}
-        <balise id="last_adverts">Last adverts</balise>
+                    {% set minPrice = minPrices[advert.id] %}
 
-        <div class="row">
+                {% else %}
 
-            {% for advert in lastAdverts %}
+                    {% set minPrice = null %}
 
-                <div class="col-md-4">
+                {% endif %}
 
-                    {% if distances[advert.id] is defined %}
+                {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'homepage': true}) }}
 
-                        {% set distance = distances[advert.id] %}
-
-                    {% else %}
-
-                        {% set distance = null %}
-
-                    {% endif %}
-
-                    {% if minPrices[advert.id] is defined %}
-
-                        {% set minPrice = minPrices[advert.id] %}
-
-                    {% else %}
-
-                        {% set minPrice = null %}
-
-                    {% endif %}
-
-                    {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'homepage': true}) }}
-
-                    {% set i = i + 1 %}
-
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-        <div id="whyUse">
-
-            <balise id="why_use">Why Roadtrip?</balise>
-
-            <p>
-
-                Owner ? The good reasons to list your motorhome.
-                Tenant? The good reasons to rent via Roadtrip.
-
-                <a href="{{ path('advert.description.create') }}" class="btn btn-primary">I list my motorhome</a>
-
-            </p>
-
-        </div>
-
-        <div id="lastRatings">
-
-            <balise id="last_ratings">Last ratings</balise>
-
-            <div class="row">
-
-                {% for rating in lastAdvertRatings %}
-
-                    <div class="col-md-4">
-
-                        {{ include('rating/_rating.html.twig', { 'rating': rating}) }}
-
-                    </div>
-
-                {% endfor %}
+                {% set i = i + 1 %}
 
             </div>
 
+        {% endfor %}
+
     </div>
+    </section>
+
+    <!-- WHY USE -->
+    <section id="whyUse" class="bg-light pt-5 pb-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>Pourquoi réserver votre véhicule sur Roadtripr ?</h2>
+          <p>Partir à l’aventure okay, mais pas sans un minimum de garanties…</p>
+        </div>
+        <div class="col">
+          <ol class="list-group">
+            <li class="list-group-item">
+              <p><strong>Sécurité</strong>. Vous savez chez qui vous louez, vous rencontrez le propriétaire du véhicule.</p>
+            </li>
+            <li class="list-group-item">
+              <p>Vous rejoignez une <strong>communauté</strong> de passionnés qui échangent leurs trucs & astuces.</p>
+            </li>
+            <li class="list-group-item">
+              <p>Le <strong>choix</strong> pardi ! On parle du niveau de confort, de la proximité et bien entendu du prix.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBSCRIPTION -->
+    <section id="whyUse" class="pt-5 pb-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>Pourquoi s'inscrire ?</h2>
+          <p>Inscrivez-vous pour réserver votre motorhome et accéder à l’ensemble des fonctionnalités du site. Une fois inscrit, vous pouvez également mettre en vente votre véhicule.</p>
+        </div>
+        <div class="col">
+          <h2>Je m'inscris gratuitement</h2>
+
+          <i>Form</i>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="bg-light pt-5 pb-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>Parole aux utilisateurs</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAST RATINGS -->
+    <section id="testimonials" class="pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h2>Last ratings / Instagram</h2>
+        </div>
+      </div>
+      <div class="row">
+      {% for rating in lastAdvertRatings %}
+          <div class="col-md-4">
+              {{ include('rating/_rating.html.twig', { 'rating': rating}) }}
+          </div>
+      {% endfor %}
+      </div>
+    </section>
 
     {% block javascripts %}
 
@@ -247,6 +196,8 @@
         {{ encore_entry_script_tags('home') }}
 
     {% endblock %}
-      </div>
+
+    {{ include('_messages.html.twig') }}
+    <input type="hidden" id="urlAjaxSession" name="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
 
 {% endblock %}

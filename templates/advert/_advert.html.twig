@@ -1,27 +1,20 @@
+<a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">
 <div class="card mb-4">
+  <div class="card-header">
+    <h3 class="card-title">
+      <a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">
+        {{ advert.title }}
+      </a>
+    </h3>
+    <a href="">add to favorite</a>
+  </div>
 
-    {% if mainPhotos[advert.id] is defined %}
-    
-        <img id="photo_{{ mainPhotos[advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[advert.id], 'file') | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height:auto;">
-
-    {% else %}
-
-        <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('thumb') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
-                
-    {% endif %}
-
-    <div class="card body">
-
-        <h5 class="card-title">
-
-            <a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">
-
-                {{ advert.title }}
-
-            </a>
-
-        </h5>
-
+  <div class="card-body">
+        {% if mainPhotos[advert.id] is defined %}
+        <img id="photo_{{ mainPhotos[advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[advert.id], 'file') | imagine_filter('thumb') }}" alt="card-img-top">
+        {% else %}
+        <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('thumb') }}" alt="card-img-top" />
+        {% endif %}
         <p class="card-text">{{ advert.description | nl2br }}</p>
 
         {% if advert.vehicle.situation is defined  %}
@@ -31,28 +24,28 @@
             {% if advert.vehicle.situation.state %}
 
                 <p class="card-text">{{ advert.vehicle.situation.state }}</p>
-                
+
             {% endif %}
 
-            <p class="card-text">{{ advert.vehicle.situation.city }} ({{ advert.vehicle.situation.zipCode }})</p>  
+            <p class="card-text">{{ advert.vehicle.situation.city }} ({{ advert.vehicle.situation.zipCode }})</p>
 
             {% if homepage is defined %}
 
                 Insertion date : {{ advert.getFormattedCreatedAt }}
 
             {% else %}
-            
+
                 {% if distance %}
 
                     {{ distance }} km from {{ userCity }}
 
                 {% endif %}
-                
+
             {% endif %}
-            
+
         {% endif %}
 
-        <div class="text-primary" style="font-size: 2rem; font-weight: bold">
+        <p class="card-text">
 
             {% if minPrice %}
 
@@ -64,8 +57,9 @@
 
             {% endif %}
 
-        </div>
-        
+        </p>
+
     </div>
 
 </div>
+</a>
