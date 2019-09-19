@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+      <title>Roadt{% block title %}Welcome!{% endblock %}</title>
 
         {% block stylesheets %}
 
@@ -20,8 +20,10 @@
 
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="{{ path('home') }}">Roadtrip</a>
+
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ path('home') }}">Roadtripr</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,59 +31,45 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
 
                 <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="#">How does it work ?</a>
+                  </li>
                     <li class="nav-item">
                         <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="{{ path('advert.index') }}">All adverts</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if current_menu is defined and current_menu == 'add_advert' %}active{% endif %}" href="{{ path('advert.description.create') }}">List your motorhome</a>
                     </li>
-                    <li class="nav-item">
-
-                        {% if app.user %}
-
-                            <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
-
-                        {% else %}
-
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('security.login') }}">Login</a>
-
-                        {% endif %}
-
-                    </li>
-                    <li class="nav-item">
-
-                        {% if app.user %}
-
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'dashbord' %}active{% endif %}" href="{{ path('user.dashbord') }}" class="nav-link">My dashbord</a>
-
-                        {% endif %}
-
-                    </li>
-
-                    {% if not app.user %}
-
-                        <li class="nav-item">
-
-                            <a class="nav-link {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" href="{{ path('security.registration') }}" class="nav-link">Sign up</a>
-
-                        </li>
-
-                    {% endif %}
-
                 </ul>
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+                {% if app.user %}
+                    <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
+                {% else %}
+                    <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('security.login') }}">Login</a>
+                {% endif %}
+
+                  {% if app.user %}
+                      <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'dashbord' %}active{% endif %}" href="{{ path('user.dashbord') }}">My dashbord</a>
+                  {% endif %}
+
+                  {% if not app.user %}
+                      <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" href="{{ path('security.registration') }}">Sign up</a>
+                  {% endif %}
+                </div>
 
             </div>
 
         </nav>
 
-        <div class="container">
+
 
             <script src="https://js.stripe.com/v3/"></script>
 
             {% block body %}
             {% endblock %}
 
-        </div>
+        
 
         <div class="footer">
 

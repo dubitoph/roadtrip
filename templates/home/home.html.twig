@@ -4,10 +4,36 @@
 
 {% block body %}
 
-    <h1>The adventure in a wheel spin</h1>
+    <section class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <div class="row">
+        <div class="col">
+          <h1 class="display-4">The adventure in a wheel spin</h1>
+          <p class="lead">Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
+          <form class="form-inline">
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">How many seats do you want ?</label>
+            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+              <option selected value="4">motorhome 4 seats</option>
+              <option value="5">motorhome 5 seats</option>
+              <option value="6">motorhome 6 seats</option>
+              <option value="7">motorhome 7 seats</option>
+              <option value="8">motorhome 8 seats</option>
+            </select>
 
+            <button type="submit" class="btn btn-primary mb-2">Search</button>
+          </form>
+          <p>Or <a href="#">rent your motorhome</a>.</p>
+        </div>
+        <div class="col">
+        </div>
+        </div>
+      </div>
+    </section>
+
+
+    <div class="container">
     <div class="vertical-navbar" style="float: left">
-                
+
             <ul class="navbar-nav mr-auto">
 
                 <li class="nav-item">
@@ -42,15 +68,15 @@
                         {{ form_row(form.minimumBedsNumber) }}
 
                     </div>
-    
+
                     <div class="col">
-    
+
                         <div class="form-group">
-    
+
                             <button class="btn btn-primary">Find</button>
-    
+
                         </div>
-    
+
                     </div>
 
                     <div class="col" style="display: none;">
@@ -79,42 +105,42 @@
 
                 </div>
 
-                <div class="form-row" style="display: none;">                    
+                <div class="form-row" style="display: none;">
 
                     <div class="col">
-        
+
                         {{ form_row(form.address, {'id': 'search_address'}) }}
-        
+
                     </div>
 
                 </div>
 
-                <div class="form-row" style="display: none;">                    
+                <div class="form-row" style="display: none;">
 
                     <div class="col">
-        
+
                         <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
-        
+
                     </div>
 
                 </div>
 
-                <div class="form-row" style="display: none;">                    
+                <div class="form-row" style="display: none;">
 
                     <div class="col">
-        
+
                         {{ form_row(form.city, {'id': 'city'}) }}
-        
+
                     </div>
 
                 </div>
 
-                <div class="form-row" style="display: none;">                    
+                <div class="form-row" style="display: none;">
 
                     <div class="col">
-        
+
                         {{ form_row(form.sorting) }}
-        
+
                     </div>
 
                 </div>
@@ -128,11 +154,11 @@
     </div>
 
     <div data-slider>
-        
+
         {% for fileName in filesNames %}
 
             <img src="{{ asset(fileName) | imagine_filter('medium') }}" alt="img" style="width: 100%; height:auto;"/>
-                    
+
         {% endfor %}
 
 
@@ -142,15 +168,15 @@
 
         {% set i = 0 %}
         <balise id="last_adverts">Last adverts</balise>
-    
-        <div class="row">            
-            
+
+        <div class="row">
+
             {% for advert in lastAdverts %}
-                
+
                 <div class="col-md-4">
 
-                    {% if distances[advert.id] is defined %}    
-                            
+                    {% if distances[advert.id] is defined %}
+
                         {% set distance = distances[advert.id] %}
 
                     {% else %}
@@ -159,8 +185,8 @@
 
                     {% endif %}
 
-                    {% if minPrices[advert.id] is defined %}    
-                            
+                    {% if minPrices[advert.id] is defined %}
+
                         {% set minPrice = minPrices[advert.id] %}
 
                     {% else %}
@@ -174,17 +200,17 @@
                     {% set i = i + 1 %}
 
                 </div>
-                                
+
             {% endfor %}
 
         </div>
 
         <div id="whyUse">
-    
+
             <balise id="why_use">Why Roadtrip?</balise>
-        
+
             <p>
-                
+
                 Owner ? The good reasons to list your motorhome.
                 Tenant? The good reasons to rent via Roadtrip.
 
@@ -195,31 +221,32 @@
         </div>
 
         <div id="lastRatings">
-    
+
             <balise id="last_ratings">Last ratings</balise>
-        
-            <div class="row">            
-                
+
+            <div class="row">
+
                 {% for rating in lastAdvertRatings %}
-                    
+
                     <div class="col-md-4">
-    
+
                         {{ include('rating/_rating.html.twig', { 'rating': rating}) }}
-    
+
                     </div>
-                                    
+
                 {% endfor %}
-    
+
             </div>
 
     </div>
-   
+
     {% block javascripts %}
-        
+
         {{ parent() }}
 
         {{ encore_entry_script_tags('home') }}
-        
+
     {% endblock %}
+      </div>
 
 {% endblock %}
