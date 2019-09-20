@@ -18,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @UniqueEntity(
  *               fields={"beginAt"},
- *               message="Une réservation existe déjà avec cette date de début."
+ *               message="A booking already exists with this beginning date."
  * )
  */
 class Booking
@@ -34,7 +34,7 @@ class Booking
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotBlank(
-     *      message = "The begining date caun't empty."
+     *      message = "The begining date caun't be empty."
      * )
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThan("today")
@@ -45,7 +45,7 @@ class Booking
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotBlank(
-     *      message = "The end date caun't empty."
+     *      message = "The end date caun't be empty."
      * )
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThan("today")
@@ -106,24 +106,46 @@ class Booking
      */
     private $ratings;
 
+    /**
+     * Operations when creating
+     */
     public function __construct()
     {
+
         $this->createdAt = new \DateTime();
         $this->ratings = new ArrayCollection();
+
     }
 
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the beginning date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getBeginAt(): ?\DateTimeInterface
     {
 
         return $this->beginAt;
         
     }
-
+    
+    /**
+     * Get the formatted beginning date
+     *
+     * @return string
+     */
     public function getFormattedBeginAt(): string
     {
 
@@ -131,18 +153,39 @@ class Booking
 
     }
 
+    /**
+     * Set the beginning date
+     *
+     * @param \DateTimeInterface $beginAt
+     * 
+     * @return self
+     */
     public function setBeginAt(\DateTimeInterface $beginAt): self
     {
+
         $this->beginAt = $beginAt;
 
         return $this;
+
     }
 
+    /**
+     * Get the end date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getEndAt(): ?\DateTimeInterface
     {
+
         return $this->endAt;
+
     }
 
+    /**
+     * Get the formatted end date
+     *
+     * @return string
+     */
     public function getFormattedEndAt(): string
     {
 
@@ -150,6 +193,13 @@ class Booking
 
     }
 
+    /**
+     * Set the end date
+     *
+     * @param \DateTimeInterface|null $endAt
+     * 
+     * @return self
+     */
     public function setEndAt(?\DateTimeInterface $endAt): self
     {
         $this->endAt = $endAt;
@@ -157,71 +207,164 @@ class Booking
         return $this;
     }
 
+    /**
+     * Get the title
+     *
+     * @return string|null
+     */
     public function getTitle(): ?string
     {
+
         return $this->title;
+
     }
 
+    /**
+     * Set the title
+     *
+     * @param string $title
+     * 
+     * @return self
+     */
     public function setTitle(string $title): self
     {
+
         $this->title = $title;
 
         return $this;
+
     }
 
+    /**
+     * Get the vehicle
+     *
+     * @return Vehicle|null
+     */
     public function getVehicle(): ?Vehicle
     {
+
         return $this->vehicle;
+
     }
 
+    /**
+     * Set the vehicle
+     *
+     * @param Vehicle|null $vehicle
+     * 
+     * @return self
+     */
     public function setVehicle(?Vehicle $vehicle): self
     {
+
         $this->vehicle = $vehicle;
 
         return $this;
+
     }
 
+    /**
+     * Get the user who request the booking
+     *
+     * @return User|null
+     */
     public function getUser(): ?User
     {
+
         return $this->user;
+
     }
 
+    /**
+     * Set the user who request the booking
+     *
+     * @param User|null $user
+     * 
+     * @return self
+     */
     public function setUser(?User $user): self
     {
+
         $this->user = $user;
 
         return $this;
+
     }
 
+    /**
+     * Get if the request is accepted
+     *
+     * @return boolean|null
+     */
     public function getAccepted(): ?bool
     {
+
         return $this->accepted;
+
     }
 
+    /**
+     * Set if the request is accepted
+     *
+     * @param boolean|null $accepted
+     * 
+     * @return self
+     */
     public function setAccepted(?bool $accepted): self
     {
+
         $this->accepted = $accepted;
 
         return $this;
+
     }
 
+    /**
+     * Get if the request is refused
+     *
+     * @return boolean|null
+     */
     public function getRefused(): ?bool
     {
+
         return $this->refused;
+
     }
 
+    /**
+     * Set if the request is refused
+     *
+     * @param boolean|null $refused
+     * 
+     * @return self
+     */
     public function setRefused(?bool $refused): self
     {
+
         $this->refused = $refused;
 
         return $this;
+
     }
 
+    /**
+     * Get the creation date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
+
         return $this->createdAt;
+
     }
 
+    /**
+     * Set the creation date
+     *
+     * @param \DateTimeInterface $createdAt
+     * @return self
+     */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
@@ -229,6 +372,11 @@ class Booking
         return $this;
     }
 
+    /**
+     * Get the formatted creation date
+     *
+     * @return string
+     */
     public function getFormattedCreatedAt(): string
     {
 
@@ -236,71 +384,147 @@ class Booking
 
     }
 
+    /**
+     * Get the user mail
+     *
+     * @return Mail|null
+     */
     public function getUserMail(): ?Mail
     {
+
         return $this->userMail;
-    }
 
-    public function setUserMail(Mail $userMail): self
-    {
-        $this->userMail = $userMail;
-
-        return $this;
-    }
-
-    public function getOwnerMail(): ?Mail
-    {
-        return $this->ownerMail;
-    }
-
-    public function setOwnerMail(?Mail $ownerMail): self
-    {
-        $this->ownerMail = $ownerMail;
-
-        return $this;
     }
 
     /**
+     * Set the user mail
+     *
+     * @param Mail $userMail
+     * 
+     * @return self
+     */
+    public function setUserMail(Mail $userMail): self
+    {
+
+        $this->userMail = $userMail;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the owner mail
+     *
+     * @return Mail|null
+     */
+    public function getOwnerMail(): ?Mail
+    {
+
+        return $this->ownerMail;
+
+    }
+
+    /**
+     * Set the owner mail
+     *
+     * @param Mail|null $ownerMail
+     * 
+     * @return self
+     */
+    public function setOwnerMail(?Mail $ownerMail): self
+    {
+
+        $this->ownerMail = $ownerMail;
+
+        return $this;
+
+    }
+
+    /**
+     * Get mails linked to this booking
+     *
      * @return Collection|Mail[]
      */
     public function getMails(): Collection
     {
+
         return $this->mails;
-    }
 
-    public function addMail(Mail $mail): self
-    {
-        if (!$this->mails->contains($mail)) {
-            $this->mails[] = $mail;
-            $mail->setBooking($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMail(Mail $mail): self
-    {
-        if ($this->mails->contains($mail)) {
-            $this->mails->removeElement($mail);
-            // set the owning side to null (unless already changed)
-            if ($mail->getBooking() === $this) {
-                $mail->setBooking(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
+     * Add a mail linked to this booking
+     *
+     * @param Mail $mail
+     * 
+     * @return self
+     */
+    public function addMail(Mail $mail): self
+    {
+
+        if (!$this->mails->contains($mail)) 
+        {
+
+            $this->mails[] = $mail;
+            $mail->setBooking($this);
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Remove a mail linked to this booking
+     *
+     * @param Mail $mail
+     * 
+     * @return self
+     */
+    public function removeMail(Mail $mail): self
+    {
+
+        if ($this->mails->contains($mail)) 
+        {
+
+            $this->mails->removeElement($mail);
+
+            // set the owning side to null (unless already changed)
+            if ($mail->getBooking() === $this) 
+            {
+
+                $mail->setBooking(null);
+
+            }
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Get ratings linked to this booking
+     *
      * @return Collection|Rating[]
      */
     public function getRatings(): Collection
     {
+
         return $this->ratings;
+
     }
 
+    /**
+     * Add a rating linked to this booking
+     *
+     * @param Rating $rating
+     * 
+     * @return self
+     */
     public function addRating(Rating $rating): self
     {
+
         if (!$this->ratings->contains($rating)) 
         {
 
@@ -310,10 +534,19 @@ class Booking
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a rating linked to this booking
+     *
+     * @param Rating $rating
+     * 
+     * @return self
+     */
     public function removeRating(Rating $rating): self
     {
+
         if ($this->ratings->contains($rating)) 
         {
 
@@ -330,5 +563,7 @@ class Booking
         }
 
         return $this;
+
     }
+    
 }

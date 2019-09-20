@@ -84,76 +84,173 @@ class Mail
      */
     private $isRead;
 
+    /**
+     * Operations when creating
+     */
     public function __construct() 
 	{
+
         $this->createdAt = new \DateTime();
+
 	}
 
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
 
     }
 
+    /**
+     * Get the sender
+     *
+     * @return User|null
+     */
     public function getSender(): ?User
     {
+
         return $this->sender;
+
     }
 
+    /**
+     * Set the sender
+     *
+     * @param User|null $sender
+     * 
+     * @return self
+     */
     public function setSender(?User $sender): self
     {
+
         $this->sender = $sender;
 
         return $this;
+
     }
 
+    /**
+     * Get the receiver
+     *
+     * @return User|null
+     */
     public function getReceiver(): ?User
     {
+
         return $this->receiver;
+
     }
 
+    /**
+     * Set the receiver
+     *
+     * @param User|null $receiver
+     * 
+     * @return self
+     */
     public function setReceiver(?User $receiver): self
     {
+
         $this->receiver = $receiver;
 
         return $this;
+
     } 
 
+    /**
+     * Get the subject
+     *
+     * @return string|null
+     */
     public function getSubject(): ?string
     {
+
         return $this->subject;
+
     }
 
+    /**
+     * Set the subject
+     *
+     * @param string $subject
+     * 
+     * @return self
+     */
     public function setSubject(string $subject): self
     {
+
         $this->subject = $subject;
 
         return $this;
+
     }
 
+    /**
+     * Get the message
+     *
+     * @return string|null
+     */
     public function getMessage(): ?string
     {
+
         return $this->message;
+
     }
 
+    /**
+     * Set the message
+     *
+     * @param string $message
+     * 
+     * @return self
+     */
     public function setMessage(string $message): self
     {
+
         $this->message = $message;
 
         return $this;
-    }
-    public function getBody(): ?string
-    {
-        return $this->body;
+
     }
 
+    /**
+     * Get the body
+     *
+     * @return string|null
+     */
+    public function getBody(): ?string
+    {
+
+        return $this->body;
+
+    }
+
+    /**
+     * Set the body
+     *
+     * @param string $body
+     * 
+     * @return self
+     */
     public function setBody(string $body): self
     {
+
         $this->body = $body;
 
         return $this;
+
     }
 
+    /**
+     * Get the thread containing this mail
+     *
+     * @return Thread|null
+     */
     public function getThread(): ?Thread
     {
 
@@ -161,13 +258,26 @@ class Mail
 
     }
 
+    /**
+     * Set the thread containing this mail
+     *
+     * @param Thread|null $thread
+     * @return self
+     */
     public function setThread(?Thread $thread): self
     {
+
         $this->thread = $thread;
 
         return $this;
+
     }
 
+    /**
+     * Get the booking linked to this mail
+     *
+     * @return Booking|null
+     */
     public function getBooking(): ?Booking
     {
 
@@ -175,13 +285,27 @@ class Mail
 
     }
 
+    /**
+     * Set the booking linked to this mail
+     *
+     * @param Booking|null $booking
+     * 
+     * @return self
+     */
     public function setBooking(?Booking $booking): self
     {
+
         $this->booking = $booking;
 
         return $this;
+
     }
 
+    /**
+     * Get the creation date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
 
@@ -189,25 +313,69 @@ class Mail
 
     }
 
+    /**
+     * Get the formatted creation date
+     *
+     * @return string
+     */
+    public function getFormattedCreatedAt(): string
+    {
+
+        return $this->createdAt->format('d-m-Y H:m');
+
+    }
+
+    /**
+     *  Set the creation date
+     *
+     * @param \DateTimeInterface $createdAt
+     * 
+     * @return self
+     */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
+
         $this->createdAt = $createdAt;
 
         return $this;
+        
     } 
 
+    /**
+     * Get if the mail is read
+     *
+     * @return boolean|null
+     */
     public function getIsRead(): ?bool
     {
+
         return $this->isRead;
+
     }
 
+    /**
+     * Set if the mail is read
+     *
+     * @param boolean $isRead
+     * 
+     * @return self
+     */
     public function setIsRead(bool $isRead): self
     {
+
         $this->isRead = $isRead;
 
         return $this;
+
     }  
 
+    /**
+     * Send trhe mail
+     *
+     * @param \Swift_Mailer $mailer
+     * 
+     * @return void
+     */
     public function sendEmail(\Swift_Mailer $mailer)
     {
         
@@ -227,10 +395,4 @@ class Mail
 
     }
 
-    public function getFormattedCreatedAt(): string
-    {
-
-        return $this->createdAt->format('d-m-Y H:m');
-
-    }
 }

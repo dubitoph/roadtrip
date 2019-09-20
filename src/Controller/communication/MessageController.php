@@ -75,11 +75,15 @@ class MessageController extends AbstractController
     }
 
     /**
+     * Mail creation
+     * 
      * @Route("/communication/mail/create/{id}/{receiver}", name="communication.mail.create")
      * @param Advert $advert
      * @param User $receiver
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function createMail(Advert $advert, User $receiver, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response

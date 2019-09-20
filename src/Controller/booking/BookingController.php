@@ -18,11 +18,14 @@ class BookingController extends AbstractController
 {
 
     /**
+     * Request a booking
+     * 
      * @Route("/booking/booking/request/{id}", name="booking.booking.request")
      * 
      * @param Vehicle $vehicle
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function new(Vehicle $vehicle, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -35,6 +38,23 @@ class BookingController extends AbstractController
 
         $booking->setVehicle($vehicle);
         $booking->setUserMail($mail);
+
+        $beginningDateBooking = $this->container->get('session')->get('beginningDateBooking');
+        $endDateBooking = $this->container->get('session')->get('endDateBooking');
+
+        if(isset($beginningDateBooking))
+        {
+
+            $booking->setBeginAt($beginningDateBooking);
+
+        }
+
+        if($endDateBooking)
+        {
+
+            $booking->setEndAt($endDateBooking);
+
+        }
 
 
         if($user != $advert->getOwner()->getUser())
@@ -54,7 +74,7 @@ class BookingController extends AbstractController
             $mail->setReceiver($advert->getOwner()->getUser())
                  ->setSubject($this->getParameter('booking_request_subject'))
                  ->setSender($user)
-                 -setBooking($booking)
+                 ->setBooking($booking)
                  ->setMessage($form['mail']->getData())
                  ->setBody($this->renderView(
                                                 'communication/bookingRequest.html.twig', 
@@ -145,10 +165,14 @@ class BookingController extends AbstractController
     }
 
     /**
+     * Update a booking with accepted or refused
+     * 
      * @Route("/booking/booking/edit/{id}/{action}", name="booking.booking.edit")
      * @param Booking $booking
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function edit(Booking $booking, $action, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -170,7 +194,7 @@ class BookingController extends AbstractController
 
         $mail->setReceiver($booking->getUser())
              ->setSender($this->getUser())
-             -setBooking($booking)
+             ->setBooking($booking)
              ->setMessage('')
              ->setBody($this->renderView(
                                             'communication/bookingRequestFollow-up.html.twig', 
@@ -182,8 +206,6 @@ class BookingController extends AbstractController
                                         )
                       )
         ;
-
-
         
         $form = $this->createForm(MailType::class, $mail);
 
@@ -192,8 +214,6 @@ class BookingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())   
         { 
 
-            dump($mail->getMessage());
-            
             if ($mail->sendEmail($mailer))
             { 
                 
@@ -221,7 +241,7 @@ class BookingController extends AbstractController
             else 
             {
 
-                $this->addFlash('error', "Your refusal caun't be successfully treated.");
+                $this->addFlash('error', "Your refusal can't be successfully treated.");
 
             } 
 
@@ -239,6 +259,8 @@ class BookingController extends AbstractController
     }
 
     /**
+     * A vérifier si cette fonction est encore nécessaire et ne fait pas double-emploi avec edit
+     * 
      * @Route("/booking/booking/refuse/{id}", name="booking.booking.refuse", methods={"DELETE"})
      * @param Booking $booking
      * @param Request $request

@@ -2,18 +2,22 @@
 
 {% block stylesheets %} 
 
-     {{ parent () }} 
-     <link rel = "stylesheet" href = "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css"> 
+    {{ parent () }} 
+    <link rel = "stylesheet" href = "//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css"> 
 
- {% endblock %}
+{% endblock %}
 
-{% block title %} Request a booking {% endblock %}
+{% block title %}
+ 
+    Roadtripr - Request a booking
+     
+{% endblock %}
 
 {% block body %}
 
-{% set mailValue = 'Hello ' ~ booking.vehicle.advert.owner.user.firstname ~ '!
+    {% set mailValue = 'Hello ' ~ booking.vehicle.advert.owner.user.firstname ~ '!
 
-I would like to booking your vehicle for the period cited.
+I would like to booking your vehicle for the cited period.
 
 Best regards,' ~ '
  
@@ -27,9 +31,9 @@ Best regards,' ~ '
                                 
             {{ form_row(form.beginAt) }}
             {{ form_row(form.endAt) }}
-            {{ form_row(form.mail, {'value' : mainValue }) }}
+            {{ form_row(form.mail, {'value' : mailValue }) }}
 
-            <button class="btn btn-primary">{{ button | default('Request') }}</button>
+            <button type="submit" class="btn btn-success">Send</button>
             
         {{ form_end(form) }}
 
@@ -39,7 +43,8 @@ Best regards,' ~ '
         
         {{ parent() }}
 
-        {{ encore_entry_script_tags('bookingManagement') }}
+        {{ encore_entry_script_tags('bookingCreation') }}
+
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 

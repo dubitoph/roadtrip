@@ -34,10 +34,13 @@ class UserUserController extends AbstractController
     }
 
     /**
+     * Edit an user
+     * 
      * @Route("/user/user/edit", name="user.user.edit")
      * @param User $user
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function edit(Request $request, ObjectManager $manager): Response
@@ -70,10 +73,14 @@ class UserUserController extends AbstractController
     }
 
     /**
+     * Delete an user
+     * 
      * @Route("/user/user/delete/{id}", name="user.user.delete", methods={"DELETE"})
+     * 
      * @param User $user
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function delete(User $user, Request $request, ObjectManager $manager): Response
@@ -92,8 +99,12 @@ class UserUserController extends AbstractController
     }
 
     /**
+     * Access to the user dashbord
+     * 
      * @Route("/user/dashbord", name="user.dashbord")
-     * @param User $user
+     *
+     * @param RatingRepository $ratingRepository
+     * 
      * @return Response
      */
     public function dashbord(RatingRepository $ratingRepository): Response
@@ -104,6 +115,7 @@ class UserUserController extends AbstractController
         $profile = $user->getProfile();
         $profileCompletion = 0;
 
+        // Calculate the user profile completion
         if($profile)
         {
 
@@ -129,10 +141,16 @@ class UserUserController extends AbstractController
 
     }
 
-    /** 
-     * @Route("/user/geolocation/session", name="user.geolocation.session") 
-     */ 
-    public function ajaxAction(Request $request) 
+    /**
+     * Get the user geolocation
+     * 
+     * @Route("/user/geolocation/session", name="user.geolocation.session")
+     *
+     * @param Request $request
+     * 
+     * @return Response
+     */
+    public function ajaxAction(Request $request): Response
     {
         if($request->isXmlHttpRequest())
         {
@@ -156,6 +174,7 @@ class UserUserController extends AbstractController
 
             $response = new JsonResponse();
             $response->setData(array('error'=> 'Not a xmlHttpRequest'));
+
             return $response;
          
         }

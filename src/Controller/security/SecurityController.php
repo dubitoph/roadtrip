@@ -293,9 +293,19 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * User password update from the forgotten password functionality
+     * 
      * @Route("security/resetting/{id}/{token}", name="security.resetting")
+     *
+     * @param User $user
+     * @param [type] $token
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ObjectManager $manager
+     * 
+     * @return Response
      */
-    public function resetting(User $user, $token, Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager)
+    public function resetting(User $user, $token, Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager): Response
     {
         // Prohibited access if:
         // the user token is null
@@ -309,26 +319,37 @@ class SecurityController extends AbstractController
 
         }
         
-        $route = 'security.login';
-        
-        return $this->passwordUpdating($user, $request, $encoder, $manager, $route);
+        return $this->passwordUpdating($user, $request, $encoder, $manager);
         
     }
 
     /**
+     * User password update from the dashbord
+     * 
      * @Route("security/resetting/dashbord", name="security.resetting.dashbord")
+     *
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ObjectManager $manager
+     * 
+     * @return void
      */
     public function resettingDashbord(Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager)
     {
 
         $user = $this->getUser();
-        $route = 'user.dashbord';
         
-        return $this->passwordUpdating($user, $request, $encoder, $manager, $route);
+        return $this->passwordUpdating($user, $request, $encoder, $manager);
         
     }
             
-    // If over 10 min, false returned
+    /**
+     * Return if the password change is over than 10 minutes after the token creation
+     *
+     * @param \Datetime $passwordRequestedAt
+     * 
+     * @return boolean
+     */
     private function isRequestInTime(\Datetime $passwordRequestedAt = null)
     {
         if ($passwordRequestedAt === null)
@@ -348,8 +369,17 @@ class SecurityController extends AbstractController
 
     }
             
-    // If over 10 min, false returned
-    private function passwordUpdating($user, $request, $encoder, $manager)
+    /**
+     * User password Update function
+     *
+     * @param User $user
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ObjectManager $manager
+     * 
+     * @return Response
+     */
+    private function passwordUpdating(User $user, Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager): Response
     {
 
         $form = $this->createForm(PasswordResettingType::class, $user);

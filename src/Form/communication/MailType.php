@@ -22,14 +22,21 @@ class MailType extends AbstractType
         }
         
         $builder->add('message', TextareaType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-                                'data_class' => Mail::class,
-                                'existingSubject' => true,
-                                'translation_domain' => 'forms'
-                               ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Mail::class,
+                                    'existingSubject' => true,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+    
 }

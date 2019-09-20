@@ -11,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class BookingType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('beginAt', DateType::class, array(
                                                     'widget' => 'single_text', 
@@ -30,6 +32,7 @@ class BookingType extends AbstractType
 
         if ($options['request']) 
         { 
+
             $builder->add('mail', TextareaType::class, array(
                                                                 'required' => false,
                                                                 'mapped' => false
@@ -43,10 +46,16 @@ class BookingType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Booking::class,
-            'request' => false,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Booking::class,
+                                    'request' => false,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+    
 }
