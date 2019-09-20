@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+ 
+    Roadtripr - User's bookings
+     
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        <h1>Bookings</h1>
+
+        <div>
+            
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Begin date</th>
+                        <th>End date</th>
+                        <th>Photo</th>
+                        <th>Advert</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                
+                    {% for booking in bookings %}
+
+                        <tr>
+
+                            <td>{{ booking.getFormattedBeginAt }}</td>
+                            <td>{{ booking.getFormattedEndAt }}</td>
+                            <td>
+
+                                {% if mainPhotos[booking.vehicle.advert.id] is defined %}
+                                
+                                    <img id="photo_{{ mainPhotos[booking.vehicle.advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[booking.vehicle.advert.id], 'file') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;">
+                            
+                                {% else %}
+                            
+                                    <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
+                                            
+                                {% endif %}
+                            
+                            </td>
+                            <td><a href="{{ path('advert.show', { 'id': booking.vehicle.advert.id, 'slug': booking.vehicle.advert.slug }) }}">{{ booking.vehicle.advert.title }}</a></td>
+                            <td><a href="{{ path('communication.mail.create', { 'id': booking.vehicle.advert.id, 'receiver': booking.vehicle.advert.owner.user.id }) }}" class="btn btn-secondary">Contact the owner</a></td>
+
+                        </tr>
+                
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+        
+    {% endblock %}
+
+{% endblock %}

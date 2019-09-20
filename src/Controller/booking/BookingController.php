@@ -8,6 +8,8 @@ use App\Form\booking\BookingType;
 use App\Entity\communication\Mail;
 use App\Form\communication\MailType;
 use App\Repository\booking\BookingRepository;
+use App\Repository\media\PhotoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -253,74 +255,44 @@ class BookingController extends AbstractController
                                                             'booking' => $booking,
                                                             'action' => $action,
                                                             'form' => $form->createView(),
-                                                         ]
+                                                       ]
                             )
         ; 
     }
 
     /**
-     * A vérifier si cette fonction est encore nécessaire et ne fait pas double-emploi avec edit
+     * User's bookings list
      * 
-     * @Route("/booking/booking/refuse/{id}", name="booking.booking.refuse", methods={"DELETE"})
-     * @param Booking $booking
-     * @param Request $request
-     * @param ObjectManager $manager
+     * @Route("/booking/bookings", name="booking.bookings")
+     * 
+     * @param BookingRepository $bookingRepository
+     * @param PhotoRepository $photoRepository
+     * 
      * @return Response
      */
-    public function refuse(Booking $booking, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
+    public function userBookings(BookingRepository $bookingRepository, PhotoRepository $photoRepository): Response
     {
-        
-        $mail = new Mail();           
 
-        $mail->setReceiver($booking->getUser())
-             ->setSubject($this->getParameter('booking_request_refused_subject'))
-             ->setSender($this->getUser())
-             -setBooking($booking)
-             ->setMessage('')
-             ->setBody($this->renderView(
-                                            'communication/bookingRequestRefused.html.twig', 
-                                            ['mail' => $mail]
-                                        )
-                      )
-        ;
+        $user = $this->getUser();        
+        $bookings = $bookingRepository->findBy(array('user' => $user, 'accepted' => true), array('beginAt' => 'desc'));
+        $adverts = new ArrayCollection();
 
+        foreach($bookings as $booking)
+        {
 
-        
-        $form = $this->createForm(MailType::class, $mail);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())   
-        { 
-
-            if ($mail->sendEmail($mailer))
-            { 
-                
-                $booking->setOwnerMail($mail);
-                
-                $manager->persist($booking);
-                $manager->flush();   
-
-                $this->addFlash('success', "Your refusal was successfully sent");
-
-            }
-            else 
-            {
-
-                $this->addFlash('error', "Your refusal caun't be successfully treated.");
-
-            } 
-
-            return $this->redirectToRoute('booking.booking.requests');
+            $adverts->add($booking->getVehicle()->getAdvert()); 
 
         }
-     
-        return $this->render('booking/refuse.html.twig', [
-                                                            'booking' => $booking,
-                                                            'form' => $form->createView(),
-                                                       ]
+
+        $mainPhotos = $photoRepository->getMainPhotos($adverts);
+        
+        return $this->render('user/bookings.html.twig', [
+                                                            'bookings' => $bookings,
+                                                            'mainPhotos' => $mainPhotos
+                                                        ]
                             )
-        ; 
+        ;
+
     }
 
     /**
@@ -338,6 +310,7 @@ class BookingController extends AbstractController
             $manager->flush();
             $this->addFlash('success', "La réservation a été supprimée avec succès.");
         }
+
         return $this->redirectToRoute('booking.booking.index');
     }
 

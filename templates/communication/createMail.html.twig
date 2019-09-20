@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Create a message{% endblock %}
+{% block title %}
+ 
+    Roadtripr - Create a message
+     
+{% endblock %}
 
 {% block body %}
 
@@ -16,7 +19,7 @@
 
             <input type="hidden" name="referer" value="{{app.request.headers.get('referer')}}"/>
             
-            <button class="btn btn-primary">{{ button | default('Send') }}</button>
+            <button id="card-button" class="btn btn-primary">Send</button>
             
             {{ form_end(form) }}
 

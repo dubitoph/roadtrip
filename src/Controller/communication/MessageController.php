@@ -78,6 +78,7 @@ class MessageController extends AbstractController
      * Mail creation
      * 
      * @Route("/communication/mail/create/{id}/{receiver}", name="communication.mail.create")
+     * 
      * @param Advert $advert
      * @param User $receiver
      * @param Request $request
