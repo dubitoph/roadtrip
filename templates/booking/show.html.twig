@@ -1,35 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Booking{% endblock %}
+{% block title %}
+
+    Raodtripr - Show a booking
+    
+{% endblock %}
 
 {% block body %}
+
+    {{ include('_messages.html.twig') }}
+
     <h1>Booking</h1>
 
     <table class="table">
         <tbody>
+
             <tr>
-                <th>Id</th>
-                <td>{{ booking.id }}</td>
+                <th>Beginning date</th>
+                <td>{{ booking.getFormattedBeginAt }}</td>
             </tr>
             <tr>
-                <th>Date de début</th>
-                <td>{{ booking.beginAt ? booking.beginAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>End date</th>
+                <td>{{ booking.getFormattedEndAt }}</td>
             </tr>
             <tr>
-                <th>Date de fin</th>
-                <td>{{ booking.endAt ? booking.endAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
+                <th>Title</th>
                 <td>{{ booking.title }}</td>
             </tr>
         </tbody>
     </table>
+    
+    <a href="{{ path('booking.booking.delete', { 'id': booking.id }) }}" class="btn btn-danger">Remove this booking</a>
+    <a href="{{ path('advert.show', { 'id': booking.vehicle.advert.id, 'slug': booking.vehicle.advert.slug }) }}#vehicleCalendar" class="btn btn-secondary">Go back to the calendar</a>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
 
-    <a href="{{ path('admin.booking.index') }}">Retour à la liste</a>
-
-    <a href="{{ path('admin.booking.edit', {'id': booking.id}) }}">Editer</a>
-
-    {{ include('Booking/_delete_form.html.twig') }}
+        {{ encore_entry_script_tags('bookingRemoving') }}
+        
+    {% endblock %}
 
 {% endblock %}

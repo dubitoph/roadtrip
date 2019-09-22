@@ -122,7 +122,7 @@ class BookingController extends AbstractController
     public function show(Booking $booking): Response
     {
 
-        return $this->render('booking/show.html.twig', ['booking' => $booking,]);
+        return $this->render('booking/show.html.twig', ['booking' => $booking]);
 
     }
 
@@ -167,6 +167,7 @@ class BookingController extends AbstractController
     }
 
     /**
+     *  
      * Update a booking with accepted or refused
      * 
      * @Route("/booking/booking/edit/{id}/{action}", name="booking.booking.edit")
@@ -197,16 +198,6 @@ class BookingController extends AbstractController
         $mail->setReceiver($booking->getUser())
              ->setSender($this->getUser())
              ->setBooking($booking)
-             ->setMessage('')
-             ->setBody($this->renderView(
-                                            'communication/bookingRequestFollow-up.html.twig', 
-                                            [
-                                                'mail' => $mail,
-                                                'action' => $action
-                                            ]
-                                            
-                                        )
-                      )
         ;
         
         $form = $this->createForm(MailType::class, $mail);
@@ -233,8 +224,20 @@ class BookingController extends AbstractController
                     $booking->setAccepted(true);
 
                 }
+
+                $mail->setBody($this->renderView(
+                                                    'communication/bookingRequestFollow-up.html.twig', 
+                                                    [
+                                                        'mail' => $mail,
+                                                        'action' => $action
+                                                    ]
+                                               
+                                                )
+                              )
+                ;
                 
                 $manager->persist($booking);
+                $manager->persist($mail);
                 $manager->flush();   
 
                 $this->addFlash('success', "Your refusal was successfully sent");
@@ -296,22 +299,92 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/booking/booking/delete/{id}", name="booking.booking.delete", methods={"DELETE"})
+     * Booking removing
+     * 
+     * @Route("/booking/booking/delete/{id}", name="booking.booking.delete")
+     * 
      * @param Booking $booking
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
-    public function delete(Booking $booking, Request $request, ObjectManager $manager): Response
+    public function delete(Booking $booking, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->request->get('_token'))) 
-        {
-            $manager->remove($booking);
-            $manager->flush();
-            $this->addFlash('success', "La réservation a été supprimée avec succès.");
-        }
 
-        return $this->redirectToRoute('booking.booking.index');
+        // Mail construction
+        $mail = new Mail();
+            
+        $mail->setSubject($this->getParameter('booking_removing_subject'))
+             ->setReceiver($booking->getUser())
+             ->setSender($this->getUser())
+             ->setBooking($booking)
+            ;
+        
+            $form = $this->createForm(MailType::class, $mail);
+    
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid())   
+            { 
+                
+                if ($this->isCsrfTokenValid('delete'.$booking->getId(), $request->request->get('_token'))) 
+                {           
+                
+                    
+                    $mail->setBody($this->renderView(
+                                                        'communication/mail.html.twig', 
+                                                        ['mail' => $mail]
+                            
+                                                    )
+                                  )
+                    ;
+                    
+                    // Sending the warning email to the tenant
+                    if ($mail->sendEmail($mailer))
+                    {
+                    
+                        // Mail saving
+                        $manager->persist($mail);
+                        // Booking removing
+                        $booking->setDeleted(true);
+
+                        $manager->persist($booking);
+                        $manager->flush();
+
+                        $this->addFlash('success', "The booking was successfully removed and a email was sent to the tenant.");
+                
+                        return $this->redirectToRoute('booking.booking.requests');
+                        
+                    }
+                    else
+                    {
+            
+                        $this->addFlash('error', "An email couldn't be sent to the tenant. So, the booking wan't removed.");
+                
+                        return $this->redirectToRoute('booking.booking.show', array('id' => $booking->getId()));
+            
+                    }
+                }
+                else
+                {
+        
+                    $this->addFlash('error', "The token to remove this booking isn't valid.");
+            
+                    return $this->redirectToRoute('booking.booking.show', array('id' => $booking->getId()));
+        
+                }
+
+            }
+        
+        return $this->render('booking/remove.html.twig', [
+                                                            'booking' => $booking,
+                                                            'form' => $form->createView()
+                                                         ]
+                            )
+        ;
+
     }
 
     /**
@@ -323,4 +396,5 @@ class BookingController extends AbstractController
         return $this->render('booking/calendar.html.twig');
         
     }
+
 }

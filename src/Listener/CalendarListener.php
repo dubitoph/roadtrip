@@ -73,7 +73,7 @@ class CalendarListener
 
             $bookingEvent->addOption(
                                         'url',
-                                        $this->router->generate('booking.booking.show', ['id' => $booking->getId(),])
+                                        $this->router->generate('booking.booking.show', ['id' => $booking->getId()])
                                     )
             ;
 

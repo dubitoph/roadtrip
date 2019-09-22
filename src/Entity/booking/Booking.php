@@ -107,6 +107,11 @@ class Booking
     private $ratings;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleted;
+
+    /**
      * Operations when creating
      */
     public function __construct()
@@ -561,6 +566,34 @@ class Booking
             }
 
         }
+
+        return $this;
+
+    } 
+
+    /**
+     * Get if the booking is removed
+     *
+     * @return boolean|null
+     */
+    public function getDeleted(): ?bool
+    {
+
+        return $this->deleted;
+
+    }
+
+    /**
+     * Set if the booking is removed
+     *
+     * @param boolean $deleted
+     * 
+     * @return self
+     */
+    public function setDeleted(bool $deleted): self
+    {
+
+        $this->deleted = $deleted;
 
         return $this;
 

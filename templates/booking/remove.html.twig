@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Raodtripr - Remove a booking
+    
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+
+        <h1>Remove a booking</h1>
+
+        {% set messageValue = "Hello " ~ booking.user.firstname ~ "!
+
+I'm really sorry : my vehicle isn't available during your booking period. So, I'm forced to suppress it.
+            
+Best regards," ~ "
+                                                            
+" ~ app.user.firstname %}
+        
+        {{ form_start(form) }}
+
+            {{ form_row(form.message, {'value' : messageValue }) }}
+
+            <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ booking.id ) }}">
+        
+            <button type="submit" class="btn btn-success">Send</button>
+                
+        {{ form_end(form) }}
+        
+    </div>
+    
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+    {% endblock %}
+
+{% endblock %}

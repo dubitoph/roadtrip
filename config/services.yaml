@@ -23,6 +23,7 @@ parameters:
     booking_request_subject: 'New booking request from Roadtrip'
     booking_request_refused_subject: 'Your request booking is refused'
     booking_request_accepted_subject: 'Your request booking is accepted'
+    booking_removing_subject: 'Your booking was removed'
     password_Resetting_email_subject: 'Renew password on Roadtrip'
     approved_rating_subject: "Your rating was approved"
     removed_rating_subject: "Rating removed"

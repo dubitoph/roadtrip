@@ -49,6 +49,7 @@ Encore
     .addEntry('registration', './assets/js/security/registration.js')    
     .addEntry('threads', './assets/js/communication/threads.js')    
     .addEntry('bookingRequestsManagement', './assets/js/booking/bookingRequestsManagement.js')    
+    .addEntry('bookingRemoving', './assets/js/booking/bookingRemoving.js')    
     .addEntry('profile', './assets/js/user/profile.js')    
     .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')   
     .addEntry('editOwner', './assets/js/user/editOwner.js')

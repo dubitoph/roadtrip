@@ -48,7 +48,7 @@ class Mail
 
     /**
      * @ORM\Column(type="text")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $message;
 
@@ -56,7 +56,6 @@ class Mail
      * @ORM\Column(type="text")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Assert\NotBlank()
      */
     private $body;
 
