@@ -2,40 +2,48 @@
 
 {% block body %}
 
-    {{ include('_messages.html.twig') }}
+    <div class="container mt-5 mb-5">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+          <h1 class="text-center">Sign up</h1>
+            <div class="card">
+              <div class="card-body">
+                {{ include('_messages.html.twig') }}
+                {{ form_start(form) }}
 
-    <h1>Registration</h1>
+                    {{ form_row ( form.firstname, { 'label': 'Firstname', 'attr': { 'placeholder' : 'Firstname...' } } ) }}
+                    {{ form_row ( form.name, { 'label': 'Name', 'attr': { 'placeholder' : 'Name...' } } ) }}
+                    {{ form_row ( form.phoneNumber, { 'label': 'Phone', 'attr': { 'placeholder' : 'Phone...' } } ) }}
+                    {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
+                    {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
+                    {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
+                    {{ form_row ( form.confirmedPassword, { 'label': 'Password confirmation', 'attr': { 'placeholder' : 'Repeat your password...' } } ) }}
 
-    {{ form_start(form) }}
+                    {% if is_granted('ROLE_ADMIN') %}
 
-        {{ form_row ( form.firstname, { 'label': 'Firstname', 'attr': { 'placeholder' : 'Firstname...' } } ) }}
-        {{ form_row ( form.name, { 'label': 'Name', 'attr': { 'placeholder' : 'Name...' } } ) }}
-        {{ form_row ( form.phoneNumber, { 'label': 'Phone', 'attr': { 'placeholder' : 'Phone...' } } ) }}
-        {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
-        {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
-        {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
-        {{ form_row ( form.confirmedPassword, { 'label': 'Password confirmation', 'attr': { 'placeholder' : 'Repeat your password...' } } ) }}
+                        {{ form_row ( form.roles ) }}
 
-        {% if is_granted('ROLE_ADMIN') %}                   
+                    {% else %}
 
-            {{ form_row ( form.roles ) }}
+                        {{ form_row ( form.termsAccepted ) }}
 
-        {% else %}                   
+                    {% endif %}
 
-            {{ form_row ( form.termsAccepted ) }}
+                    <button type="submit" class="btn btn-success">Sign up</button>
 
-        {% endif %}
-        
-        <button type="submit" class="btn btn-success">Registration</button>
+                {{ form_end(form) }}
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
 
-    {{ form_end(form) }}
-    
     {% block javascripts %}
-        
+
         {{ parent() }}
-        
+
         {{ encore_entry_script_tags('registration') }}
-        
+
     {% endblock %}
 
-{% endblock %}  
+{% endblock %}

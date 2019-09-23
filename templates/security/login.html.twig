@@ -4,51 +4,49 @@
 
 {% block body %}
 
-    <div class="container mt-4">
+    <div class="container mt-5 mb-5">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+          <h1 class="text-center">Login</h1>
+            <div class="card">
+              <div class="card-body">
+                {{ include('_messages.html.twig') }}
+                {% if error %}
+                  <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                <form action="{{ path('security.login') }}" method="post">
 
-        {% if error %}
+                    <div class="form-group">
 
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <label for="username">Email address</label>
+                        <input type="text" placeholder="Email adress..." id="username" name="_username" class="form-control" value="{{ last_username }}"  required autofocus>
 
-        {% endif %}
+                    </div>
 
-        {{ include('_messages.html.twig') }}
+                    <div class="form-group">
 
-        <form action="{{ path('security.login') }}" method="post">
+                        <label for="password">Password</label>
+                        <input type="password" placeholder="Password..." id="password" name="_password" class="form-control" required>
 
-            <div class="form-group">
+                    </div>
 
-                <label for="username">Email address</label>
-                <input type="text" placeholder="Email adress..." id="username" name="_username" class="form-control" value="{{ last_username }}"  required autofocus>
+                    <div class="checkbox mb-3">
 
+                        <input type="checkbox" id="remember_me" name="_remember_me" checked/>
+                        <label for="remember_me">Remember me</label>
+
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn btn-primary">Login</button>
+
+                </form>
+                <p class="text-right"><a href="{{ path('security.resetting.request') }}">Forgotten password</a></p>
+              </div>
             </div>
-
-            <div class="form-group">
-
-                <label for="password">Password</label>
-                <input type="password" placeholder="Password..." id="password" name="_password" class="form-control" required>
-
-            </div>
-            
-            <div class="checkbox mb-3">
-
-                <input type="checkbox" id="remember_me" name="_remember_me" checked/>
-                <label for="remember_me">Remember me</label>
-
-            </div>
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-            <button type="submit" class="btn btn-primary">Login</button>
-
-        </form>
-            
-            <div>
-
-                <a href="{{ path('security.resetting.request') }}" class="btn btn-primary">Forgotten password</a>
-
-            </div>
-
+        </div>
+      </div>
     </div>
 
 {% endblock %}
