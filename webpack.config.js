@@ -19,6 +19,8 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
+    .addEntry('calendar', './assets/css/calendar.css')
+
     .addEntry('app', './assets/js/app.js')
     .addEntry('indexAdvert', './assets/js/backend/indexAdvert.js')
     .addEntry('indexEquipment', './assets/js/backend/indexEquipment.js')

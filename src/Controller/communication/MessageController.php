@@ -96,9 +96,6 @@ class MessageController extends AbstractController
 
         $mail->setSender($this->getUser())
              ->setReceiver($receiver)
-             ->setSubject('')
-             ->setMessage('')
-             ->setBody('The body')
              ->setThread($thread)
         ;
 

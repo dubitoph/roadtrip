@@ -1,0 +1,102 @@
+<div class="d-flex flex-row align-items-center justify-content-between mx-sm-3">
+
+    <h1>{{ month.toString }}</h1>
+
+    <div>
+
+        <a href="{{ path('calendar.show', { 'intMonth': month.previousMonth.month, 'intYear': month.previousMonth.year, 'vehicle': vehicleId }) }}" class="btn btn-primary">&lt;</a>    
+        <a href="{{ path('calendar.show', { 'intMonth': month.nextMonth.month, 'intYear': month.nextMonth.year, 'vehicle': vehicleId }) }}" class="btn btn-primary">&gt;</a>
+
+    </div>
+
+</div>
+
+<table class="calendar__table calendar__table--{{ month.getWeeks }}weeks">
+
+    {% for i in range(0, month.getWeeks - 1) %}
+
+        <tr>
+
+            {% set k = 0 %}
+
+            {% for day in month.days %}
+
+                {% set date = firstCalendarDay|date_modify("+" ~ (k + (i * 7)) ~ "day") %}
+
+                {% if month.getIfIsInMonth(date) %}
+                    
+                    <td>
+                            
+                {% else %}
+                        
+                    <td class="calendar__otherMonth">
+                            
+                {% endif %}
+
+                    {% if i == 0 %}
+                            
+                        <div class="calendar__weekDay">{{ day }}</div> 
+                                
+                    {% endif %}
+
+                    <div class="calendar__day">{{ date|date("d") }}</div>                       
+                        
+                    <div class="calendar__booking">
+
+                        AM : 
+                            
+                        {% if AMDays[date|date("Y-m-d")] is defined %}
+
+                            {% if app.user == AMDays[date|date("Y-m-d")].vehicle.advert.owner.user %} 
+                                    
+                                <a href="{{ path('booking.booking.show', { 'id': AMDays[date|date("Y-m-d")].id }) }}">{{ AMDays[date|date("Y-m-d")].title }}</a>
+
+                            {% else %} 
+                                    
+                                unavailable                                 
+
+                            {% endif %}
+                                
+                        {% else %}
+                                
+                            -
+
+                        {% endif %}
+                            
+                    </div>                      
+                        
+                    <div class="calendar__booking">
+
+                        PM : 
+                            
+                        {% if PMDays[date|date("Y-m-d")] is defined %}
+                            
+                            {% if app.user == PMDays[date|date("Y-m-d")].vehicle.advert.owner.user %} 
+                                    
+                                <a href="{{ path('booking.booking.show', { 'id': PMDays[date|date("Y-m-d")].id }) }}">{{ PMDays[date|date("Y-m-d")].title }}</a>
+
+                            {% else %} 
+                                    
+                                unavailable                                 
+
+                            {% endif %}
+                                
+                        {% else %}
+                                
+                            -
+
+                        {% endif %}
+                            
+                    </div>
+                            
+                </td>
+
+                {% set k = k + 1 %}
+
+            {% endfor %}
+
+        </tr>
+
+    {% endfor %}
+
+</table>
