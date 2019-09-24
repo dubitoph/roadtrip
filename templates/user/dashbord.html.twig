@@ -1,220 +1,111 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Your Raodtrip dashbord {% endblock %}
+{% block title %} Your Roadtripr dashboard {% endblock %}
 
 {% block body %}
-
-    <h1>Your Raodtrip dashbord</h1>
-
-    <div class="container mt4" style="float: left">
-
-        <div class="col-md-4">
-
-            {{ include('_messages.html.twig') }}
-
-            <div class="vertical-navbar">
-        
-                <ul class="navbar-nav mr-auto">
-
-                    {% if user.owner is not null %}
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="{{ path('booking.booking.requests') }}">My booking requests</a>
-
-                        </li>
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="{{ path('advert.owner') }}">My adverts</a>
-
-                        </li>
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="{{ path('user.owner.edit') }}">My owner contact informations</a>
-
-                        </li>
-    
-                        <li class="nav-item">
-
-                            <a class="nav-link"  href="{{ path('payment.owner.bills') }}">My bills</a>
-
-                        </li>
-                        
-                    {% endif %}
-    
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('user.user.edit') }}">My user data</a>
-
-                    </li>
-    
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('user.profile.update') }}">My profile ({{ profileCompletion }}% completed)</a>
-
-                    </li>
-    
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('security.resetting.dashbord') }}">My password</a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('user.favorites') }}">My favorites</a>
-
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('communication.messages') }}">My messages</a>
-                        
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('rating.dashbord') }}">My ratings</a>
-                        
-                    </li>
-
-                    <li class="nav-item">
-
-                        <a class="nav-link"  href="{{ path('booking.bookings') }}">My bookings</a>
-                        
-                    </li>
-    
-                </ul>
-    
-            </div>
-
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">My profile</h2>
+          {% if user.owner is not null %}({{ profileCompletion }}% completed)
+          {% endif %}
         </div>
-        
-    </div>    
+        <div class="card-body">
+        <div class="container mt-4">
+            Photo (<a href="">edit</a>)
+            <dl class="row">
+              <dt class="col-6 col-sm-6">Username :</dt>
+              <dd class="col-6 col-sm-6">{{ user.username }}</dd>
 
-    <div class="container mt-4">
-    
-        <div class="row">
- 
-            <div class="col-md-4">
+              <dt class="col-6 col-sm-6">First Name :</dt>
+              <dd class="col-6 col-sm-6">{{ user.firstname }}</dd>
 
-                Username :
+              <dt class="col-6 col-sm-6">Last Name :</dt>
+              <dd class="col-6 col-sm-6">{{ user.name }}</dd>
 
+              <dt class="col-6 col-sm-6">Phone :</dt>
+              <dd class="col-6 col-sm-6">{{ user.phoneNumber }}</dd>
+
+              {% if user.owner is not null %}
+              <dt class="col-6 col-sm-6">Company name :</dt>
+              <dd class="col-6 col-sm-6">{{ user.owner.companyName }}</dd>
+
+              <dt class="col-6 col-sm-6">Company number :</dt>
+              <dd class="col-6 col-sm-6">{{ user.owner.companyNumber }}</dd>
+
+              <dt class="col-6 col-sm-6">Billing address :</dt>
+              <dd class="col-6 col-sm-6">
+                  {{ user.owner.billingAddress.street }}, {{ user.owner.billingAddress.number }}  {% if user.owner.billingAddress.box %}/{{ user.owner.billingAddress.box }}{% endif %},
+                  {{ user.owner.billingAddress.zipCode }}  {{ user.owner.billingAddress.city }}, {{ user.owner.billingAddress.country }}
+                  {% if user.owner.billingAddress.state %}({{ user.owner.billingAddress.state }}{% endif %})
+              </dd>
+
+            </dl>
+            <hr />
+            {% if user.owner is not null %}
+            <ul>
+              <li><a href="{{ path('user.profile.update') }}">Modify my profile</a></li>
+              <li><a href="{{ path('user.user.edit') }}">My user data</a></li>
+              <li><a href="{{ path('security.resetting.dashbord') }}">Modify my password</a></li>
+              <li><a href="{{ path('user.owner.edit') }}">My owner contact informations</a></li>
+            </ul>
+            {% endif %}
             </div>
-
-            <div class="col-md-4">
-
-                {{ user.username }}
-
-            </div>
-
         </div>
-    
-        <div class="row">
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h1>Hi {{ user.username }}, what's up ?</h1>
 
-            <div class="col-md-4">
-
-                Firstname :
-
-            </div>
-
-            <div class="col-md-4">
-
-                {{ user.firstname }}
-
-            </div>
-
-        </div>
-    
-        <div class="row">
-
-            <div class="col-md-4">
-
-                Name :
-
-            </div>
-
-            <div class="col-md-4">
-
-                {{ user.name }}
-
-            </div>
-
-        </div>
-    
-        <div class="row">
-
-            <div class="col-md-4">
-
-                Phone :
-
-            </div>
-
-            <div class="col-md-4">
-
-                {{ user.phoneNumber }}
-
-            </div>
-
-        </div>
+        {{ include('_messages.html.twig') }}
 
         {% if user.owner is not null %}
-    
-            <div class="row">
 
-                <div class="col-md-4">
+        <h3>My booking requests</h3>
+        <div class="alert alert-warning" role="alert">
+          Currently no request
+        </div>
+        <a class="btn btn-secondary" href="{{ path('booking.booking.requests') }}">All requests</a>
+        <hr />
 
-                    Company name :
+        <h3>My adverts (12)</h3>
+        <ul>
+          <li><a href="">Last advert 1</a></li>
+          <li><a href="">Last advert 2</a></li>
+        </ul>
+        <a class="btn btn-secondary"  href="{{ path('advert.owner') }}">All adverts</a>
+        <hr />
 
-                </div>
+        <h3>My bills</h3>
+        <a class="btn btn-secondary"  href="{{ path('payment.owner.bills') }}">All bills</a>
+        <hr />
 
-                <div class="col-md-4">
-
-                    {{ user.owner.companyName }}
-
-                </div>
-
-            </div>
-    
-            <div class="row">
-
-                <div class="col-md-4">
-
-                    Company number :
-
-                </div>
-
-                <div class="col-md-4">
-
-                    {{ user.owner.companyNumber }}
-
-                </div>
-
-            </div>
-    
-            <div class="row">
-                
-
-                <div class="col-md-4">
-
-                    Billing address :
-
-                </div>
-
-                <div class="col-md-4">
-
-                    {{ user.owner.billingAddress.street }}, {{ user.owner.billingAddress.number }}  {% if user.owner.billingAddress.box %}/{{ user.owner.billingAddress.box }}{% endif %},
-                    {{ user.owner.billingAddress.zipCode }}  {{ user.owner.billingAddress.city }}, {{ user.owner.billingAddress.country }} 
-                    {% if user.owner.billingAddress.state %}({{ user.owner.billingAddress.state }}{% endif %})
-
-                </div>
-
-            </div>
-            
         {% endif %}
 
+        <h3>My favorites</h3>
+        <a class="btn btn-secondary"  href="{{ path('user.favorites') }}">All favorites</a>
+        <hr />
+
+        <h3>My messages</h3>
+        <a class="btn btn-secondary"  href="{{ path('communication.messages') }}">All messages</a>
+        <hr />
+
+        <h3>My ratings</h3>
+        <a class="btn btn-secondary"  href="{{ path('rating.dashbord') }}">All ratings</a>
+        <hr />
+
+        <h3>My bookings</h3>
+        <a class="btn btn-secondary"  href="{{ path('booking.bookings') }}">all bookings</a>
+        <hr />
+
     </div>
+
+    </div>
+
+</div>
+
+        {% endif %}
 
 {% endblock %}
