@@ -73,6 +73,10 @@ class BookingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {           
 
+            // For a good showing in the calendar
+            $booking->getBeginAt()->setTime('12', '0', '0');
+            $booking->getEndAt()->setTime('11', '59', '59');
+            
             $mail->setReceiver($advert->getOwner()->getUser())
                  ->setSubject($this->getParameter('booking_request_subject'))
                  ->setSender($user)

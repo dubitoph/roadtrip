@@ -202,7 +202,7 @@
 
                 <div id="vehicleCalendar" class="row">
                 
-                    {% include '@Calendar/calendar.html' %}
+                    {{ render(controller('App\\Controller\\calendar\\CalendarController::show', { 'vehicle': advert.vehicle.id, 'toInclude': true })) }}
 
                 </div>
 

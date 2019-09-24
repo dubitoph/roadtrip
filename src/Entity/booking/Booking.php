@@ -37,7 +37,7 @@ class Booking
      *      message = "The begining date caun't be empty."
      * )
      * @Assert\Type("\DateTime")
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThanOrEqual("today")
      */
     private $beginAt;
 
@@ -48,7 +48,7 @@ class Booking
      *      message = "The end date caun't be empty."
      * )
      * @Assert\Type("\DateTime")
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThanOrEqual("today")
      * @Assert\GreaterThan(propertyPath="beginAt")
      */
     private $endAt;

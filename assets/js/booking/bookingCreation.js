@@ -47,7 +47,7 @@ jQuery(document).ready(function() {
         $('input.js-datepicker-date').each(function(e) {
 
             var sDate = $(this).val();
-            var dateTime = moment(sDate, localeDateFormat).toISOString();
+            var dateTime = moment(sDate, localeDateFormat).toISOString(true);
 
             $(this).val(dateTime);
 

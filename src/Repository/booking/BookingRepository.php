@@ -27,7 +27,7 @@ class BookingRepository extends ServiceEntityRepository
     {
 
         $query = $this->createQueryBuilder('b')
-                      ->where('b.beginAt BETWEEN :start and :end')
+                      ->where('(b.beginAt BETWEEN :start and :end) or (b.endAt BETWEEN :start and :end)')
                       ->andWhere('b.accepted = true')
                       ->andWhere('b.deleted is null')
         ;

@@ -41,8 +41,6 @@ class Mail
     /**
      * @ORM\Column(type="string", length=50)
      * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Assert\NotBlank()
      */
     private $subject;
 
