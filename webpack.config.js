@@ -45,7 +45,6 @@ Encore
     .addEntry('ratingManagement', './assets/js/rating/ratingManagement.js')
     .addEntry('showAdvert', './assets/js/advert/showAdvert.js')
     .addEntry('advertsSearch', './assets/js/advert/advertsSearch.js')
-    .addEntry('showCalendar', './assets/js/advert/showCalendar.js')
     .addEntry('home', './assets/js/home/home.js')
     .addEntry('payment', './assets/js/payment/payment.js')    
     .addEntry('registration', './assets/js/security/registration.js')    
@@ -75,7 +74,7 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

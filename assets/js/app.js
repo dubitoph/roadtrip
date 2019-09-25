@@ -8,17 +8,13 @@
 // any CSS you require will output into a single css file (app.css in this case)
 //require('../css/app.css');
 
-import '../css/app.css';
-import Map from './modules/map';
+import '../css/app.scss';
 import $ from 'jquery';
+global.$ = global.jQuery = $;
+
 import 'slick-carousel'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-
-import '@fullcalendar/core/main.css';
-import '@fullcalendar/daygrid/main.css';
-import '@fullcalendar/timegrid/main.css';
-import '@fullcalendar/list/main.css';
 
 import moment from 'moment';
 window['moment'] = moment;
@@ -29,16 +25,9 @@ import '../../node_modules/intl-tel-input/build/css/intlTelInput.css';
 import 'intl-tel-input/build/js/utils.js'
 window['intlTelInput'] = intlTelInput;
 
-
-/*
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
-*/
-global.$ = global.jQuery = $;
-
 require('select2');
+
+import 'bootstrap';
 
 jQuery( document ).ready( function( $ ){
 
@@ -50,38 +39,8 @@ jQuery( document ).ready( function( $ ){
     arrows: true
     
   });
-/*
-  var calendarEl = document.getElementById('calendar-holder');
 
-  var calendar = new Calendar(calendarEl, {
-    defaultView: 'dayGridMonth',
-    editable: true,
-    eventSources: [
-        {
-            url: "/fc-load-events",
-            type: "POST",
-            data: {
-                filters: {},
-            },
-            error: () => {
-                // alert("There was an error while fetching FullCalendar!");
-            },
-        },
-    ],
-    header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay',
-    },
-    plugins: [ dayGridPlugin, timeGridPlugin, listPlugin ], // https://fullcalendar.io/docs/plugin-index
-    timeZone: 'UTC',
-  });
-
-  calendar.render();
- */   
 });
-
-//Map.init();
 
 export function deletePhoto($element) 
 {
