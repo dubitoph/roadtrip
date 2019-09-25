@@ -42,7 +42,7 @@
                     <button type="button" class="btn btn-primary float-right" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#modalBasket">modal qui ne marche pas</button>
                      -->
 
-                      <a id="call_modal_btn" class="btn btn-primary float-right" data-toggle="modal" href="#modalDiv">Open Modal</a>
+                      <a id="call_modal_btn" class="btn btn-primary float-right" data-toggle="modal" href="#myModal">Open Modal</a>
 
                     </li>
                 </ul>
@@ -67,8 +67,19 @@
 
         </nav>
 
-            {% block body %}              
-            {% endblock %}
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+
+          <div class="modal-dialog">
+
+            {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
+
+          </div>
+
+        </div>
+
+        {% block body %}              
+        {% endblock %}
 
         <footer class="footer bg-dark pt-5 pb-5">
           <div class="container">

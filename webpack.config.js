@@ -19,7 +19,6 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
-    .addEntry('calendar', './assets/css/calendar.css')
 
     .addEntry('app', './assets/js/app.js')
     .addEntry('indexAdvert', './assets/js/backend/indexAdvert.js')
@@ -54,7 +53,8 @@ Encore
     .addEntry('profile', './assets/js/user/profile.js')    
     .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')   
     .addEntry('editOwner', './assets/js/user/editOwner.js')
-    //.addEntry('page2', './assets/js/page2.js')
+    
+    .addEntry('calendar', './assets/css/calendar.css')
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
