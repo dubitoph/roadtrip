@@ -121,9 +121,11 @@
 
         {% block javascripts %}
 
-            {{ encore_entry_script_tags ( 'app' ) }}
+            {{ encore_entry_script_tags ('app') }}
 
             <script src="https://js.stripe.com/v3/"></script>
+
+            <script>console.log('home javascript block loaded')</script>
 
         {% endblock %}
 

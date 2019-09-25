@@ -12,6 +12,8 @@ import '../css/app.scss';
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
+import 'bootstrap-datepicker';
+
 import 'slick-carousel'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
