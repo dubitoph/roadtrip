@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Roadt{% block title %}Welcome!{% endblock %}</title>
+      <title>Roadtripr | {% block title %}Welcome!{% endblock %}</title>
 
         {% block stylesheets %}
 
@@ -37,21 +37,13 @@
                     <li class="nav-item">
                         <a class="nav-link {% if current_menu is defined and current_menu == 'add_advert' %}active{% endif %}" href="{{ path('advert.description.create') }}">List your motorhome</a>
                     </li>
-                    <li>
-                    <!-- Button trigger modal
-                    <button type="button" class="btn btn-primary float-right" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#modalBasket">modal qui ne marche pas</button>
-                     -->
-
-                      <a id="call_modal_btn" class="btn btn-primary float-right" data-toggle="modal" href="#myModal">Open Modal</a>
-
-                    </li>
                 </ul>
 
                 <div class="btn-group" role="group" aria-label="Basic example">
                 {% if app.user %}
                     <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
                 {% else %}
-                    <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" href="{{ path('security.login') }}">Login</a>
+                    <a id="call_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-toggle="modal" href="#myModal">Login</a>
                 {% endif %}
 
                   {% if app.user %}
@@ -78,7 +70,7 @@
 
         </div>
 
-        {% block body %}              
+        {% block body %}
         {% endblock %}
 
         <footer class="footer bg-dark pt-5 pb-5">

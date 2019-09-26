@@ -1,7 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .autoProvidejQuery()    
+    .autoProvidejQuery()
 
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
@@ -45,15 +45,15 @@ Encore
     .addEntry('showAdvert', './assets/js/advert/showAdvert.js')
     .addEntry('advertsSearch', './assets/js/advert/advertsSearch.js')
     .addEntry('home', './assets/js/home/home.js')
-    .addEntry('payment', './assets/js/payment/payment.js')    
-    .addEntry('registration', './assets/js/security/registration.js')    
-    .addEntry('threads', './assets/js/communication/threads.js')    
-    .addEntry('bookingRequestsManagement', './assets/js/booking/bookingRequestsManagement.js')    
-    .addEntry('bookingRemoving', './assets/js/booking/bookingRemoving.js')    
-    .addEntry('profile', './assets/js/user/profile.js')    
-    .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')   
+    .addEntry('payment', './assets/js/payment/payment.js')
+    .addEntry('registration', './assets/js/security/registration.js')
+    .addEntry('threads', './assets/js/communication/threads.js')
+    .addEntry('bookingRequestsManagement', './assets/js/booking/bookingRequestsManagement.js')
+    .addEntry('bookingRemoving', './assets/js/booking/bookingRemoving.js')
+    .addEntry('profile', './assets/js/user/profile.js')
+    .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')
     .addEntry('editOwner', './assets/js/user/editOwner.js')
-    
+
     .addEntry('calendar', './assets/css/calendar.css')
 
     // will require an extra script tag for runtime.js

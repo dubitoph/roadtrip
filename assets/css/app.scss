@@ -1,5 +1,21 @@
+/* 1. import only the necessary Bootstrap files */
+@import "type";
+
+/* 2. begin customization -------- */
+/* theme color */
+$black:                       #322A1D;
+/* radius */
+$border-radius:               5px;
+/* link */
+$link-color:                  #E7553A;
+/* font */
+$font-family-base:            'Basier',Helvetica,Arial,sans-serif;
+$font-family-alt:             'Basier',Helvetica,Arial,sans-serif;
+$font-family-alt2:            'Basier',Helvetica,Arial,sans-serif;
+$font-weight-normal:          normal;
+$font-weight-bold:            bold;
+
+
+/* 3. Bootstrap */
 @import "~bootstrap/scss/bootstrap";
-
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css";
-
-
