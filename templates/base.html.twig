@@ -43,7 +43,7 @@
                 {% if app.user %}
                     <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
                 {% else %}
-                    <a id="call_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-toggle="modal" href="#myModal">Login</a>
+                    <a id="call_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#myModal">Login</a>
                 {% endif %}
 
                   {% if app.user %}
@@ -62,11 +62,7 @@
         <!-- Modal -->
         <div id="myModal" class="modal fade" role="dialog">
 
-          <div class="modal-dialog">
-
             {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
-
-          </div>
 
         </div>
 
