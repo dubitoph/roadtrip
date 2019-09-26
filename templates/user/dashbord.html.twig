@@ -65,15 +65,24 @@
 
         <h3>My booking requests</h3>
         <div class="alert alert-warning" role="alert">
+          {% if bookingRequestsNumber is not null %}
+            {% if bookingRequestsNumber > 1 %}
+            {{ bookingRequestsNumber }} requests
+            {% else %}
+            1 request
+            {% endif %}
+          {% else %}
           Currently no request
+          {% endif %}            
         </div>
         <a class="btn btn-secondary" href="{{ path('booking.booking.requests') }}">All requests</a>
         <hr />
 
-        <h3>My adverts (12)</h3>
+        <h3>My adverts ({{ advertsNumber }})</h3>
         <ul>
-          <li><a href="">Last advert 1</a></li>
-          <li><a href="">Last advert 2</a></li>
+          {% for advert in advertsToShow %}
+            <li><a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">{{ advert.title }}</a></li>
+          {% endfor %}
         </ul>
         <a class="btn btn-secondary"  href="{{ path('advert.owner') }}">All adverts</a>
         <hr />
@@ -97,7 +106,7 @@
         <hr />
 
         <h3>My bookings</h3>
-        <a class="btn btn-secondary"  href="{{ path('booking.bookings') }}">all bookings</a>
+        <a class="btn btn-secondary"  href="{{ path('booking.bookings') }}">All bookings</a>
         <hr />
 
     </div>

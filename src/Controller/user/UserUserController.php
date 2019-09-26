@@ -4,6 +4,7 @@ namespace App\Controller\user;
 
 use App\Entity\user\User;
 use App\Form\user\EditUserType;
+use App\Repository\booking\BookingRepository;
 use App\Repository\user\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\rating\RatingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class UserUserController extends AbstractController
 {
@@ -107,7 +109,7 @@ class UserUserController extends AbstractController
      * 
      * @return Response
      */
-    public function dashbord(RatingRepository $ratingRepository): Response
+    public function dashbord(RatingRepository $ratingRepository, BookingRepository $bookingRepository): Response
     {
      
         $user = $this->getUser();
@@ -125,16 +127,46 @@ class UserUserController extends AbstractController
             $profileTab[3] = $profile->getAddress();
             $profileTab[4] = $profile->getAboutMe();
 
-            $numberItems = 0;
+            $itemsNumber = 0;
 
-            $profileCompletion = ($numberItems / count($profileTab)) * 100;
+            $profileCompletion = ($itemsNumber / count($profileTab)) * 100;
+
+        }
+
+        // Calculate booking requests number
+
+        $ownerVehicles = array();
+        $bookingRequestsNumber = null;
+        $ownerVehicles = new ArrayCollection();
+
+        $adverts = $this->getUser()->getOwner()->getAdverts();
+        $advertsToShowNumber = $this->getParameter('dashbord_number_adverts');
+        $advertsToShow = $adverts->slice(0, $advertsToShowNumber);
+
+        $advertsNumber = $adverts->count();
+
+        foreach ($adverts as $advert) 
+        {
+
+            $ownerVehicles->add($advert->getVehicle());
+
+        }
+        
+        if(count($ownerVehicles) > 0)
+        {
+        
+            $bookingRequestsNumber = $bookingRepository->findOpenedRequestsNumber($ownerVehicles);
 
         }
         
         return $this->render('user/dashbord.html.twig', [
                                                             'user' => $user,
                                                             'current_menu' => 'dashbord',
-                                                            'profileCompletion' => number_format($profileCompletion, 0)
+                                                            'profileCompletion' => number_format($profileCompletion, 0),
+                                                            'bookingRequestsNumber' => $bookingRequestsNumber,
+                                                            'adverts' => $adverts,
+                                                            'advertsNumber' => $advertsNumber,
+                                                            'advertsToShow' => $advertsToShow
                                                         ]
                             )
         ; 

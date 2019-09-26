@@ -43,6 +43,7 @@ parameters:
     stripe_invoice_created_endpoint_secret: whsec_cVHIBYMuLNDxe850TwK6hZJ3Vwod37UA
     stripe_betas: payment_intent_beta_3
     bills_directory: '%kernel.project_dir%/bills'
+    dashbord_number_adverts: 2
     payment:
         currency: EUR
         decimal: true
@@ -70,10 +71,6 @@ services:
         tags:
             - { name: doctrine.event_subscriber }
         arguments: [ '@service_container' ]
-
-    App\Listener\CalendarListener:
-        tags:
-            - { name: 'kernel.event_listener', event: 'calendar.set_data', method: load }
     App\Upload\PhotoDirectoryNamer:
         public: true
     twig.extension.intl:

@@ -64,12 +64,31 @@ class BookingRepository extends ServiceEntityRepository
                     ->andWhere('b.vehicle IN (:ownerVehicles)')
                     ->andWhere('b.accepted is NULL')
                     ->andWhere('b.refused is NULL')
+                    ->andWhere('b.deleted is NULL')
                     ->setParameter('ownerVehicles', $ownerVehicles)
                     ->orderBy('b.createdAt', 'ASC')
                     ->getQuery()
                     ->getResult()
         ;
     }
+
+    /**
+     * @return int
+     */
+   public function findOpenedRequestsNumber($ownerVehicles)
+   {
+       
+        return $this->createQueryBuilder('b')
+                    ->select('count(b.id)')
+                    ->andWhere('b.vehicle IN (:ownerVehicles)')
+                    ->andWhere('b.accepted is NULL')
+                    ->andWhere('b.refused is NULL')
+                    ->andWhere('b.deleted is NULL')
+                    ->setParameter('ownerVehicles', $ownerVehicles)
+                    ->getQuery()
+                    ->getSingleScalarResult()
+        ;
+   }
 
     /**
      * @return Booking[]

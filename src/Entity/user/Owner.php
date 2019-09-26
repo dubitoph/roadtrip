@@ -50,6 +50,7 @@ class Owner
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\advert\Advert", mappedBy="owner")
+     * @OrderBy({"createdAt" = "DESC"})
      */
     private $adverts;
 
