@@ -189,6 +189,9 @@
       </div>
     </section>
 
+    {{ include('_messages.html.twig') }}
+    <input type="hidden" id="urlAjaxSession" name="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+
     {% block javascripts %}
 
         {{ parent() }}
@@ -196,8 +199,5 @@
         {{ encore_entry_script_tags('home') }}
 
     {% endblock %}
-
-    {{ include('_messages.html.twig') }}
-    <input type="hidden" id="urlAjaxSession" name="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
 
 {% endblock %}

@@ -11,7 +11,7 @@
             <link rel="stylesheet" href="/build/app.css"> -->
 
             {# 'app' must match the first argument to addEntry() in webpack.config.js #}
-            {{ encore_entry_link_tags ( 'app' ) }}
+            {{ encore_entry_link_tags ( 'appCss' ) }}
 
          {% endblock %}
 
@@ -62,7 +62,7 @@
         {% set messages = app.flashes %}
 
         <!-- Modal -->
-        {% if app.flashes|length > 0 %}          
+        {% if messages|length > 0 %}          
           <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
         {% else %}
           <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>          
@@ -146,11 +146,13 @@
 
         {% block javascripts %}
 
-            {{ encore_entry_script_tags ('app') }}
+            {{ encore_entry_script_tags ('appJs') }}
 
             <script src="https://js.stripe.com/v3/"></script>
                 
             <script>
+              
+              console.log('base loaded');
               $(document).ready(function() {
 
                 if($('#loginModal').data('visibility') == '1') 

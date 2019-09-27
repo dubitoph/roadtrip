@@ -8,7 +8,8 @@
 // any CSS you require will output into a single css file (app.css in this case)
 //require('../css/app.css');
 
-import '../css/app.scss';
+//import '../css/app.scss';
+
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
