@@ -27,13 +27,14 @@ import '../../node_modules/intl-tel-input/build/css/intlTelInput.css';
 import 'intl-tel-input/build/js/utils.js'
 window['intlTelInput'] = intlTelInput;
 
-import 'select2';
+import select2 from'select2';
+window['select2'] = select2;
 
 import 'bootstrap';
 
 jQuery( document ).ready( function( $ ){
 
-  //$('select').select2();
+  $('[select]').select2();
   
   $('[data-slider]').slick({
   
