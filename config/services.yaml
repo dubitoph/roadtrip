@@ -77,6 +77,8 @@ services:
         class: Twig\Extensions\IntlExtension
         tags:
             - { name: twig.extension }
+    authentication_handler:
+        class: App\Handler\AuthenticationHandler
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones 

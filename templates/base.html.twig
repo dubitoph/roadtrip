@@ -43,7 +43,7 @@
                 {% if app.user %}
                     <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
                 {% else %}
-                    <a id="call_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#myModal">Login</a>
+                    <a id="call_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
                 {% endif %}
 
                   {% if app.user %}
@@ -58,11 +58,37 @@
             </div>
 
         </nav>
+        
+        {% set messages = app.flashes %}
 
         <!-- Modal -->
-        <div id="myModal" class="modal fade" role="dialog">
-
-            {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
+        {% if app.flashes|length > 0 %}          
+          <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
+        {% else %}
+          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>          
+        {% endif %}        
+        
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Login</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div>                  
+                        {% for message in messages %}
+                          <div class="alert alert-danger">
+                            {{ message[0] }}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         </div>
 
@@ -123,8 +149,19 @@
             {{ encore_entry_script_tags ('app') }}
 
             <script src="https://js.stripe.com/v3/"></script>
+                
+            <script>
+              $(document).ready(function() {
 
-            <script>console.log('home javascript block loaded')</script>
+                if($('#loginModal').data('visibility') == '1') 
+                {
+
+                  $('#loginModal').modal('show');
+                  
+                }
+                  
+              });
+            </script>
 
         {% endblock %}
 

@@ -35,12 +35,14 @@ security:
             form_login: 
                 login_path: security.login
                 check_path: security.login
-                default_target_path: /user/dashbord
                 csrf_token_generator: security.csrf.token_manager
+                use_referer: true
+                failure_handler: authentication_handler
 
             logout:
                 path: security.logout
                 target: /
+                success_handler: authentication_handler
 
             remember_me:
                 secret:   '%kernel.secret%'
