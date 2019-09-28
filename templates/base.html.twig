@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Roadtripr | {% block title %}Welcome!{% endblock %}</title>
+        <title>Roadtripr | {% block title %}Welcome!{% endblock %}</title>
 
         {% block stylesheets %}
 
@@ -15,17 +15,18 @@
     <body>
 
 
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar fixed-top navbar-expand-lg">
             <a class="navbar-brand" href="{{ path('home') }}"><img src="/images/roadtripr.svg" alt="Roadtripr" /></a>
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarColor01">
+            <div class="collapse navbar-collapse" id="navbar">
 
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
-                <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="#">How does it work ?</a>
+                    <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="#">How does it work ?</a>
                   </li>
                     <li class="nav-item">
                         <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="{{ path('advert.index') }}">All adverts</a>
@@ -54,23 +55,23 @@
             </div>
 
         </nav>
-        
+
         {% set messages = app.flashes %}
 
         <!-- Modal -->
-        {% if messages|length > 0 %}          
+        {% if messages|length > 0 %}
           <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
         {% else %}
-          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>          
-        {% endif %}        
-        
+          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>
+        {% endif %}
+
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Login</h4>
                     </div>
                     <div class="modal-body">
-                      <div>                  
+                      <div>
                         {% for message in messages %}
                           <div class="alert alert-danger">
                             {{ message[0] }}
@@ -145,9 +146,9 @@
             {{ encore_entry_script_tags ('app') }}
 
             <script src="https://js.stripe.com/v3/"></script>
-                
+
             <script>
-              
+
               console.log('base loaded');
 
             </script>

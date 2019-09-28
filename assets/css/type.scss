@@ -12,6 +12,13 @@ body{
 }
 @font-face {
   font-family: 'Basier';
+  src: url('/fonts/Basier-Circle-regular-webfont/basiercircle-regular-webfont.woff') format('woff'),
+       url('/fonts/Basier-Circle-regular-webfont/basiercircle-regular-webfont.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Basier';
   src: url('/fonts/Basier-Circle-medium-webfont/basiercircle-medium-webfont.woff') format('woff'),
        url('/fonts/Basier-Circle-medium-webfont/basiercircle-medium-webfont.woff2') format('woff2');
   font-weight: 300;
@@ -29,5 +36,12 @@ body{
   src: url('/fonts/Basier-Circle-bold-webfont/basiercircle-bold-webfont.woff') format('woff'),
        url('/fonts/Basier-Circle-bold-webfont/basiercircle-bold-webfont.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Basier';
+  src: url('/fonts/Basier-Circle-bold-webfont/basiercircle-bold-webfont.woff') format('woff'),
+       url('/fonts/Basier-Circle-bold-webfont/basiercircle-bold-webfont.woff2') format('woff2');
+  font-weight: bold;
   font-style: normal;
 }
