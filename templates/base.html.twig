@@ -7,13 +7,9 @@
 
         {% block stylesheets %}
 
-            <!-- Renders a link tag (if your module requires any CSS)
-            <link rel="stylesheet" href="/build/app.css"> -->
+          {{ encore_entry_link_tags ( 'app' ) }}
 
-            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
-            {{ encore_entry_link_tags ( 'app' ) }}
-
-         {% endblock %}
+        {% endblock %}
 
     </head>
     <body>
@@ -47,7 +43,7 @@
                 {% endif %}
 
                   {% if app.user %}
-                      <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'dashbord' %}active{% endif %}" href="{{ path('user.dashbord') }}">My dashbord</a>
+                      <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
                   {% endif %}
 
                   {% if not app.user %}
@@ -153,6 +149,7 @@
             <script>
               
               console.log('base loaded');
+
             </script>
 
         {% endblock %}

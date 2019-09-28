@@ -43,7 +43,7 @@ parameters:
     stripe_invoice_created_endpoint_secret: whsec_cVHIBYMuLNDxe850TwK6hZJ3Vwod37UA
     stripe_betas: payment_intent_beta_3
     bills_directory: '%kernel.project_dir%/bills'
-    dashbord_number_adverts: 2
+    dashboard_number_adverts: 2
     payment:
         currency: EUR
         decimal: true

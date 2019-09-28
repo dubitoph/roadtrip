@@ -61,7 +61,7 @@ class UserUserController extends AbstractController
 
             $this->addFlash('success', "Your profile has been changed successfully.");
 
-            return $this->redirectToRoute('user.dashbord');
+            return $this->redirectToRoute('user.dashboard');
 
         }
      
@@ -101,15 +101,15 @@ class UserUserController extends AbstractController
     }
 
     /**
-     * Access to the user dashbord
+     * Access to the user dashboard
      * 
-     * @Route("/user/dashbord", name="user.dashbord")
+     * @Route("/user/dashboard", name="user.dashboard")
      *
      * @param RatingRepository $ratingRepository
      * 
      * @return Response
      */
-    public function dashbord(RatingRepository $ratingRepository, BookingRepository $bookingRepository): Response
+    public function dashboard(RatingRepository $ratingRepository, BookingRepository $bookingRepository): Response
     {
      
         $user = $this->getUser();
@@ -140,7 +140,7 @@ class UserUserController extends AbstractController
         $ownerVehicles = new ArrayCollection();
 
         $adverts = $this->getUser()->getOwner()->getAdverts();
-        $advertsToShowNumber = $this->getParameter('dashbord_number_adverts');
+        $advertsToShowNumber = $this->getParameter('dashboard_number_adverts');
         $advertsToShow = $adverts->slice(0, $advertsToShowNumber);
 
         $advertsNumber = $adverts->count();
@@ -159,9 +159,9 @@ class UserUserController extends AbstractController
 
         }
         
-        return $this->render('user/dashbord.html.twig', [
+        return $this->render('user/dashboard.html.twig', [
                                                             'user' => $user,
-                                                            'current_menu' => 'dashbord',
+                                                            'current_menu' => 'dashboard',
                                                             'profileCompletion' => number_format($profileCompletion, 0),
                                                             'bookingRequestsNumber' => $bookingRequestsNumber,
                                                             'adverts' => $adverts,

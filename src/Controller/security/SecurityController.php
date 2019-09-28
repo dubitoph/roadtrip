@@ -154,7 +154,7 @@ class SecurityController extends AbstractController
 
         $this->addFlash('success', 'Your account was successfully activated.');
         
-        return $this->redirectToRoute('user.dashbord');
+        return $this->redirectToRoute('user.dashboard');
     
     }
 
@@ -169,14 +169,14 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-/*        
+        
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) 
         {
 
-            return $this->redirectToRoute('user.dashbord');
+            return $this->redirectToRoute('user.dashboard');
 
         }
-*/       
+       
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -324,9 +324,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * User password update from the dashbord
+     * User password update from the dashboard
      * 
-     * @Route("security/resetting/dashbord", name="security.resetting.dashbord")
+     * @Route("security/resetting/dashboard", name="security.resetting.dashboard")
      *
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
@@ -334,7 +334,7 @@ class SecurityController extends AbstractController
      * 
      * @return void
      */
-    public function resettingDashbord(Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager)
+    public function resettingDashboard(Request $request, UserPasswordEncoderInterface $encoder, ObjectManager $manager)
     {
 
         $user = $this->getUser();
@@ -404,7 +404,7 @@ class SecurityController extends AbstractController
             if ($this->isGranted('ROLE_USER')) 
             {
 
-                return $this->redirectToRoute('user.dashbord');
+                return $this->redirectToRoute('user.dashboard');
 
             }
             else
