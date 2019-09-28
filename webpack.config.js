@@ -20,7 +20,7 @@ Encore
      * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
      */
 
-    .addEntry('appJs', './assets/js/app.js')
+    .addEntry('app', './assets/js/app.js')
     .addEntry('indexAdvert', './assets/js/backend/indexAdvert.js')
     .addEntry('indexEquipment', './assets/js/backend/indexEquipment.js')
     .addEntry('indexSort', './assets/js/backend/indexSort.js')
@@ -54,7 +54,6 @@ Encore
     .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')
     .addEntry('editOwner', './assets/js/user/editOwner.js')
 
-    .addEntry('appCss', './assets/css/app.scss')
     .addEntry('calendar', './assets/css/calendar.css')
 
     // will require an extra script tag for runtime.js

@@ -8,7 +8,7 @@
 // any CSS you require will output into a single css file (app.css in this case)
 //require('../css/app.css');
 
-//import '../css/app.scss';
+import '../css/app.scss';
 
 import $ from 'jquery';
 global.$ = global.jQuery = $;
@@ -43,6 +43,14 @@ jQuery( document ).ready( function( $ ){
     arrows: true
     
   });
+
+  // Display the login modal form if there is an autentication error
+  if($('#loginModal').data('visibility') == '1') 
+    {
+
+      $('#loginModal').modal('show');
+      
+    }
 
 });
 

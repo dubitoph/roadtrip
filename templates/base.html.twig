@@ -11,7 +11,7 @@
             <link rel="stylesheet" href="/build/app.css"> -->
 
             {# 'app' must match the first argument to addEntry() in webpack.config.js #}
-            {{ encore_entry_link_tags ( 'appCss' ) }}
+            {{ encore_entry_link_tags ( 'app' ) }}
 
          {% endblock %}
 
@@ -146,23 +146,13 @@
 
         {% block javascripts %}
 
-            {{ encore_entry_script_tags ('appJs') }}
+            {{ encore_entry_script_tags ('app') }}
 
             <script src="https://js.stripe.com/v3/"></script>
                 
             <script>
               
               console.log('base loaded');
-              $(document).ready(function() {
-
-                if($('#loginModal').data('visibility') == '1') 
-                {
-
-                  $('#loginModal').modal('show');
-                  
-                }
-                  
-              });
             </script>
 
         {% endblock %}
