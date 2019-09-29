@@ -1,13 +1,33 @@
 /* 1. import only the necessary Bootstrap files */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
 @import "type";
 
 /* 2. begin customization -------- */
 /* theme color */
 $black:                       #322A1D;
+$body-color:                  #322A1D;
+$gray-600:                    #98948E;
+$red:                         #D73517;
+$orange:                      #E7553A;
+$yellow:                      #FBDF8F;
+$green:                       #C9DB0D;
+$blue:                        #578ACC;
+$gray:                        #CCCAC6;
+$theme-colors: (
+  primary: #E7553A,
+  warning: #D73517,
+  success: #C9DB0D,
+  info:    #578ACC,
+  light:   #EFEDE9,
+  dark:    #322A1D
+);
 /* radius */
 $border-radius:               5px;
 /* link */
 $link-color:                  #E7553A;
+$link-hover-color:            #BE422B;
+$link-decoration:             underline;
 /* font */
 $font-family-base:            'Basier',Helvetica,Arial,sans-serif;
 $font-family-alt:             'Basier',Helvetica,Arial,sans-serif;
@@ -15,7 +35,148 @@ $font-family-alt2:            'Basier',Helvetica,Arial,sans-serif;
 $font-weight-normal:          normal;
 $font-weight-bold:            bold;
 
+$h1-font-size:                4.3rem;
+$h2-font-size:                1.75rem;
+$h3-font-size:                1.45rem;
+$h4-font-size:                1.25rem;
+$h5-font-size:                1.15rem;
+$headings-font-weight:        700;
+$headings-line-height:        0.9;
+$headings-color:              $body-color;
 
+/* buttons */
+$btn-padding-y:               17px;
+$btn-padding-x:               24px;
+$input-btn-padding-y:         17px;
+$input-btn-padding-x:         24px;
+$btn-font-weight:             700;
+$btn-padding-y-lg:            $btn-padding-y *1.25;
+$btn-padding-x-lg:            $btn-padding-x *1.25;
+$btn-padding-y-sm:            $btn-padding-y *0.5;
+$btn-padding-x-sm:            $btn-padding-x;
+$btn-border-radius:           5px;
+$btn-border-radius-lg:        10px;
+$btn-border-radius-sm:        5px;
+$btn-line-height:             1;
+
+/* container */
+$container-max-widths: (
+  lg: 1140px+30,
+  xl: 1140px+30
+);
+html{-webkit-tap-highlight-color: transparent;}
+p, li,address {
+    font-size: 1.18rem;
+    line-height: 1.5;
+    color: $black;
+    font-weight: 100;
+    small{line-height: 1.5;}
+}
+$body-weight: 100;
 /* 3. Bootstrap */
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css";
+/* 4. custom styles */
+h1, .h1 { margin-top: 25px; }
+h2, .h2 { margin-top: 25px; }
+/* buttons */
+.btn{
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 1;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  &:visited,
+  &.visited {
+    outline: 0;
+  }
+}
+.btn-secondary{
+  background: $white;
+  border-color: $link-hover-color;
+  color: $link-color;
+  &:hover{
+    background: none;
+    color: $link-hover-color;
+    border-color: $link-hover-color;
+  }
+  &:focus,
+  &.focus{
+    border-color: $link-hover-color;
+    background: $white;
+  }
+  &:active,
+  &.active{
+    background: $white;
+  }
+}
+.btn-primary {
+  &:hover{
+    background-color: $link-hover-color;
+  }
+  &:focus,
+  &.focus{
+    background-color: $link-hover-color;
+  }
+}
+/* navbar */
+.navbar-nav {
+  .nav-link{
+      text-decoration: none;
+      color: $body-color;
+      font-size: 0.8em;
+      font-weight: 700;
+      &:hover{text-decoration: underline;}
+  }
+}
+/* forms */
+label{
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: $gray-600;
+  text-transform: uppercase;
+}
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}
+}
+@include placeholder {
+  font-family: $font-family-alt2;
+  font-style: italic;
+  line-height: 1.4em;
+  color:$gray-600;
+}
+input::placeholder{
+  font-family: $font-family-alt2;
+  font-style: italic;
+  line-height: 1.4em;
+
+}
+input:-moz-placeholder,
+input::-moz-placeholder {
+  line-height:0;
+}
+textarea.form-control{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+select.form-control{
+  height: 3rem;
+  border-radius: 5px;
+  padding-left: 18px;
+}
+input:focus,
+select:focus {
+    outline: 0;
+}
+input[type="text"]::-ms-clear,
+input[type="search"]::-ms-clear {
+    display: none;
+}
