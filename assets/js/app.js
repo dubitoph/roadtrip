@@ -175,7 +175,7 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 
 }
 
-export function setSessionLocation(address, latitude, longitude, city) 
+export function setSessionLocation(address, latitude, longitude, city)
 { 
   
   $.ajax(
@@ -194,8 +194,6 @@ export function setSessionLocation(address, latitude, longitude, city)
         dataType: 'json',                 
         success: function(response) 
                 {  
-
-                  console.log(response);
 
                   localStorage.setItem('userLatitude',  latitude);
                   localStorage.setItem('userLongitude',  longitude);

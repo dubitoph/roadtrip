@@ -17,11 +17,11 @@ jQuery( document ).ready( function( $ ) {
             
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-            
+
         $('#latitude').val(latitude);
         $('#longitude').val(longitude);
                   
-        geocode(position.coords.latitude + ', ' + position.coords.longitude);                
+        geocode(latitude + ', ' + longitude);                
             
       });
 
@@ -31,17 +31,17 @@ jQuery( document ).ready( function( $ ) {
   else
   {
 
-    $('#latitude').val(localStorage.getItem("userLatitude"));
-    $('#longitude').val(localStorage.getItem("userLongitude"));
+    $('#latitude').val(userLatitude);
+    $('#longitude').val(userLongitude);
     $('#search_address').val(userAddress);
-    $('#city').val(localStorage.getItem("userCity"));
+    $('#city').val(userCity);
 
   }
 
   if (! sessionStorage.getItem("phpSessionVariablesExist") && userAddress)
   {
     
-    setSessionLocation($('#search_address').val());
+    setSessionLocation($('#search_address').val(), $('#latitude').val(), $('#longitude').val(), $('#city').val());
 
   }
 
@@ -70,10 +70,14 @@ function geocode(query)
                               
                             // success
                             var address = response.results[0].formatted;
+                            var city = response.results[0].components.village;
+                            var latitude = response.results[0].geometry.lat;
+                            var longitude = response.results[0].geometry.lng;
+
                             $('#search_address').val(address);
                             $('#city').val(response.results[0].components.village);
 
-                            setSessionLocation($('#search_address').val());
+                            setSessionLocation($('#search_address').val(), latitude, longitude, city);
 
                           },
                      402: function()

@@ -60,6 +60,9 @@ Class AdvertSearch
      */
     private $sorting;
 
+    /**
+     * Operations when creating
+     */
     public function __construct()
     {
 
@@ -69,19 +72,25 @@ Class AdvertSearch
     }
 
     /**
-     * @param int|null $minimumBedsNumber
+     * Set the minimum beds number
+     *
+     * @param integer|null $minimumBedsNumber
+     * 
      * @return AdvertSearch
      */
     public function setMinimumBedsNumber(?int $minimumBedsNumber): AdvertSearch
     {
 
         $this->minimumBedsNumber = $minimumBedsNumber;
+
         return $this;
 
     }
 
     /**
-     * @return int|null $minimumBedsNumber
+     *  Get the minimum beds number
+     *
+     * @return integer|null
      */
     public function getMinimumBedsNumber(): ?int
     {
@@ -91,19 +100,25 @@ Class AdvertSearch
     }
 
     /**
-     * @param int|null $maximumPrice
+     *  Set the maximum price
+     *
+     * @param integer|null $maximumPrice
+     * 
      * @return AdvertSearch
      */
     public function setMaximumPrice(?int $maximumPrice): AdvertSearch
     {
 
         $this->maximumPrice = $maximumPrice;
+
         return $this;
 
     }
 
     /**
-     * @return int|null $maximumPrice
+     * Get the maximum price
+     *
+     * @return integer|null
      */
     public function getMaximumPrice(): ?int
     {
@@ -113,7 +128,11 @@ Class AdvertSearch
     }
 
     /**
+     * Set the cell equipments desired
+     *
      * @param ArrayCollection $cellEquipments
+     * 
+     * @return void
      */
     public function setCellEquipments(ArrayCollection $cellEquipments): void
     {
@@ -123,7 +142,9 @@ Class AdvertSearch
     }
 
     /**
-     * @return ArrayCollection 
+     * Get the cell equipments desired
+     *
+     * @return ArrayCollection
      */
     public function getCellEquipments(): ArrayCollection
     {
@@ -133,7 +154,11 @@ Class AdvertSearch
     }
 
     /**
+     * Get the carrier equipments desired
+     *
      * @param ArrayCollection $carrierEquipments
+     * 
+     * @return void
      */
     public function setCarrierEquipments(ArrayCollection $carrierEquipments): void
     {
@@ -143,7 +168,9 @@ Class AdvertSearch
     }
 
     /**
-     * @return ArrayCollection 
+     * Set the carrier equipments desired
+     *
+     * @return ArrayCollection
      */
     public function getCarrierEquipments(): ArrayCollection
     {
@@ -153,19 +180,25 @@ Class AdvertSearch
     }
 
     /**
+     * Set the user's latitude
+     *
      * @param float|null $latitude
+     * 
      * @return AdvertSearch
      */
     public function setLatitude(?float $latitude): AdvertSearch
     {
 
         $this->latitude = $latitude;
+
         return $this;
 
     }
 
     /**
-     * @return float|null $latitude
+     * Get the user's latitude
+     *
+     * @return float|null
      */
     public function getLatitude(): ?float
     {
@@ -175,19 +208,25 @@ Class AdvertSearch
     }
 
     /**
+     * Set the user's longitude
+     *
      * @param float|null $longitude
+     * 
      * @return AdvertSearch
      */
     public function setLongitude(?float $longitude): AdvertSearch
     {
 
         $this->longitude = $longitude;
+
         return $this;
 
     }
 
     /**
-     * @return float|null $longitude
+     * Get the user's longitude
+     *
+     * @return float|null
      */
     public function getLongitude(): ?float
     {
@@ -197,19 +236,25 @@ Class AdvertSearch
     }
 
     /**
-     * @param int|null $distance
+     * Set the maximum distance
+     *
+     * @param float|null $distance
+     * 
      * @return AdvertSearch
      */
     public function setDistance(?float $distance): AdvertSearch
     {
 
         $this->distance = $distance;
+
         return $this;
 
     }
 
     /**
-     * @return int|null $distance
+     * Get the maximum distance
+     *
+     * @return integer|null
      */
     public function getDistance(): ?int
     {
@@ -219,19 +264,25 @@ Class AdvertSearch
     }
 
     /**
+     * Set the user's address
+     *
      * @param string|null $address
+     * 
      * @return AdvertSearch
      */
     public function setAddress(?string $address): AdvertSearch
     {
 
         $this->address = $address;
+
         return $this;
 
     }
 
     /**
-     * @return string|null $address
+     * Get the user's address
+     *
+     * @return string|null
      */
     public function getAddress(): ?string
     {
@@ -241,7 +292,10 @@ Class AdvertSearch
     }
 
     /**
+     * Set the user's city
+     *
      * @param string|null $city
+     * 
      * @return AdvertSearch
      */
     public function setCity(?string $city): AdvertSearch
@@ -253,7 +307,9 @@ Class AdvertSearch
     }
 
     /**
-     * @return string|null $city
+     * Get the user's city
+     *
+     * @return string|null
      */
     public function getCity(): ?string
     {
@@ -263,24 +319,26 @@ Class AdvertSearch
     }
 
     /**
-     * Set sorting
+     * Set the sorting criterion
      *
      * @param string|null $sorting
+     * 
      * @return AdvertSearch
      */
     public function setSorting(?string $sorting): AdvertSearch
     {
 
         $this->sorting = $sorting;
+
         return $this;
 
     }
 
-    /**
-     * Get sorting
-     *
-     * @return string|null
-     */
+   /**
+    * Get the sorting criterion
+    *
+    * @return string|null
+    */
     public function getSorting(): ?string
     {
 

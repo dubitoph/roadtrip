@@ -17,10 +17,19 @@ class HomeController extends AbstractController
 {
 
     /**
-     * @Route("/", name="home")
+     * Homepage
+     * 
+     *  @Route("/", name="home")
+     *
+     * @param Request $request
+     * @param AdvertRepository $advertRepository
+     * @param RatingRepository $ratingRepository
+     * @param SubscriptionRepository $subscriptionRepository
+     * @param PhotoRepository $photoRepository
      * @return Response
      */
-    public function index(Request $request, AdvertRepository $advertRepository, RatingRepository $ratingRepository, SubscriptionRepository $subscriptionRepository, PhotoRepository $photoRepository): Response
+    public function index(Request $request, AdvertRepository $advertRepository, RatingRepository $ratingRepository, 
+                          SubscriptionRepository $subscriptionRepository, PhotoRepository $photoRepository): Response
     { 
 
         $results = array();

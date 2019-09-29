@@ -38,10 +38,18 @@ class AdvertController extends AbstractController
 {
     
     /**
+     * Adverts list after filtering
+     * 
      * @Route("/adverts", name="advert.index")
+     *
+     * @param PaginatorInterface $paginator
+     * @param AdvertRepository $advertRepository
+     * @param PhotoRepository $photoRepository
+     * @param Request $request
      * @return Response
      */
-    public function index(PaginatorInterface $paginator, AdvertRepository $advertRepository, PhotoRepository $photoRepository, Request $request): Response
+    public function index(PaginatorInterface $paginator, AdvertRepository $advertRepository, PhotoRepository $photoRepository, 
+                          Request $request): Response
     {
 
         $search = $this->container->get('session')->get('search');
@@ -98,21 +106,21 @@ class AdvertController extends AbstractController
             }
 
         }
+
+        $mainPhotos = array();
+
+        if (count($adverts) > 0) 
+        {
+        
+            $mainPhotos = $photoRepository->getMainPhotos($adverts);
+
+        }
         
         $adverts = $paginator->paginate($adverts, 
                                         $request->query->getInt('page', 1), 
                                         12
                                        )
         ;
-
-        $mainPhotos = array();
-
-        if ($adverts->count() > 0) 
-        {
-        
-            $mainPhotos = $photoRepository->getMainPhotos($adverts);
-
-        }
 
         return $this->render('advert/index.html.twig', [
                                                         'current_menu' => 'adverts',
