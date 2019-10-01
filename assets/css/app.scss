@@ -210,10 +210,11 @@ input[type="search"]::-ms-clear {
         position: absolute;
         content: " ";
         top:0px;
+        left:100px;
         z-index: 100;
-        width: 430px;
-        height: 168px;
-        background: red url('../images/track.svg') no-repeat left top;
+        width: 168px;
+        height: 400px;
+        background:transparent url('http://127.0.0.1:8000/images/track.svg') no-repeat left top;
       }
   }
 
@@ -222,11 +223,11 @@ input[type="search"]::-ms-clear {
     width: 70vw;
     max-height: 700px;
     height: 100%;
-    transform: skew(-17deg,0) translateX(150px);
+    transform: skew(-14deg,0) translateX(150px);
     overflow: hidden;
     picture {
       overflow: visible;
-      transform: translateX(-20%) skew(17deg,0);
+      transform: translateX(-20%) skew(14deg,0);
   }
 }
 .objectfit--cover img {
