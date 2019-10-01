@@ -38,13 +38,65 @@ class AdvertRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('a')
                       ->addSelect('MIN(p.price / d.daysNumber) as minPrice')
-                      ->leftJoin('a.vehicle', 'v')
+                      ->join('a.vehicle', 'v')
                       ->leftJoin('a.prices', 'p')
                       ->leftJoin('p.duration', 'd')
                       ->andWhere('a.expiresAt >= :today')
                       ->groupBy('a.id')
                       ->setParameter('today', date("Y-m-d"))
         ;
+
+        $beginAt = $search->getBeginAt();
+        $endAt = $search->getEndAt();
+
+        if ($beginAt || $endAt) 
+        {
+
+            $subquery = $this->createQueryBuilder('b')
+                             ->from('App\Entity\booking\Booking', 'b')
+                             ->andWhere('b.vehicle = a.vehicle')
+                             ->andWhere('b.refused  IS NULL')
+                             ->andWhere('b.deleted  IS NULL')
+            ;
+
+            if($beginAt)
+            {
+
+                $subquery->setParameter('beginAt', $beginAt);
+
+            }
+
+            if($endAt)
+            {
+
+                $subquery->setParameter('endAt', $endAt);
+
+            }
+
+            if($beginAt && ! $endAt)
+            {
+
+                $subquery->andWhere(':beginAt BETWEEN b.beginAt and b.endAt');
+
+            }
+            elseif($endAt && ! $beginAt)
+            {
+
+                $subquery->andWhere(':endAt BETWEEN b.beginAt and b.endAt');
+
+            }
+            else
+            {
+                
+                $subquery->andWhere('(:beginAt BETWEEN b.beginAt and b.endAt) or (:endAt BETWEEN b.beginAt and b.endAt)');
+
+            }
+
+            $subquery->getDQL();
+
+            $query->andWhere($query->expr()->notIn('a.vehicle', $subquery));
+
+        }
 
         if ($search->getLatitude() && $search->getLongitude()) 
         {

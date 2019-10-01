@@ -132,6 +132,24 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
   
+            $beginAt = $search->getBeginAt();
+            
+            if($beginAt)
+            {
+
+                $beginAt->setTime('12', '0', '0');
+
+            } 
+      
+            $endAt = $search->getEndAt();
+                
+            if($endAt)
+            {
+    
+                $endAt->setTime('11', '59', '59');
+    
+            }
+            
             $this->container->get('session')->set('search', $search);
 
             return $this->redirectToRoute('advert.index');

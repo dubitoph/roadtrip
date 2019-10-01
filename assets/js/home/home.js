@@ -1,5 +1,9 @@
 import { setSessionLocation } from '../app';
 
+//Setup the date format according to navigator locale
+var localData = moment.localeData();
+var localeDateFormat = localData['_longDateFormat']['L'];
+
 jQuery( document ).ready( function( $ ) {
 
   var userAddress = localStorage.getItem("userAddress");
@@ -44,6 +48,47 @@ jQuery( document ).ready( function( $ ) {
     setSessionLocation($('#search_address').val(), $('#latitude').val(), $('#longitude').val(), $('#city').val());
 
   }
+
+  //Use a calendar for the start and end dates of booking 
+  $(".js-datepicker").datepicker({
+
+    viewMode: "years",
+    weekStart: 1,
+    daysOfWeekHighlighted: "6,0",
+    autoclose: true,
+    todayHighlight: true,
+    startDate: '-0d',
+    endDate:'+2y',
+    format: localeDateFormat.toLowerCase()
+
+  });
+    
+  // Avoid end date less than begin date
+  $("#beginAt").datepicker().on('changeDate', function (selected) {
+
+      $('#endAt').datepicker('setStartDate', selected.date);
+
+  });    
+  
+  $("#endAt").datepicker().on('changeDate', function (selected) {
+
+      $('#beginAt').datepicker('setEndDate', selected.date);
+
+  });
+    
+  //Dates formatting to ISO before submit
+  $("form").submit(function(event) {
+
+      $('input.js-datepicker').each(function(e) {
+
+          var sDate = $(this).val();
+          var dateTime = moment(sDate, localeDateFormat).toISOString(true);
+
+          $(this).val(dateTime);
+
+      });
+
+  });
 
 });
 

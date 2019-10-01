@@ -37,7 +37,6 @@ $(document).ready(function() {
       var $mamufactureDateInput = $("#vehicle_manufactureDate");
       var sDate = $mamufactureDateInput.val();
       var dateTime = moment(sDate, localeDateFormat).toISOString();
-
       $mamufactureDateInput.val(dateTime);
 
     });

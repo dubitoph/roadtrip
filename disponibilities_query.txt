@@ -1,0 +1,17 @@
+SELECT distinct(advert.id)
+FROM advert
+JOIN vehicle ON vehicle.id = advert.vehicle_id
+WHERE advert.expires_at >= NOW() and
+	  vehicle_id NOT IN
+      (
+        SELECT booking.vehicle_id
+        FROM booking 
+       	where booking.vehicle_id = vehicle.id AND
+       		  (
+                  booking.end_at between '2019-01-24' AND '2019-01-25' OR
+      		  	  booking.begin_at between '2019-01-24' AND '2019-01-25'
+               ) 
+          	  and 
+      		  booking.refused IS null and 
+      		  booking.deleted IS null
+      )

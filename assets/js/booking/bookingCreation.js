@@ -29,6 +29,7 @@ jQuery(document).ready(function() {
         format: localeDateFormat.toLowerCase()
     });
     
+    // Avoid end date less than begin
     $("#booking_beginAt").datepicker().on('changeDate', function (selected) {
 
         $('#booking_endAt').datepicker('setStartDate', selected.date);

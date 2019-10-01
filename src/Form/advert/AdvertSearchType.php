@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class AdvertSearchType extends AbstractType
 {
@@ -20,7 +21,25 @@ class AdvertSearchType extends AbstractType
         $belongingCarrier = 'Porteur';
         $belongingCell = 'Cellule';
 
-        $builder        
+        $builder 
+            ->add('beginAt', DateTimeType::class, array(
+                                                            'widget' => 'single_text', 
+                                                            'html5' => false,
+                                                            'attr' => [
+                                                                        'class' => 'js-datepicker',
+                                                                        'readonly' => true
+                                                                      ]
+                                                       )
+                 )
+            ->add('endAt', DateTimeType::class, array(
+                                                            'widget' => 'single_text', 
+                                                            'html5' => false,
+                                                            'attr' => [
+                                                                        'class' => 'js-datepicker',
+                                                                        'readonly' => true
+                                                                      ]
+                                                       )
+                 )        
             ->add('minimumBedsNumber', ChoiceType::class, [
                                                         'choices' => [
                                                                         '1' => 1, 

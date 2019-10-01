@@ -61,6 +61,23 @@ Class AdvertSearch
     private $sorting;
 
     /**
+     * @var datetime|null
+     * 
+     * @Assert\Type("\DateTime")
+     * @Assert\GreaterThanOrEqual("today")
+     */
+    private $beginAt; 
+
+    /**
+     * @var datetime|null
+     * 
+     * @Assert\Type("\DateTime")
+     * @Assert\GreaterThanOrEqual("today")
+     * @Assert\GreaterThan(propertyPath="beginAt")
+     */
+    private $endAt;
+
+    /**
      * Operations when creating
      */
     public function __construct()
@@ -344,6 +361,60 @@ Class AdvertSearch
 
         return $this->sorting;
 
+    }
+
+    /**
+     * Get the beginning date
+     *
+     * @return \DateTimeInterface|null
+     */
+    public function getBeginAt(): ?\DateTimeInterface
+    {
+
+        return $this->beginAt;
+        
+    }
+
+    /**
+     * Set the beginning date
+     *
+     * @param \DateTimeInterface $beginAt
+     * 
+     * @return self
+     */
+    public function setBeginAt(\DateTimeInterface $beginAt): self
+    {
+
+        $this->beginAt = $beginAt;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the end date
+     *
+     * @return \DateTimeInterface|null
+     */
+    public function getEndAt(): ?\DateTimeInterface
+    {
+
+        return $this->endAt;
+
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTimeInterface|null $endAt
+     * 
+     * @return self
+     */
+    public function setEndAt(?\DateTimeInterface $endAt): self
+    {
+        $this->endAt = $endAt;
+
+        return $this;
     }
 
 }
