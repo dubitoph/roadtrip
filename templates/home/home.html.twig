@@ -4,75 +4,83 @@
 
 {% block body %}
 
-    <section class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <div class="row">
-        <div class="col">
-          <h1>The adventure in a wheel spin</h1>
-          <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
+    <section class="m_hero">
+        <div class="m_headline" data-triangle="hero-img" data-parallax="35" style="visibility: inherit; opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">
+          <div class="" style="visibility: inherit; opacity: 1; transform: matrix(1, 0, 0, 1, 0, 0);">
+            <h1>The adventure in a wheel spin</h1>
+            <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
 
-          {{ form_start(form) }}
-              <div class="form-row align-items-end">
-                  <div class="col">
-                      {{ form_row(form.minimumBedsNumber) }}
-                  </div>
+            {{ form_start(form) }}
+                <div class="form-row align-items-end">
+                    <div class="col">
+                        {{ form_row(form.minimumBedsNumber) }}
+                    </div>
 
-                  <div class="col">
-                      <div class="form-group">
-                          <button class="btn btn-primary">Search</button>
-                      </div>
-                  </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <button class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.maximumPrice) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.maximumPrice) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.cellEquipments) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.cellEquipments) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.carrierEquipments) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.carrierEquipments) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.distance) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.distance) }}
+                    </div>
 
-              </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.address, {'id': 'search_address'}) }}
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.address, {'id': 'search_address'}) }}
+                    </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+                    </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.city, {'id': 'city'}) }}
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.city, {'id': 'city'}) }}
+                    </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.sorting) }}
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.sorting) }}
+                    </div>
+                </div>
 
-          {{ form_end(form) }}
+            {{ form_end(form) }}
 
-          <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
+            <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
+          </div>
+
         </div>
-        <div class="col">
+
+        <div class="m_hero__image">
+         <div class="m_skew">
+            <picture class="objectfit--cover objectFitContainer">
+               <source media="(min-width: 1024px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
+               <source media="(min-width: 786px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
+               <source media="(min-width: 320px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
+               <img alt="The adventure in a wheel spin" src="images/motorhome1.jpg" style="opacity: 1;">
+             </picture>
+         </div>
         </div>
-        </div>
-      </div>
     </section>
 
     <!-- LAST ADVERTS -->
