@@ -3,91 +3,82 @@
 {% block title %}The first free spirit trip community{% endblock %}
 
 {% block body %}
-
+    <!-- HERO -->
     <section class="jumbotron jumbotron-fluid">
       <div class="container">
         <div class="row">
-        <div class="col">
-          <h1>The adventure in a wheel spin</h1>
-          <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
+          <div class="col">
+            <h1>The adventure in a wheel spin</h1>
+            <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
 
-          {{ form_start(form) }}
-              <div class="form-row align-items-end">
-                  <div class="col">
-                      {{ form_row(form.minimumBedsNumber) }}
-                  </div>
-                  
-                  <div class="col">
-                    {{ form_row(form.beginAt) }} {{ form_row(form.endAt) }}
-                  </div>
+            {{ form_start(form) }}
+                <div class="form-row align-items-end">
+                    <div class="col">
+                        {{ form_row(form.minimumBedsNumber) }}
+                    </div>
 
-                  <div class="col">
-                      <div class="form-group">
-                          <button class="btn btn-primary">Search</button>
-                      </div>
-                  </div>
+                    <div class="col">
+                      {{ form_row(form.beginAt) }} {{ form_row(form.endAt) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.maximumPrice) }}
-                  </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <button class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.cellEquipments) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.maximumPrice) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.carrierEquipments) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.cellEquipments) }}
+                    </div>
 
-                  <div class="col" style="display: none;">
-                      {{ form_row(form.distance) }}
-                  </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.carrierEquipments) }}
+                    </div>
 
-              </div>
+                    <div class="col" style="display: none;">
+                        {{ form_row(form.distance) }}
+                    </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.address, {'id': 'search_address'}) }}
-                  </div>
-              </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.address, {'id': 'search_address'}) }}
+                    </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.city, {'id': 'city'}) }}
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
+                    </div>
+                </div>
 
-              <div class="form-row" style="display: none;">
-                  <div class="col">
-                      {{ form_row(form.sorting) }}
-                  </div>
-              </div>
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.city, {'id': 'city'}) }}
+                    </div>
+                </div>
 
-          {{ form_end(form) }}
+                <div class="form-row" style="display: none;">
+                    <div class="col">
+                        {{ form_row(form.sorting) }}
+                    </div>
+                </div>
 
-          <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
+            {{ form_end(form) }}
+
+            <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
+          </div>
+          <div class="col">
+          </div>
         </div>
-        <div class="col">
-        </div>
-
-        <div class="m_hero__image">
-         <div class="m_skew">
-            <picture class="objectfit--cover objectFitContainer">
-               <source media="(min-width: 1024px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
-               <source media="(min-width: 786px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
-               <source media="(min-width: 320px)" srcset="images/motorhome1.jpg" style="opacity: 1;">
-               <img alt="The adventure in a wheel spin" src="images/motorhome1.jpg" style="opacity: 1;">
-             </picture>
-         </div>
-        </div>
+      </div>
     </section>
-
+    <!-- HERO:end -->
     <!-- LAST ADVERTS -->
     <section id="lastAdverts" class="pt-5 pb-5">
       <div class="container">
@@ -134,7 +125,7 @@
 
     </div>
     </section>
-
+    <!-- LAST ADVERTS:end -->
     <!-- WHY USE -->
     <section id="whyUse" class="bg-light pt-5 pb-5">
     <div class="container">
@@ -158,7 +149,7 @@
         </div>
       </div>
     </section>
-
+    <!-- WHY USE:end -->
     <!-- SUBSCRIPTION -->
     <section id="whyUse" class="pt-5 pb-5">
     <div class="container">
@@ -184,6 +175,7 @@
         </div>
       </div>
     </section>
+    <!-- TESTIMONIALS:end -->
 
     <!-- LAST RATINGS -->
     <section id="testimonials" class="pt-5 pb-5">
@@ -201,6 +193,7 @@
       {% endfor %}
       </div>
     </section>
+    <!-- LAST RATINGS:end -->
 
     {{ include('_messages.html.twig') }}
     <input type="hidden" id="urlAjaxSession" name="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
