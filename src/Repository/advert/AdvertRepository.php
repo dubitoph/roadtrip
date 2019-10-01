@@ -91,11 +91,10 @@ class AdvertRepository extends ServiceEntityRepository
                 $subquery->andWhere('(:beginAt BETWEEN b.beginAt and b.endAt) or (:endAt BETWEEN b.beginAt and b.endAt)');
 
             }
-
-            $subquery->getDQL();
-
-            $query->andWhere($query->expr()->notIn('a.vehicle', $subquery));
-
+/*
+            $query->andWhere($query->expr()->notIn('a.vehicle', $subquery->getDQL());
+            $qb2 ->andWhere($qb2->expr()->in('st.id',$qb->getDQL()));
+*/
         }
 
         if ($search->getLatitude() && $search->getLongitude()) 
