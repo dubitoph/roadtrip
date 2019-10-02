@@ -16,6 +16,7 @@ class AdvertSimplifiedSearchType extends AbstractType
     {
         
         $builder 
+/*
             ->add('beginAt', DateTimeType::class, array(
                                                             'widget' => 'single_text', 
                                                             'html5' => false,
@@ -25,6 +26,7 @@ class AdvertSimplifiedSearchType extends AbstractType
                                                                       ]
                                                        )
                  )
+
             ->add('endAt', DateTimeType::class, array(
                                                             'widget' => 'single_text', 
                                                             'html5' => false,
@@ -33,22 +35,22 @@ class AdvertSimplifiedSearchType extends AbstractType
                                                                         'readonly' => true
                                                                       ]
                                                        )
-                 )        
+                 ) 
+*/       
             ->add('minimumBedsNumber', ChoiceType::class, [
-                                                        'choices' => [
-                                                                        '1' => 1, 
-                                                                        '2' => 2, 
-                                                                        '3' => 3, 
-                                                                        '4' => 4, 
-                                                                        '5' => 5, 
-                                                                        '6' => 6, 
-                                                                        '7' => 7, 
-                                                                        '8' => 8, 
-                                                                        '9' => 9, 
-                                                                        '10' => 10
-                                                                    ],
-                                                        'required' => false,
-                                                        'placeholder' => 'Minimum beds number',
+                                                            'choices' => [
+                                                                            'Mobilhome 1 place' => 1, 
+                                                                            'Mobilhome 2 places' => 2, 
+                                                                            'Mobilhome 3 places' => 3, 
+                                                                            'Mobilhome 4 places' => 4, 
+                                                                            'Mobilhome 5 places' => 5, 
+                                                                            'Mobilhome 6 places' => 6, 
+                                                                            'Mobilhome 7 places' => 7, 
+                                                                            'Mobilhome 8 places' => 8, 
+                                                                            'Mobilhome 9 places' => 9, 
+                                                                            'Mobilhome 10 places' => 10
+                                                                        ],
+                                                            'required' => false
                                                       ]
                  )
             ->add('latitude', HiddenType::class)
