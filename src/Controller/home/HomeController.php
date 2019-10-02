@@ -3,12 +3,12 @@
 namespace App\Controller\home;
 
 use App\Entity\advert\AdvertSearch;
-use App\Form\advert\AdvertSearchType;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use App\Repository\rating\RatingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Form\advert\AdvertSimplifiedSearchType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\backend\SubscriptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,7 +97,7 @@ class HomeController extends AbstractController
 
         }
 
-        $form = $this->createForm(AdvertSearchType::class, $search);
+        $form = $this->createForm(AdvertSimplifiedSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session')));
         $form->handleRequest($request);
 
         $filesNames = array();
