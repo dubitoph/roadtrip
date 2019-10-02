@@ -3,6 +3,7 @@ namespace App\Repository\advert;
 
 use App\Entity\advert\Advert;
 use App\Entity\advert\AdvertSearch;
+use App\Repository\booking\BookingRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -34,8 +35,9 @@ class AdvertRepository extends ServiceEntityRepository
      * 
      * @return Advert[]|null
      */
-    public function findSearchedAdverts(AdvertSearch $search) : ?array
+    public function findSearchedAdverts(AdvertSearch $search, BookingRepository $bookingRepository) : ?array
     {
+
         $query = $this->createQueryBuilder('a')
                       ->addSelect('MIN(p.price / d.daysNumber) as minPrice')
                       ->join('a.vehicle', 'v')
@@ -50,51 +52,51 @@ class AdvertRepository extends ServiceEntityRepository
         $endAt = $search->getEndAt();
 
         if ($beginAt || $endAt) 
-        {
-
-            $subquery = $this->createQueryBuilder('b')
-                             ->from('App\Entity\booking\Booking', 'b')
-                             ->andWhere('b.vehicle = a.vehicle')
-                             ->andWhere('b.refused  IS NULL')
-                             ->andWhere('b.deleted  IS NULL')
+        {  
+                        
+            $subquery = $bookingRepository->createQueryBuilder('b')
+                                          ->select('ve.id')
+                                          ->join('b.vehicle', 've')
+                                          ->andWhere('b.accepted = true')
+                                          ->andWhere('b.deleted is null')
+                                          ->andWhere('b.vehicle = a.vehicle')
             ;
-
-            if($beginAt)
-            {
-
-                $subquery->setParameter('beginAt', $beginAt);
-
-            }
-
-            if($endAt)
-            {
-
-                $subquery->setParameter('endAt', $endAt);
-
-            }
 
             if($beginAt && ! $endAt)
             {
-
+  
                 $subquery->andWhere(':beginAt BETWEEN b.beginAt and b.endAt');
-
+  
             }
             elseif($endAt && ! $beginAt)
             {
-
+  
                 $subquery->andWhere(':endAt BETWEEN b.beginAt and b.endAt');
-
+  
             }
             else
             {
                 
                 $subquery->andWhere('(:beginAt BETWEEN b.beginAt and b.endAt) or (:endAt BETWEEN b.beginAt and b.endAt)');
+  
+            }
+
+            if ($beginAt) 
+            {
+
+                $query->setParameter('beginAt', $beginAt);
 
             }
-/*
-            $query->andWhere($query->expr()->notIn('a.vehicle', $subquery->getDQL());
-            $qb2 ->andWhere($qb2->expr()->in('st.id',$qb->getDQL()));
-*/
+
+            if ($endAt) 
+            {
+
+                $query->setParameter('endAt', $endAt);
+
+            }
+            
+            $query->andWhere($query->expr()->notIn('a.vehicle', $subquery->getDQL()));
+
         }
 
         if ($search->getLatitude() && $search->getLongitude()) 

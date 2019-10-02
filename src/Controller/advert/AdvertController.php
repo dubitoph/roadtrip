@@ -21,6 +21,7 @@ use App\Form\advert\VariousCostsType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
+use App\Form\booking\BookingType;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use App\Repository\user\FavoriteRepository;
@@ -28,6 +29,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\backend\SeasonRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\backend\DurationRepository;
+use App\Repository\booking\BookingRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,7 +51,7 @@ class AdvertController extends AbstractController
      * @return Response
      */
     public function index(PaginatorInterface $paginator, AdvertRepository $advertRepository, PhotoRepository $photoRepository, 
-                          Request $request): Response
+                          BookingRepository $bookingRepository, Request $request): Response
     {
 
         $search = $this->container->get('session')->get('search');
@@ -69,7 +71,7 @@ class AdvertController extends AbstractController
         $results = array();
         $distances = array();
         
-        $results = $advertRepository->findSearchedAdverts($search);
+        $results = $advertRepository->findSearchedAdverts($search, $bookingRepository);
         
         $adverts = array();            
         $minPrices = array();            

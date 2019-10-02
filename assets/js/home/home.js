@@ -16,7 +16,7 @@ jQuery( document ).ready( function( $ ) {
 
     if(navigator.geolocation)
     {
-      
+      console.log('geolocation');
       navigator.geolocation.getCurrentPosition(function(position) {
             
         var latitude = position.coords.latitude;
