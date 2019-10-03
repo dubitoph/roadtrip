@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Form\advert\AdvertSimplifiedSearchType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\backend\SubscriptionRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
@@ -126,7 +127,7 @@ class HomeController extends AbstractController
 
         }
 
-        $form = $this->createForm(AdvertSimplifiedSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session')));
+        $form = $this->createForm(AdvertSimplifiedSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session', [], UrlGeneratorInterface::ABSOLUTE_URL)));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) 

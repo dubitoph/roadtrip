@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class AdvertSimplifiedSearchType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         
@@ -63,17 +64,23 @@ class AdvertSimplifiedSearchType extends AbstractType
                                                             )
                  )
         ;
+
     }           
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => AdvertSearch::class,
-            'url' => null,
-            'method' => 'get',
-            'csrf_protection' => false,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => AdvertSearch::class,
+                                    'url' => null,
+                                    'method' => 'get',
+                                    'csrf_protection' => false,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+        
     }
 
     public function getBlockPrefix()

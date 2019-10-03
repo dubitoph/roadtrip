@@ -3,8 +3,8 @@
 namespace App\Repository\media;
 
 use App\Entity\media\Photo;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Photo|null find($id, $lockMode = null, $lockVersion = null)
