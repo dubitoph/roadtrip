@@ -207,8 +207,10 @@ class UserUserController extends AbstractController
      */
     public function ajaxAction(Request $request): Response
     {
+
         if($request->isXmlHttpRequest())
         {
+
             $userLatitude = $request->request->get('userLatitude');
             $userLongitude = $request->request->get('userLongitude');
             $userCity = $request->request->get('userCity');
@@ -220,9 +222,10 @@ class UserUserController extends AbstractController
             $this->container->get('session')->set('userAddress', $userAddress);
              
             $response = new JsonResponse();
-            $response->setData(array('success'=> 'Session variables created')); 
+            $response->setData(array('success'=> "Session user's geolocation variables created")); 
 
             return $response;
+            
         }
         else
         {

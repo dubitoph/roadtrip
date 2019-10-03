@@ -28,7 +28,7 @@ jQuery( document ).ready( function( $ ) {
 
     if(navigator.geolocation)
     {
-      console.log('geolocation');
+
       navigator.geolocation.getCurrentPosition(function(position) {
             
         var latitude = position.coords.latitude;
@@ -133,6 +133,8 @@ function geocode(query)
 
                             $('#address').val(address);
                             $('#city').val(response.results[0].components.village);
+
+                            console.log('Geocode Ajax call succeed');
 
                             setSessionLocation($('#address').val(), latitude, longitude, city);
 

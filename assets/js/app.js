@@ -190,6 +190,8 @@ export function setSessionLocation(address, latitude, longitude, city)
                   localStorage.setItem('userCity',  city);
                   localStorage.setItem('userAddress',  address);
 
+                  console.log(response);
+
                   sessionStorage.setItem('phpSessionVariablesExist', '1');
                   
                 },  
