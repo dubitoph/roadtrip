@@ -25,8 +25,9 @@ class AuthenticationHandler implements AuthenticationFailureHandlerInterface, Lo
     {
 
         $referer = $request->headers->get('referer');
+
         return new RedirectResponse($referer);
-        
+
     }
 
 }
