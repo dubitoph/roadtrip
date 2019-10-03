@@ -28,6 +28,9 @@
         "popper.js": "^1.15.0",
         "select2": "^4.0.7",
         "slick-carousel": "^1.8.1",
+        "svg-points": "^6.0.1",
+        "svg4everybody": "^2.1.9",
+        "svgxuse": "^1.2.6",
         "tooltip.js": "^1.3.2",
         "yarn": "^1.16.0"
     }

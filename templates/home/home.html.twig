@@ -29,6 +29,15 @@
             {{ form_end(form) }}
 
             <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
+            <div class="select">
+              	<select id="mobib" class="select-hidden">
+              		<option value="1">308687</option>
+              		<option value="2" selected="">308602</option>
+              		<option value="3">308687</option>
+              		<option value="4">629852</option>
+              		<option value="5">639653</option>
+              	</select>
+              <div class="select-styled">308602</div><ul class="select-options"><li rel="1" tabindex="0">308687</li><li class="isActive" rel="2" tabindex="0">308602</li><li rel="3" tabindex="0">308687</li><li rel="4" tabindex="0">629852</li><li rel="5" tabindex="0">639653</li></ul></div>
             </div>
 
           </div>
@@ -62,11 +71,9 @@
       </div>
 
       {% set i = 0 %}
-      <div class="row">
+      <div class="card-deck">
 
         {% for advert in lastAdverts %}
-
-            <div class="col-md-4">
 
                 {% if distances[advert.id] is defined %}
 
@@ -92,11 +99,9 @@
 
                 {% set i = i + 1 %}
 
-            </div>
-
         {% endfor %}
 
-    </div>
+      </div>
     </section>
     <!-- LAST ADVERTS:end -->
     <!-- WHY USE -->
