@@ -10,17 +10,23 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AuthenticationHandler implements AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
 {
+
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {       
+    { 
+
         $referer = $request->headers->get('referer');       
         $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
 
         return new RedirectResponse($referer);
+
     }
 
     public function onLogoutSuccess(Request $request) 
     {
+
         $referer = $request->headers->get('referer');
         return new RedirectResponse($referer);
+        
     }
+
 }

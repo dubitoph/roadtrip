@@ -2,6 +2,18 @@
 import { autocompleteAddress } from '../app';
 
 jQuery( document ).ready( function( $ ) {
+    
+  //Dates formatting according user's locale
+  $('.js-datepicker').each(function() {
+
+      if($(this).val())
+      {
+      
+          $(this).val(moment($(this).val(), 'YYYY-MM-DD').format('L'));
+
+      }
+
+  });
 
   autocompleteAddress('profile_address_street', 'profile_address_city', 'profile_address_zipCode', 'profile_address_country', 
                       'profile_address_latitude', 'profile_address_longitude');

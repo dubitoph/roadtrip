@@ -2,9 +2,12 @@
 
 namespace App\Repository\rating;
 
+use App\Entity\user\User;
+use App\Entity\user\Owner;
+use App\Entity\advert\Advert;
 use App\Entity\rating\Rating;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Rating|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +22,14 @@ class RatingRepository extends ServiceEntityRepository
         parent::__construct($registry, Rating::class);
     }
     
-    public function findByAdverts($adverts)
+    /**
+     * Get approved ratings from somes adverts
+     *
+     * @param Advert[] $adverts
+     * 
+     * @return Rating[]|null
+     */
+    public function findByAdverts(Advert $adverts): ?array
     {
 
         $now = date("Y-m-d");
@@ -41,7 +51,14 @@ class RatingRepository extends ServiceEntityRepository
 
     }
     
-    public function findReceivedUserRatings($user)
+    /**
+     * Get an user's received ratings
+     *
+     * @param User $user
+     * 
+     * @return Rating[]|null
+     */
+    public function findReceivedUserRatings(User $user): ?array
     {
 
         return $this->createQueryBuilder('r')
@@ -56,7 +73,14 @@ class RatingRepository extends ServiceEntityRepository
 
     }
     
-    public function findReceivedOwnerRatings($owner)
+    /**
+     * Get an owner's received ratings
+     *
+     * @param Owner $owner
+     * 
+     * @return Rating[]|null
+     */
+    public function findReceivedOwnerRatings(Owner $owner): ?array
     {
 
         return $this->createQueryBuilder('r')
@@ -74,7 +98,14 @@ class RatingRepository extends ServiceEntityRepository
 
     }
     
-    public function findGivenUserRatings($owner)
+    /**
+     * Get an user's given ratings
+     *
+     * @param Owner $owner
+     * 
+     * @return Rating[]|null
+     */
+    public function findGivenUserRatings(Owner $owner): ?array
     {
 
         return $this->createQueryBuilder('r')
@@ -92,7 +123,14 @@ class RatingRepository extends ServiceEntityRepository
 
     }
     
-    public function findGivenOwnerRatings($user)
+    /**
+     * Get an user's given ratings
+     *
+     * @param [type] $user
+     * 
+     * @return Rating[]|null
+     */
+    public function findGivenOwnerRatings(User $user): ?array
     {
 
         return $this->createQueryBuilder('r')
@@ -107,15 +145,4 @@ class RatingRepository extends ServiceEntityRepository
 
     }
 
-    /*
-    public function findOneBySomeField($value): ?Rating
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

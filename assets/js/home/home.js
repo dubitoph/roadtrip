@@ -10,7 +10,19 @@ jQuery( document ).ready( function( $ ) {
   var userLatitude = localStorage.getItem("userLatitude");
   var userLongitude = localStorage.getItem("userLongitude");
   var userCity = localStorage.getItem("userCity");
-    
+/*    
+  //Dates formatting according user's locale
+  $('.js-datepicker').each(function() {
+
+      if($(this).val())
+      {
+      
+          $(this).val(moment($(this).val(), 'YYYY-MM-DD').format('L'));
+
+      }
+
+  });
+*/    
   if (userAddress == null || userLatitude == null || userLongitude == null || userCity == null) 
   { 
 

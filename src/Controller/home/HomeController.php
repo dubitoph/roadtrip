@@ -19,7 +19,7 @@ class HomeController extends AbstractController
     /**
      * Homepage
      * 
-     *  @Route("/", name="home")
+     * @Route("/", name="home")
      *
      * @param Request $request
      * @param AdvertRepository $advertRepository
@@ -97,9 +97,6 @@ class HomeController extends AbstractController
 
         }
 
-        $form = $this->createForm(AdvertSimplifiedSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session')));
-        $form->handleRequest($request);
-
         $filesNames = array();
         $imagesDirectory = $this->getParameter('home_page_images_directory');
         
@@ -129,9 +126,14 @@ class HomeController extends AbstractController
 
         }
 
+        $form = $this->createForm(AdvertSimplifiedSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session')));
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) 
         {
-  
+
+            // If availibility filter is reused, uncomment
+/*  
             $beginAt = $search->getBeginAt();
             
             if($beginAt)
@@ -149,7 +151,7 @@ class HomeController extends AbstractController
                 $endAt->setTime('11', '59', '59');
     
             }
-            
+*/            
             $this->container->get('session')->set('search', $search);
 
             return $this->redirectToRoute('advert.index');

@@ -7,6 +7,7 @@ use App\Repository\booking\BookingRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 /**
  * @method Advert|null find($id, $lockMode = null, $lockVersion = null)
  * @method Advert|null findOneBy(array $criteria, array $orderBy = null)
@@ -29,9 +30,10 @@ class AdvertRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get advert matching with the search criteria
+     * Get adverts matching with the search criteria
      *
      * @param AdvertSearch $search
+     * @param BookingRepository $bookingRepository
      * 
      * @return Advert[]|null
      */
@@ -216,13 +218,13 @@ class AdvertRepository extends ServiceEntityRepository
     /**
      * Get user's favorite adverts
      *
-     * @param [type] $adverts
-     * @param [type] $latitude
-     * @param [type] $longitude
+     * @param Advert[] $adverts
+     * @param Float $latitude
+     * @param Float $longitude
      * 
      * @return Advert[]|null
      */
-    public function favorites($adverts, $latitude = null, $longitude = null): ?array
+    public function favorites(Advert $adverts, Float $latitude = null, Float $longitude = null): ?array
     {
 
         $query = $this->createQueryBuilder('a')
