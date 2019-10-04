@@ -2,7 +2,6 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "type";
-@import "select";
 @import "icons";
 /* 2. begin customization -------- */
 /* theme color */
@@ -82,6 +81,7 @@ $body-weight: 100;
 /* 3. Bootstrap */
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css";
+@import "select";
 /* 4. custom styles */
 h1, .h1 { margin-top: 25px; }
 h2, .h2 { margin-top: 25px; }
