@@ -21,19 +21,19 @@ use App\Form\advert\VariousCostsType;
 use Symfony\Component\Form\FormError;
 use App\Entity\advert\IncludedMileage;
 use App\Form\advert\PeriodsAdvertType;
-use App\Form\booking\BookingType;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
 use App\Repository\user\FavoriteRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\backend\SeasonRepository;
+use App\Repository\booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\backend\DurationRepository;
-use App\Repository\booking\BookingRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdvertController extends AbstractController
@@ -47,7 +47,9 @@ class AdvertController extends AbstractController
      * @param PaginatorInterface $paginator
      * @param AdvertRepository $advertRepository
      * @param PhotoRepository $photoRepository
+     * @param BookingRepository $bookingRepository
      * @param Request $request
+     * 
      * @return Response
      */
     public function index(PaginatorInterface $paginator, AdvertRepository $advertRepository, PhotoRepository $photoRepository, 
@@ -56,17 +58,45 @@ class AdvertController extends AbstractController
 
         $search = $this->container->get('session')->get('search');
 
-        $this->container->get('session')->remove('search');
+        if($search)
+        {
 
-        if ($search === null || !$search instanceof AdvertSearch) 
+            $this->container->get('session')->remove('search');
+
+        }
+
+        if ($search === null || !$search instanceof AdvertSearch)
         {
 
             $search = new AdvertSearch();
 
         }
 
-        $form = $this->createForm(AdvertSearchType::class, $search);
+        $form = $this->createForm(AdvertSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session', [], UrlGeneratorInterface::ABSOLUTE_URL)));
         $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        { 
+
+            $beginAt = $search->getBeginAt();
+                            
+            if($beginAt)
+            {
+                
+                $beginAt->setTime('12', '0', '0');
+                
+            } 
+                      
+            $endAt = $search->getEndAt();
+                                
+            if($endAt)
+            {
+                    
+                $endAt->setTime('11', '59', '59');
+                    
+            }
+
+        }
 
         $results = array();
         $distances = array();
@@ -118,9 +148,10 @@ class AdvertController extends AbstractController
 
         }
         
-        $adverts = $paginator->paginate($adverts, 
-                                        $request->query->getInt('page', 1), 
-                                        12
+        $adverts = $paginator->paginate(
+                                            $adverts, 
+                                            $request->query->getInt('page', 1), 
+                                            12
                                        )
         ;
 

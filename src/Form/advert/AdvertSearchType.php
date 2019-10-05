@@ -16,8 +16,10 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class AdvertSearchType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $belongingCarrier = 'Porteur';
         $belongingCell = 'Cellule';
 
@@ -28,48 +30,49 @@ class AdvertSearchType extends AbstractType
                                                             'attr' => [
                                                                         'class' => 'js-datepicker',
                                                                         'readonly' => true
-                                                                      ]
+                                                                      ],
+                                                            'required' => false
                                                        )
                  )
             ->add('endAt', DateTimeType::class, array(
-                                                            'widget' => 'single_text', 
-                                                            'html5' => false,
-                                                            'attr' => [
-                                                                        'class' => 'js-datepicker',
-                                                                        'readonly' => true
-                                                                      ]
-                                                       )
+                                                        'widget' => 'single_text', 
+                                                        'html5' => false,
+                                                        'attr' => [
+                                                                    'class' => 'js-datepicker',
+                                                                    'readonly' => true
+                                                                  ],
+                                                        'required' => false
+                                                     )
                  )        
             ->add('minimumBedsNumber', ChoiceType::class, [
-                                                        'choices' => [
-                                                                        '1' => 1, 
-                                                                        '2' => 2, 
-                                                                        '3' => 3, 
-                                                                        '4' => 4, 
-                                                                        '5' => 5, 
-                                                                        '6' => 6, 
-                                                                        '7' => 7, 
-                                                                        '8' => 8, 
-                                                                        '9' => 9, 
-                                                                        '10' => 10
-                                                                    ],
-                                                        'required' => false,
-                                                        'placeholder' => 'Minimum beds number',
-                                                      ]
+                                                            'choices' => [
+                                                                            'Mobilhome 1 place' => 1, 
+                                                                            'Mobilhome 2 places' => 2, 
+                                                                            'Mobilhome 3 places' => 3, 
+                                                                            'Mobilhome 4 places' => 4, 
+                                                                            'Mobilhome 5 places' => 5, 
+                                                                            'Mobilhome 6 places' => 6, 
+                                                                            'Mobilhome 7 places' => 7, 
+                                                                            'Mobilhome 8 places' => 8, 
+                                                                            'Mobilhome 9 places' => 9, 
+                                                                            'Mobilhome 10 places' => 10
+                                                                         ],
+                                                            'required' => false
+                                                          ]
                  )
             ->add('maximumPrice', IntegerType::class, [
-                                                    'required' => false,
-                                                    'attr' => ['placeholder' => 'Maximum price',]
-                                                  ]
+                                                        'required' => false,
+                                                        'attr' => ['placeholder' => 'Maximum price']
+                                                      ]
                  )
             ->add('cellEquipments', EntityType::class, [
-                                                        'required' => false,
-                                                        'class' => 'App\Entity\backend\Equipment',
-                                                        'choice_label' => 'equipment',
-                                                        'multiple' => true, 
-                                                        'query_builder' => function(EquipmentRepository $er) use ($belongingCell) {
-                                                                                return $er->queryFindByBelonging($belongingCell);
-                                                                           }
+                                                            'required' => false,
+                                                            'class' => 'App\Entity\backend\Equipment',
+                                                            'choice_label' => 'equipment',
+                                                            'multiple' => true, 
+                                                            'query_builder' => function(EquipmentRepository $er) use ($belongingCell) {
+                                                                                    return $er->queryFindByBelonging($belongingCell);
+                                                                            }
                                                        ]
                  )
             ->add('carrierEquipments', EntityType::class, [
@@ -85,38 +88,51 @@ class AdvertSearchType extends AbstractType
             ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
             ->add('distance', ChoiceType::class, array(
-                                                       'required' => false,
-                                                       'choices' => array('5 km'  => 5,
-                                                                          '10 km'  => 10,
-                                                                          '20 km'  => 20,
-                                                                          '30 km'  => 30,
-                                                                          '40 km'  => 40,
-                                                                          '50 km'  => 50,
-                                                                          '100 km'  => 100
-                                                                         )
+                                                        'required' => false,
+                                                        'choices' => array('5 km'  => 5,
+                                                                            '10 km'  => 10,
+                                                                            '20 km'  => 20,
+                                                                            '30 km'  => 30,
+                                                                            '40 km'  => 40,
+                                                                            '50 km'  => 50,
+                                                                            '100 km'  => 100
+                                                                            )
                                                       )
                  )
             ->add('address', TextType::class, array('required' => false))
             ->add('city', HiddenType::class)
             ->add('sorting', ChoiceType::class, array(
                                                       'required' => false,
-                                                      'choices' => array('Proximity'  => 'Proximity',
-                                                                         'Price'  => 'Price',
-                                                                         'Proximity + price'  => 'Proximity + price'
+                                                      'choices' => array(
+                                                                            'Proximity'  => 'Proximity',
+                                                                            'Price'  => 'Price',
+                                                                            'Proximity + price'  => 'Proximity + price'
                                                                         )
                                                      )
                  )
+            ->add('urlAjaxSession', HiddenType::class, array(
+                                                                'mapped' => false,
+                                                                'data' => $options['url']
+                                                            )
+                 )
         ;
+
     }           
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => AdvertSearch::class,
-            'method' => 'get',
-            'csrf_protection' => false,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => AdvertSearch::class,
+                                    'url' => null,
+                                    'method' => 'get',
+                                    'csrf_protection' => false,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
 
     public function getBlockPrefix()

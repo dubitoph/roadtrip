@@ -109,18 +109,18 @@ jQuery(document).ready(function() {
         }       
 
     });
+
+});
     
-    //Dates formatting to ISO before submit
-    $("form").submit(function(event) {
+//Dates formatting to ISO before submit
+$("form").submit(function(event) {
 
-        $('input.js-datepicker-period').each(function(e) {
+    $('input.js-datepicker-period').each(function(e) {
 
-            var sDate = $(this).val();
-            var dateTime = moment(sDate, localeDateFormat).toISOString();
+        var sDate = $(this).val();
+        var dateTime = moment(sDate, localeDateFormat).toISOString();
 
-            $(this).val(dateTime);
-
-        });
+        $(this).val(dateTime);
 
     });
 

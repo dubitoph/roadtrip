@@ -265,6 +265,7 @@ class Vehicle
      * Set the manufacture date
      *
      * @param \DateTimeInterface $manufactureDate
+     * 
      * @return self
      */
     public function setManufactureDate(\DateTimeInterface $manufactureDate): self

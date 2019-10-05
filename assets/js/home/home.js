@@ -60,7 +60,7 @@ jQuery( document ).ready( function( $ ) {
     setSessionLocation($('#address').val(), $('#latitude').val(), $('#longitude').val(), $('#city').val());
 
   }
-
+/*
   //Use a calendar for the start and end dates of booking 
   $(".js-datepicker").datepicker({
 
@@ -87,23 +87,23 @@ jQuery( document ).ready( function( $ ) {
       $('#beginAt').datepicker('setEndDate', selected.date);
 
   });
-    
-  //Dates formatting to ISO before submit
-  $("form").submit(function(event) {
-
-      $('input.js-datepicker').each(function(e) {
-
-          var sDate = $(this).val();
-          var dateTime = moment(sDate, localeDateFormat).toISOString(true);
-
-          $(this).val(dateTime);
-
-      });
 
   });
-
+*/
 });
+/*    
+//Dates formatting to ISO before submit
+$("form").submit(function(event) {
 
+    $('input.js-datepicker').each(function(e) {
+
+        var sDate = $(this).val();
+        var dateTime = moment(sDate, localeDateFormat).toISOString(true);
+
+        $(this).val(dateTime);
+
+    });
+*/
 function geocode(query) 
 {
     

@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Toutes les annonces{% endblock %}
+{% block title %}
+
+    Roadtripr - The adverts
+    
+{% endblock %}
 
 {% block body %}
 
@@ -72,28 +76,10 @@
 
                 </div>
 
-                <div class="form-row" style="display: none">                    
-
-                    <div class="col">
-        
-                        <input type="text" id="urlAjaxSession" value="{{ path('user.geolocation.session') }}">
-        
+                <div class="col">
+                    <div class="form-group">
+                        <button class="btn btn-primary">Search</button>
                     </div>
-
-                </div>
-
-                <div class="form-row">
-
-                    <div class="col">
-
-                        <div class="form-group">
-
-                            <button class="btn btn-primary">Rechercher</button>
-
-                        </div>
-
-                    </div>
-                    
                 </div>
                 
             {{ form_end(form) }}
@@ -104,7 +90,7 @@
 
     <div class='container mt-4'>
 
-        <h1>Tous les motorhomes</h1>
+        <h1>All mobilehomes</h1>
 
         {% set i = 0 %}
 
@@ -143,33 +129,7 @@
             {% endfor %}
             
         </div>
-{#
-        <div class="row">
-
-            {% for advert in adverts %}
-            
-                <div class="col-md-4">
-
-                    {% if distances[advert.id] is defined %}
-
-                        
-                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distances[advert.id]}) }}
-
-                    {% else %}
-
-                        
-                        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert }) }}
-                        
-                    {% endif %}
-
-                </div>
-
-                {% set i = i + 1 %}
-                
-            {% endfor %}
-            
-        </div>
-#}
+        
         <div class="pagination">
 
             {{ knp_pagination_render(adverts) }}

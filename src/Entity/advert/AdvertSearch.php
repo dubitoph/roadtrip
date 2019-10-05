@@ -61,7 +61,7 @@ Class AdvertSearch
     private $sorting;
 
     /**
-     * @var datetime|null
+     * @var DateTime|null
      * 
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThanOrEqual("today")
@@ -69,7 +69,7 @@ Class AdvertSearch
     private $beginAt; 
 
     /**
-     * @var datetime|null
+     * @var DateTime|null
      * 
      * @Assert\Type("\DateTime")
      * @Assert\GreaterThanOrEqual("today")
@@ -366,7 +366,7 @@ Class AdvertSearch
     /**
      * Get the beginning date
      *
-     * @return \DateTimeInterface|null
+     * return \DateTimeInterface|null
      */
     public function getBeginAt(): ?\DateTimeInterface
     {
@@ -382,7 +382,7 @@ Class AdvertSearch
      * 
      * @return self
      */
-    public function setBeginAt(\DateTimeInterface $beginAt): self
+    public function setBeginAt(?\DateTimeInterface $beginAt): self
     {
 
         $this->beginAt = $beginAt;

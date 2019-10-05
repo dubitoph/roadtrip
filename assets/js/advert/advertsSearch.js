@@ -1,8 +1,11 @@
-//import Places from 'places.js';
 import { autocompleteAddress } from '../app';
 
+//Setup the date format according to navigator locale
+var localData = moment.localeData();
+var localeDateFormat = localData['_longDateFormat']['L'];
+
 jQuery( document ).ready( function( $ ) {
-    
+
   //Dates formatting according user's locale
   $('.js-datepicker').each(function() {
 
@@ -13,54 +16,50 @@ jQuery( document ).ready( function( $ ) {
 
       }
 
+      //Use a calendar for the start and end dates of booking 
+      $(".js-datepicker").datepicker({
+    
+        viewMode: "years",
+        weekStart: 1,
+        daysOfWeekHighlighted: "6,0",
+        autoclose: true,
+        todayHighlight: true,
+        startDate: '-0d',
+        endDate:'+2y',
+        format: localeDateFormat.toLowerCase()
+    
+      });
+        
+      // Avoid end date less than begin date
+      $("#beginAt").datepicker().on('changeDate', function (selected) {
+    
+          $('#endAt').datepicker('setStartDate', selected.date);
+    
+      });    
+      
+      $("#endAt").datepicker().on('changeDate', function (selected) {
+    
+          $('#beginAt').datepicker('setEndDate', selected.date);
+    
+      });
+
+  });
+    
+  //Dates formatting to ISO before submit
+  $("form").on('submit', function(e) {
+
+    var beginAt = $('#beginAt').val();
+    var dateTimeBeginAt = moment(beginAt, localeDateFormat).toISOString(true);
+
+    var endAt = $('#endAt').val();
+    var dateTimeEndAt = moment(endAt, localeDateFormat).toISOString(true);
+
+    $('#beginAt').val(dateTimeBeginAt);
+    $('#endAt').val(dateTimeEndAt);
+
   });
 
   autocompleteAddress('profile_address_street', 'profile_address_city', 'profile_address_zipCode', 'profile_address_country', 
                       'profile_address_latitude', 'profile_address_longitude');
-/*
-  var places = require('places.js');
-  var inputAddress = document.querySelector('#search_address');
 
-  if (inputAddress !== null) 
-  {
-
-    var placesAutocomplete = places({
-
-      appId: 'pl3HG0JAQ7C3',
-      apiKey: '1c3a71e4dabb3c07b37e1275f63c154f',
-      container: inputAddress
-
-    });
-
-    placesAutocomplete.on('change', e => {
-
-      document.querySelector('#latitude').value = e.suggestion.latlng.lat;
-      document.querySelector('#longitude').value = e.suggestion.latlng.lng;
-      document.querySelector('#city').value = e.suggestion.city;
-
-      if (confirm('Would you like this location becomes your default location?'))
-      {
-
-        localStorage.setItem('userLatitude', e.suggestion.latlng.lat);
-        localStorage.setItem('userLongitude', e.suggestion.latlng.lng);
-        localStorage.setItem('userCity', e.suggestion.city);
-        localStorage.setItem('userAddress', e.query);
-        
-        setSessionLocation(e.query);
-        
-      }
-
-    });
-
-    placesAutocomplete.on('clear', function() {
-
-      document.querySelector('#latitude').value = '';
-      document.querySelector('#longitude').value = '';
-      document.querySelector('#city').value = '';
-      document.querySelector('#search_address').value = '';
-
-    });
-
-  }
-*/
 });

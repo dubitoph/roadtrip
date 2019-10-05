@@ -30,19 +30,19 @@ $(document).ready(function() {
       format: localeDateFormat.toLowerCase()
 
     });
-    
-    //Building date formatting to ISO before submit
-    $("form").submit(function(event) {
-
-      var $mamufactureDateInput = $("#vehicle_manufactureDate");
-      var sDate = $mamufactureDateInput.val();
-      var dateTime = moment(sDate, localeDateFormat).toISOString();
-      $mamufactureDateInput.val(dateTime);
-
-    });
 
     autocompleteAddress('vehicle_situation_street', 'vehicle_situation_city', 'vehicle_situation_zipCode', 'vehicle_situation_country', 
                         'vehicle_situation_number', 'vehicle_situation_box', 'vehicle_situation_state', 'vehicle_situation_latitude', 
                         'vehicle_situation_longitude');
+
+});
+    
+//Building date formatting to ISO before submit
+$("form").submit(function(event) {
+
+  var $mamufactureDateInput = $("#vehicle_manufactureDate");
+  var sDate = $mamufactureDateInput.val();
+  var dateTime = moment(sDate, localeDateFormat).toISOString();
+  $mamufactureDateInput.val(dateTime);
 
 });
