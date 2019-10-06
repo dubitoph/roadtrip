@@ -1,3 +1,4 @@
+console.log("variable: " + localStorage.getItem("userLongitude"));
 import '../css/app.scss';
 
 import $ from 'jquery';
@@ -22,17 +23,15 @@ import select2 from'select2';
 window['select2'] = select2;
 */
 import 'bootstrap';
+
 /*
-// -- polyfill
 import './polyfill/svg.js'
-// -- actions
-import './actions/select/init.js'
 */
+import './actions/select/init.js'
+
 jQuery( document ).ready( function( $ ){
 
 //  $('[select]').select2();
-
-//  $("select").removeClass("form-control");
 
   $('[data-slider]').slick({
 

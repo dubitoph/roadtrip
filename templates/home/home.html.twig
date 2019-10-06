@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+ {% extends 'base.html.twig' %}
 
 {% block title %}The first free spirit trip community{% endblock %}
 
@@ -16,16 +16,8 @@
             <div class="form-row align-items-end">
                 <div class="col">
                   <div class="select">
-                      <!--<select id="" class="select-hidden">
-                        <option value="1" selected="">Mobilhome 4 places</option>
-                        <option value="2">Mobilhome 4 places</option>
-                        <option value="3">Mobilhome 4 places</option>
-                        <option value="4">Mobilhome 4 places</option>
-                        <option value="5">Mobilhome 4 places</option>
-                      </select>-->
-                      {{ form_row(form.minimumBedsNumber) }}
+                      {{ form_widget(form.minimumBedsNumber) }}
                   </div>
-
                 </div>
 
                 <div class="col">

@@ -14,7 +14,7 @@ function selectShowHide(){
 		const head = select.querySelector('.select-styled');
 		const customSelect = select.querySelector('.select-options');
 		const options = customSelect.querySelectorAll('li');
-		const selHide = select.querySelector('.select-hidden')
+		const selHide = select.querySelector('.select-hidden');
 		const openH = [...options].reduce( (tot, o) => { return tot + o.clientHeight }, 0);
 
 		let count = false;
