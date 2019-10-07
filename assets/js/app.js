@@ -1,4 +1,3 @@
-console.log("variable: " + localStorage.getItem("userLongitude"));
 import '../css/app.scss';
 
 import $ from 'jquery';
@@ -27,7 +26,7 @@ import 'bootstrap';
 /*
 import './polyfill/svg.js'
 */
-import './actions/select/init.js'
+//import './actions/select/init.js'
 
 jQuery( document ).ready( function( $ ){
   $(window).scroll(function () {

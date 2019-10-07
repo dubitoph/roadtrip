@@ -1072,7 +1072,7 @@ class AdvertController extends AbstractController
         {
 
             return $this->redirectToRoute('all.advert.show', ['id' => $advert->getId(),
-                                                              'slug' => $advertSlug,
+                                                              'slug' => $advertSlug
                                                              ],
                                                              301 
                                          )
@@ -1194,7 +1194,7 @@ class AdvertController extends AbstractController
                                                             'mainPhoto' => $mainPhoto,
                                                             'cellEquipments' => $cellEquipments,
                                                             'carrierEquipments' => $carrierEquipments
-                                                        ]
+                                                          ]
                                 )
             ;
 
