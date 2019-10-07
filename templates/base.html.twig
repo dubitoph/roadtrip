@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<<<<<<< HEAD
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,9 +20,9 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-collapse collapse" id="navbar">
 
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ml-auto mr-1">
               <li class="nav-item">
                 <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="#">How does it work ?</a>
               </li>
@@ -82,93 +81,8 @@
                       <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-=======
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Roadtripr | {% block title %}Welcome!{% endblock %}</title>
-
-    {% block stylesheets %}
-
-      {{ encore_entry_link_tags ( 'app' ) }}
-
-    {% endblock %}
-
-  </head>
-  <body>
-
-    <nav class="navbar fixed-top navbar-expand-lg">
-      <a class="navbar-brand" href="{{ path('home') }}"><img src="/images/roadtripr.svg" alt="Roadtripr" /></a>
-
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbar">
-
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="#">How does it work ?</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if current_menu is defined and current_menu == 'adverts' %}active{% endif %}" href="{{ path('advert.index') }}">All adverts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if current_menu is defined and current_menu == 'add_advert' %}active{% endif %}" href="{{ path('advert.description.create') }}">List your motorhome</a>
-          </li>
-        </ul>
-
-        <div class="btn-group" role="group" aria-label="Basic example">
-          {% if app.user %}
-            <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
-          {% else %}
-            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
-          {% endif %}
-
-          {% if app.user %}
-            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
-          {% endif %}
-
-          {% if not app.user %}
-            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
-          {% endif %}
+            </div>
         </div>
-
-      </div>
-
-    </nav>
-
-    {% set messages = app.flashes %}
-
-    <!-- Login modal -->
-    {% if messages|length > 0 %}
-      <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
-    {% else %}
-      <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>
-    {% endif %}
-
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Login</h4>
-            </div>
-            <div class="modal-body">
-              <div>
-                {% for message in messages %}
-                  <div class="alert alert-danger">
-                    {{ message[0] }}
-                  </div>
-                {% endfor %}
-              </div>
-              {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
->>>>>>> 4d93ed4ced5afaf0a4903c5e207ffb747ee38243
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-<<<<<<< HEAD
 
         </div>
 
@@ -233,101 +147,7 @@
           {{ encore_entry_script_tags ('app') }}
 
       {% endblock %}
-=======
-      </div>
 
-      <!-- Registration modal -->
-      {% if messages|length > 0 %}
-        <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1'>
-      {% else %}
-        <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0'>
-      {% endif %}
-  
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title">Sign up</h4>
-              </div>
-              <div class="modal-body">
-                <div>
-                  {% for message in messages %}
-                    <div class="alert alert-danger">
-                      {{ message[0] }}
-                    </div>
-                  {% endfor %}
-                </div>
-                {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-    </div>
-
-    {% block body %}
-    {% endblock %}
-
-    <footer class="footer bg-dark pt-5 pb-5">
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <h5>Menu 1</h5>
-            <ul class="list-unstyled">
-              <li class="">Cras justo odio</li>
-              <li class="">Dapibus ac facilisis in</li>
-              <li class="">Morbi leo risus</li>
-              <li class="">Porta ac consectetur ac</li>
-              <li class="">Vestibulum at eros</li>
-            </ul>
-          </div>
-          <div class="col">
-            <h5>Menu 2</h5>
-            <ul class="list-unstyled">
-              <li class="">Cras justo odio</li>
-              <li class="">Dapibus ac facilisis in</li>
-              <li class="">Morbi leo risus</li>
-              <li class="">Porta ac consectetur ac</li>
-              <li class="">Vestibulum at eros</li>
-            </ul>
-          </div>
-          <div class="col">
-            <h5>Menu 3</h5>
-            <ul class="list-unstyled">
-              <li class="">Cras justo odio</li>
-              <li class="">Dapibus ac facilisis in</li>
-              <li class="">Morbi leo risus</li>
-              <li class="">Porta ac consectetur ac</li>
-              <li class="">Vestibulum at eros</li>
-            </ul>
-          </div>
-          <div class="col">
-            <h5>Social</h5>
-            <ul class="list-unstyled">
-              <li class="">Twitter</li>
-              <li class="">Instagram</li>
-              <li class="">Facebook</li>
-            </ul>
-          </div>
-        </div>
-        <center>
-          Use of this site implies acceptance of the terms and conditions of use and the <a href="#">privacy policy</a>.
-          Copyright © 2019 ‐ 2029 Roadtrip ‐ All rights reserved ‐ Last site update : June 20, 2019
-        </center>
-
-    </footer>
-
-    <script src="https://js.stripe.com/v3/"></script>
-
-    {% block javascripts %}
-
-        {{ encore_entry_script_tags ('app') }}
-
-    {% endblock %}
->>>>>>> 4d93ed4ced5afaf0a4903c5e207ffb747ee38243
-
-  </body>
+    </body>
 
 </html>
