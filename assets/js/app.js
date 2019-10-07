@@ -30,8 +30,18 @@ import './polyfill/svg.js'
 import './actions/select/init.js'
 
 jQuery( document ).ready( function( $ ){
+  $(window).scroll(function () {
+     if ($(this).scrollTop() > 80) {
+        $('.topbar > .navbar').addClass('topbar-sticky');
+        $('#navbar .btn-secondary').removeClass('btn-white');
+     }
+     if ($(this).scrollTop() < 80) {
+        $('.topbar > .navbar').removeClass('topbar-sticky');
+        $('#navbar .btn-secondary').addClass('btn-white');
+     }
+  });
 
-//  $('[select]').select2();
+  //  $('[select]').select2();
 
   $('[data-slider]').slick({
 

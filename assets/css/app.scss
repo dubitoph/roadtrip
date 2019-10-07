@@ -116,9 +116,9 @@ h2, .h2 { margin-top: 25px; }
   }
 }
 .btn-secondary{
-  background: $white;
-  border-color: $link-hover-color;
-  color: $link-color;
+  background: transparent;
+  border-color: $black;
+  color: $black;
   &.btn-white{
     background: transparent;
     border-color: $white!important;
@@ -126,7 +126,7 @@ h2, .h2 { margin-top: 25px; }
   }
   &:hover{
     background: none;
-    color: $link-hover-color;
+    color: $black;
     border-color: $link-hover-color;
   }
   &:focus,
@@ -143,11 +143,27 @@ h2, .h2 { margin-top: 25px; }
 .navbar-nav {
   .nav-link{
       text-decoration: none;
-      color: $body-color;
+      color: $white;
       font-size: 0.8em;
       font-weight: 700;
       &:hover{text-decoration: underline;}
   }
+}
+.navbar-expand-lg {
+  .navbar-nav {
+    @include media-breakpoint-up(lg) {
+      flex-direction: row-reverse !important;
+    }
+  }
+}
+.topbar-sticky{
+  background-color: rgba(255,255,255,.8) !important;
+  li a,
+  .navbar-nav .nav-link {
+    color: $black;
+    &:hover{color: $black;}
+  }
+  transition: 0.5s all;
 }
 /* forms */
 label{
@@ -195,6 +211,7 @@ input[type="text"]::-ms-clear,
 input[type="search"]::-ms-clear {
     display: none;
 }
+
 /* hero */
 .hero {
   position: relative;
@@ -320,6 +337,13 @@ input[type="search"]::-ms-clear {
   @include media-breakpoint-up(lg) {
     background-image: url($root-url+'/images/landscape3-l.jpg');
   }
+}
+/* footer */
+.footer{
+  background-color: $black;
+  padding: 25px;
+  color: $white;
+  ul, li, p, a{color: $white;}
 }
 /* card */
 .card {
