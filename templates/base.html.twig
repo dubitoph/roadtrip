@@ -39,7 +39,7 @@
           {% if app.user %}
             <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
           {% else %}
-            <a id="call_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
+            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
           {% endif %}
 
           {% if app.user %}
@@ -47,7 +47,7 @@
           {% endif %}
 
           {% if not app.user %}
-            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" href="{{ path('security.registration') }}">Sign up</a>
+            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
           {% endif %}
         </div>
 

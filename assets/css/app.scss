@@ -4,6 +4,7 @@
 @import "type";
 @import "icons";
 /* 2. begin customization -------- */
+$root-url:                    'http://127.0.0.1:8000';
 /* theme color */
 $black:                       #322A1D;
 $body-color:                  #322A1D;
@@ -35,6 +36,7 @@ $font-family-alt2:            'Basier',Helvetica,Arial,sans-serif;
 $font-weight-normal:          normal;
 $font-weight-bold:            bold;
 
+$enable-responsive-font-sizes:'true';
 $h1-font-size:                4.3rem;
 $h2-font-size:                1.75rem;
 $h3-font-size:                1.45rem;
@@ -43,6 +45,7 @@ $h5-font-size:                1.15rem;
 $headings-font-weight:        700;
 $headings-line-height:        0.9;
 $headings-color:              $body-color;
+$headings-margin-bottom:      1.5rem;
 
 /* buttons */
 $btn-padding-y:               17px;
@@ -194,17 +197,15 @@ input[type="search"]::-ms-clear {
 }
 /* hero */
 .hero {
-  min-height: 700px;
   position: relative;
   .hero_headline {
     position:absolute;
-    top:80px;
+    top:168px;
     left:0;
     z-index: 2;
     padding-bottom: 0;
     padding-top: 0;
     margin: 0;
-
   }
   .hero_image {
       position: relative;
@@ -220,14 +221,14 @@ input[type="search"]::-ms-clear {
         z-index: 100;
         width: 168px;
         height: 400px;
-        background:transparent url('http://127.0.0.1:8000/images/track.svg') no-repeat left top;
+        background:transparent url($root-url+'/images/track.svg') no-repeat left top;
       }
   }
 
 }
 .m_skew {
     width: 70vw;
-    max-height: 700px;
+    max-height: 720px;
     height: 100%;
     transform: skew(-14deg,0) translateX(150px);
     overflow: hidden;
@@ -254,9 +255,71 @@ input[type="search"]::-ms-clear {
       position: absolute;
     }
     img {
-      width: 100%;
+      max-width: 100%;
       height: 100%;
     }
+}
+/* images bg */
+.container-image{
+  background-repeat:no-repeat;
+  padding-top:25px;padding-bottom:25px;
+  @include media-breakpoint-up(md) {padding-top:160px;padding-bottom:160px;}
+  @media (min-width: 2240px) {background-size:cover;}
+  &.container-image-right{
+    background-position:92vw bottom;
+    background-size:auto;
+    @include media-breakpoint-up(md) {background-position:45vw bottom;background-size:auto 100%;}
+  }
+  &.container-image-left{
+    background-position:calc(100% - 92vw) bottom;
+    background-size:auto;
+    @include media-breakpoint-up(md) {background-position:calc(100% - 45vw) bottom;background-size:auto 100%;}
+  }
+  .container-image-content{}
+}
+.bg-blue {
+  background-color: $blue !important;
+  text-color:$white!important;
+}
+.bg-orange {
+  background-color: $orange !important;
+  * {text-color:$white!important;}
+}
+.bg-gray {
+  background-color: $gray-600 !important;
+  * {text-color:$white!important;}
+}
+.bg-yellow {
+  background-color: $yellow !important;
+}
+
+#home-hero{
+  background-image: url($root-url+'/images/landscape1-m.jpg');
+  @include media-breakpoint-up(md) {
+    background-image: url($root-url+'/images/landscape1-m.jpg');
+  }
+  @include media-breakpoint-up(lg) {
+    background-image: url($root-url+'/images/landscape1-l.jpg');
+  }
+
+}
+#home-why{
+  background-image: url($root-url+'/images/landscape2-m.jpg');
+  @include media-breakpoint-up(md) {
+    background-image: url($root-url+'/images/landscape2-m.jpg');
+  }
+  @include media-breakpoint-up(lg) {
+    background-image: url($root-url+'/images/landscape2-l.jpg');
+  }
+}
+#home-subscribe{
+  background-image: url($root-url+'/images/landscape3-m.jpg');
+  @include media-breakpoint-up(md) {
+    background-image: url($root-url+'/images/landscape3-m.jpg');
+  }
+  @include media-breakpoint-up(lg) {
+    background-image: url($root-url+'/images/landscape3-l.jpg');
+  }
 }
 /* card */
 .card {

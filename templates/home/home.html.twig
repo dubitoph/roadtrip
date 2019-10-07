@@ -4,17 +4,18 @@
 
 {% block body %}
     <!-- HERO -->
-    <section class="hero">
-      <div class="container" style="position:relative;">
-        <div class="row">
-          <div class="col-md-6">
-          <div class="hero_headline">
+    <section class="container-fluid container-image container-image-right" id="home-hero">
+      <div class="container">
+          <div class="col-md-5">
+          <div class="container-image-content">
             <h1>The adventure in a wheel spin</h1>
             <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
 
             {{ form_start(form) }}
             <div class="form-row align-items-end">
                 <div class="col">
+
+                  <label for="minimumBedsNumber">How many seats do you want ?</label>
                   <div class="select">
                       {{ form_widget(form.minimumBedsNumber) }}
                   </div>
@@ -27,33 +28,16 @@
                 </div>
 
             </div>
-
             {{ form_end(form) }}
 
             <p><small>Or <a href="{{ path('advert.description.create') }}">list your motorhome</a>.</small></p>
 
-
           </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-6 align-self-center"></div>
-        <div class="col-md-6">
-          <div class="hero_image">
-            <div class="m_skew">
-               <picture class="objectfit--cover objectFitContainer">
-                  <source media="(min-width: 1024px)" srcset="images/motorhome1.jpg">
-                  <source media="(min-width: 786px)" srcset="images/motorhome1.jpg">
-                  <source media="(min-width: 320px)" srcset="images/motorhome1.jpg">
-                  <img alt="L'association" src="images/motorhome1.jpg">
-                </picture>
-            </div>
           </div>
-        </div>
       </div>
     </section>
     <!-- HERO:end -->
+
     <!-- LAST ADVERTS -->
     <section id="lastAdverts" class="pt-5 pb-5">
       <div class="container">
@@ -97,15 +81,16 @@
       </div>
     </section>
     <!-- LAST ADVERTS:end -->
+
     <!-- WHY USE -->
-    <section id="whyUse" class="bg-light pt-5 pb-5">
+    <section id="home-why" class="container-fluid container-image container-image-right">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col">
+        <div class="col-md-5 container-image-content">
           <h2>Pourquoi réserver votre véhicule sur Roadtripr ?</h2>
           <p>Partir à l’aventure okay, mais pas sans un minimum de garanties…</p>
         </div>
-        <div class="col">
+        <div class="col-md-5 offset-md-2 container-image-content">
           <ol class="list-group">
             <li class="list-group-item">
               <p><strong>Sécurité</strong>. Vous savez chez qui vous louez, vous rencontrez le propriétaire du véhicule.</p>
@@ -119,30 +104,31 @@
           </ol>
         </div>
       </div>
+    </div>
     </section>
     <!-- WHY USE:end -->
     <!-- SUBSCRIPTION -->
-    <section id="whyUse" class="pt-5 pb-5">
+    <section id="home-subscribe" class="container-fluid container-image container-image-left">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col">
-          <h2>Pourquoi s'inscrire ?</h2>
-          <p>Inscrivez-vous pour réserver votre motorhome et accéder à l’ensemble des fonctionnalités du site. Une fois inscrit, vous pouvez également mettre en vente votre véhicule.</p>
+        <div class="col-md-5 container-image-content">
+          <h2 class="text-white">Pourquoi s'inscrire ?</h2>
+          <p class="text-white">Inscrivez-vous pour réserver votre motorhome et accéder à l’ensemble des fonctionnalités du site. Une fois inscrit, vous pouvez également mettre en vente votre véhicule.</p>
         </div>
-        <div class="col">
+        <div class="col-md-5 offset-md-2 container-image-content">
           <h2>Je m'inscris gratuitement</h2>
 
-          <i>Form</i>
+          {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
         </div>
       </div>
     </section>
 
     <!-- TESTIMONIALS -->
-    <section id="testimonials" class="bg-light pt-5 pb-5">
+    <section id="testimonials" class="bg-blue pt-5 pb-5">
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
-          <h2>Parole aux utilisateurs</h2>
+          <h2 class="text-white">Parole aux utilisateurs</h2>
         </div>
       </div>
     </section>

@@ -8,11 +8,11 @@
   border: 1px solid $gray;
   border-radius: $border-radius;
   background-color: $white;
-  padding: 12px 17px;
+  padding: 11px 17px;
   font-size: 0.9rem;
   font-weight: normal;
   color:$gray-600;
-  line-height: 1.8;
+  line-height: 1.7;
   letter-spacing: 1;
   -webkit-appearance: none;
 	outline: none;
@@ -40,7 +40,7 @@
   color: $gray-600;
   width: 100%;
   margin-right: 0px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   &.isActive{
 		z-index:999;
 		.select-styled{
