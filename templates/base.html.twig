@@ -65,7 +65,10 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Login</h4>
+                      <h4 class="modal-title">Login</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
                     <div class="modal-body">
                       <div>
@@ -76,9 +79,6 @@
                         {% endfor %}
                       </div>
                       {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -97,6 +97,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Sign up</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                       <div>
@@ -107,9 +110,6 @@
                         {% endfor %}
                       </div>
                       {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -128,45 +128,46 @@
             <div class="col">
               <h5>Menu 1</h5>
               <ul class="list-unstyled text-light">
-                <li class="">Cras justo odio</li>
-                <li class="">Dapibus ac facilisis in</li>
-                <li class="">Morbi leo risus</li>
-                <li class="">Porta ac consectetur ac</li>
-                <li class="">Vestibulum at eros</li>
+                <li class=""><a href="#">Cras justo odio</a></li>
+                <li class=""><a href="#">Dapibus ac facilisis in</a></li>
+                <li class=""><a href="#">Morbi leo risus</a></li>
+                <li class=""><a href="#">Porta ac consectetur ac</a></li>
+                <li class=""><a href="#">Vestibulum at eros</a></li>
               </ul>
             </div>
             <div class="col">
               <h5>Menu 2</h5>
               <ul class="list-unstyled text-light">
-                <li class="">Cras justo odio</li>
-                <li class="">Dapibus ac facilisis in</li>
-                <li class="">Morbi leo risus</li>
-                <li class="">Porta ac consectetur ac</li>
-                <li class="">Vestibulum at eros</li>
+              <li class=""><a href="#">Cras justo odio</a></li>
+              <li class=""><a href="#">Dapibus ac facilisis in</a></li>
+              <li class=""><a href="#">Morbi leo risus</a></li>
+              <li class=""><a href="#">Porta ac consectetur ac</a></li>
+              <li class=""><a href="#">Vestibulum at eros</a></li>
               </ul>
             </div>
             <div class="col">
               <h5>Menu 3</h5>
               <ul class="list-unstyled text-light">
-                <li class="">Cras justo odio</li>
-                <li class="">Dapibus ac facilisis in</li>
-                <li class="">Morbi leo risus</li>
-                <li class="">Porta ac consectetur ac</li>
-                <li class="">Vestibulum at eros</li>
+              <li class=""><a href="#">Cras justo odio</a></li>
+              <li class=""><a href="#">Dapibus ac facilisis in</a></li>
+              <li class=""><a href="#">Morbi leo risus</a></li>
+              <li class=""><a href="#">Porta ac consectetur ac</a></li>
+              <li class=""><a href="#">Vestibulum at eros</a></li>
               </ul>
             </div>
             <div class="col">
               <h5>Social</h5>
               <ul class="list-unstyled">
-                <li class="">Twitter</li>
-                <li class="">Instagram</li>
-                <li class="">Facebook</li>
+                <li class=""><a href="#">Twitter</a></li>
+                <li class=""><a href="#">Instagram</a></li>
+                <li class=""><a href="#">Facebook</a></li>
               </ul>
             </div>
           </div>
           <center>
-              Use of this site implies acceptance of the terms and conditions of use and the <a href="#">privacy policy</a>.
-              Copyright © 2019 ‐ 2029 Roadtrip ‐ All rights reserved ‐ Last site update : June 20, 2019
+              <p>Use of this site implies acceptance of the terms and conditions of use and the <a href="#">privacy policy</a>.
+              <br />Copyright © 2019 ‐ 2029 Roadtrip ‐ All rights reserved
+              <br />Last site update : June 20, 2019</p>
           </center>
 
       </footer>

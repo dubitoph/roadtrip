@@ -1,36 +1,27 @@
-<div class="container mt-5 mb-5">
-  <div class="row justify-content-center align-items-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          {{ include('_messages.html.twig') }}
-          {{ form_start(form) }}
+{{ include('_messages.html.twig') }}
+{{ form_start(form) }}
 
-            {{ form_row ( form.firstname, { 'label': 'Firstname', 'attr': { 'placeholder' : 'Firstname...' } } ) }}
-            {{ form_row ( form.name, { 'label': 'Name', 'attr': { 'placeholder' : 'Name...' } } ) }}
-            {{ form_row ( form.phoneNumber, { 'label': 'Phone', 'attr': { 'placeholder' : 'Phone...' } } ) }}
-            {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
-            {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
-            {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
+  {{ form_row ( form.firstname, { 'label': 'Firstname', 'attr': { 'placeholder' : 'Firstname...' } } ) }}
+  {{ form_row ( form.name, { 'label': 'Name', 'attr': { 'placeholder' : 'Name...' } } ) }}
+  {{ form_row ( form.phoneNumber, { 'label': 'Phone', 'attr': { 'placeholder' : 'Phone...' } } ) }}
+  {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
+  {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
+  {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
 
-            {% if is_granted('ROLE_ADMIN') %}
+  {% if is_granted('ROLE_ADMIN') %}
 
-              {{ form_row ( form.roles ) }}
+    {{ form_row ( form.roles ) }}
 
-            {% else %}
+  {% else %}
 
-              {{ form_row ( form.termsAccepted ) }}
+    {{ form_row ( form.termsAccepted ) }}
 
-            {% endif %}
+  {% endif %}
 
-            <button type="submit" class="btn btn-success">Sign up</button>
+  <button type="submit" class="btn btn-primary">Sign up</button>
 
-          {{ form_end(form) }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{{ form_end(form) }}
+
 
 {% block javascripts %}
 

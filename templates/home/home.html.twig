@@ -12,10 +12,9 @@
             <p>Roadtripr allows owners to rent their motorhomes. Find the nearest vehicle that suits you!</p>
 
             {{ form_start(form) }}
+            <label for="minimumBedsNumber">Find the motorhome of your dreams</label>
             <div class="form-row align-items-end">
                 <div class="col">
-
-                  <label for="minimumBedsNumber">How many seats do you want ?</label>
                   <div class="select">
                       {{ form_widget(form.minimumBedsNumber) }}
                   </div>
@@ -117,8 +116,7 @@
         </div>
         <div class="col-md-5 offset-md-2 container-image-content">
           <h2>Je m'inscris gratuitement</h2>
-
-          {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
+          {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
         </div>
       </div>
     </section>

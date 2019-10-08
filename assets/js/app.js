@@ -26,16 +26,17 @@ import 'bootstrap';
 /*
 import './polyfill/svg.js'
 */
-//import './actions/select/init.js'
+import './actions/select/init.js'
 
 jQuery( document ).ready( function( $ ){
+  // stickybar scrollspy
   $(window).scroll(function () {
      if ($(this).scrollTop() > 80) {
-        $('.topbar > .navbar').addClass('topbar-sticky');
+        $('.topbar').addClass('topbar-sticky');
         $('#navbar .btn-secondary').removeClass('btn-white');
      }
      if ($(this).scrollTop() < 80) {
-        $('.topbar > .navbar').removeClass('topbar-sticky');
+        $('.topbar').removeClass('topbar-sticky');
         $('#navbar .btn-secondary').addClass('btn-white');
      }
   });
