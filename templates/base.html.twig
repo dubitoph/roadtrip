@@ -38,7 +38,7 @@
             {% if app.user %}
                 <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
             {% else %}
-                <a id="call_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
+                <a id="call_login_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
             {% endif %}
 
               {% if app.user %}
@@ -46,7 +46,7 @@
               {% endif %}
 
               {% if not app.user %}
-              <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
+              <a id="call_registration_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
               {% endif %}
             </div>
 
@@ -57,9 +57,9 @@
 
         <!-- Login modal -->
         {% if messages|length > 0 %}
-          <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
+          <div id="loginModal" class="modal fade" role="dialog" data-visibility='1' data-active='0'>
         {% else %}
-          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>
+          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0' data-active='0'>
         {% endif %}
 
             <div class="modal-dialog">
@@ -88,9 +88,9 @@
 
         <!-- Registration modal -->
         {% if messages|length > 0 %}
-          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1'>
+          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1' data-active='0'>
         {% else %}
-          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0'>
+          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0' data-active='0'>
         {% endif %}
 
             <div class="modal-dialog">

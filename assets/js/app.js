@@ -49,13 +49,40 @@ jQuery( document ).ready( function( $ ){
 
   });
 
+  //Indicate that one works with one or the other modal div
+  $('#call_login_modal_btn').on('click', function(e) {
+
+    sessionStorage.setItem('loginDivActive', 1);
+    sessionStorage.setItem('registartionDivActive', 0);
+
+  });
+
+  $('#call_registration_modal_btn').on('click', function(e) {
+
+    sessionStorage.setItem('loginDivActive', 0);
+    sessionStorage.setItem('registartionDivActive', 1);
+
+  });
+
   // Display the login modal form if there is an autentication error
-  if($('#loginModal').data('visibility') == '1')
-    {
+  var $loginDiv = $('#loginModal');
 
-      $('#loginModal').modal('show');
+  if($loginDiv.data('visibility') == '1' && sessionStorage.getItem('loginDivActive') == 1)
+  {
 
-    }
+    $loginDiv.modal('show');
+
+  }
+
+  // Display the login modal form if there is an autentication error
+  var $registrationDiv = $('#registartionModal');
+
+  if($registrationDiv.data('visibility') == '1' && sessionStorage.getItem('registrationDivActive') == 1)
+  {
+
+    $registrationDiv.modal('show');
+
+  }
 
 });
 
