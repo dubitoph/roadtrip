@@ -1,4 +1,5 @@
 var Encore = require('@symfony/webpack-encore');
+//var path = require('path');
 
 Encore
     .autoProvidejQuery()
@@ -56,6 +57,8 @@ Encore
 
     .addEntry('calendar', './assets/css/calendar.css')
 
+//    .addAliases({'@images': path.resolve(__dirname, 'public/images')})
+
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
@@ -97,5 +100,17 @@ Encore
         }]
     })
 ;
+
+/*
+var config = Encore.getWebpackConfig();
+var path = require('path');
+
+config.resolve.alias = {
+                            '@images': path.resolve(__dirname, '../images')
+                       }
+;
+
+module.exports = config;
+*/
 
 module.exports = Encore.getWebpackConfig();

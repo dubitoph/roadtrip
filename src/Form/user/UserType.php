@@ -46,12 +46,11 @@ class UserType extends AbstractType
         if ($options['isAdmin']) 
         {
             
-            $builder->add('roles', ChoiceType::class, array('choices' => array(
-                                                                                'Administrateur' => 'ROLE_ADMIN', 
-                                                                                'Propriétaire' => 'ROLE_OWNER', 
-                                                                                'Utilisateur' =>'ROLE_USER' 
-                                                                              ),
-                                                          )
+            $builder->add('roles', ChoiceType::class, array(
+                                                                'required' => true,
+                                                                'multiple' => true,
+                                                                'choices' => $this->refactorRoles($options['roles'])
+                                                           )
                          )
             ;
 
@@ -77,10 +76,46 @@ class UserType extends AbstractType
                                 [
                                     'data_class' => User::class,
                                     'isAdmin' => false,
+                                    'roles' => null,
                                     'translation_domain' => 'forms'
                                 ]
                               )
         ;
+
+    }
+
+    private function refactorRoles($originRoles)
+    {
+
+        $roles = array();
+        $rolesAdded = array();
+    
+        // Add herited roles
+        foreach ($originRoles as $roleParent => $rolesHerit) 
+        {
+
+            $tmpRoles = array_values($rolesHerit);
+            $rolesAdded = array_merge($rolesAdded, $tmpRoles);
+            $roles[$roleParent] = array_combine($tmpRoles, $tmpRoles);
+
+        }
+
+        // Add missing superparent roles
+        $rolesParent = array_keys($originRoles);
+
+        foreach ($rolesParent as $roleParent) 
+        {
+
+            if (!in_array($roleParent, $rolesAdded)) 
+            {
+
+                $roles['-----'][$roleParent] = $roleParent;
+
+            }
+
+        }
+    
+        return $roles;
 
     }
     

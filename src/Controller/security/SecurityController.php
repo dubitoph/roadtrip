@@ -47,9 +47,16 @@ class SecurityController extends AbstractController
 
         $user = new User;
 
-        $isAdmin = $authChecker->isGranted('ROLE_ADMIN');
+        $isAdmin = false;
         
-        $form = $this->createForm(UserType::class, $user, array('isAdmin' => $isAdmin));
+        if($authChecker->isGranted('ROLE_ADMIN'))
+        {
+
+            $isAdmin = true;
+
+        }
+        
+        $form = $this->createForm(UserType::class, $user, array('isAdmin' => $isAdmin, 'roles' => $this->getParameter('security.role_hierarchy.roles')));
 
         $form->handleRequest($request);
 

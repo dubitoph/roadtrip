@@ -19,7 +19,10 @@
         <a class="navbar-brand" href="{{ path('home') }}"><img src="/images/roadtripr.svg" alt="Roadtripr" /></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button>        
+        {% if is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('backend') }}">Backend</a>
+        {% endif %}
         <div class="navbar-collapse collapse" id="navbar">
 
             <ul class="navbar-nav ml-auto mr-1">
@@ -42,7 +45,7 @@
             {% endif %}
 
               {% if app.user %}
-            <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
+              <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
               {% endif %}
 
               {% if not app.user %}
