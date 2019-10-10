@@ -1,14 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Gérer les types de durée {% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : duration update
+
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt-4">
 
-        <h1>Editer le type de durée</h1>
+        <h1>Duration update</h1>
 
-        {{ include('backend/duration/_form.html.twig', { button: 'Editer' }) }}
+        {{ form_start(form) }}
+
+            {{ form_rest(form) }}
+
+            <button type="submit" class="btn btn-success">Save</button>
+            
+        {{ form_end(form) }}
         
     </div>
 

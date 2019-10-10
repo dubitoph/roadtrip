@@ -15,8 +15,12 @@ class BackendDurationController extends AbstractController
 {
     
     /**
+     * Durations list
+     * 
      * @Route("/backend/durations", name="backend.duration.index")
+     * 
      * @param DurationRepository $durationRepository
+     * 
      * @return Response
      */
     public function index(DurationRepository $durationRepository): Response
@@ -62,16 +66,46 @@ class BackendDurationController extends AbstractController
     }
 
     /**
+     * Edit a duration
+     * 
      * @Route("/backend/duration/{id}", name="backend.duration.edit")
+     * 
      * @param Duration $duration
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
-    public function edit(Duration $duration, Request $request, ObjectManager $manager): Response
+    public function edit(Duration $duration, DurationRepository $durationRepository, Request $request, ObjectManager $manager): Response
     {
 
-        $form = $this->createForm(DurationType::class, $duration);
+        // Missing durations search
+        $existingDurations = $durationRepository->findAll();
+
+        $numberDays = array();
+
+        foreach ($existingDurations as $existingDuration) 
+        {
+
+            $numberDays[] = $existingDuration->getDaysNumber();
+
+        }
+
+        $missingDurations = array();
+
+        for ($i=1; $i < 32; $i++) 
+        { 
+
+            if (! in_array($i, $numberDays)) 
+            {
+
+                $missingDurations[$i] = $i;
+
+            }
+
+        }
+        
+        $form = $this->createForm(DurationType::class, $duration, array('missingDurations' => $missingDurations));
 
         $form->handleRequest($request);
 
@@ -79,7 +113,7 @@ class BackendDurationController extends AbstractController
 
             $manager->flush();
 
-            $this->addFlash('success', "La durée a été modifiée avec succès.");                   
+            $this->addFlash('success', "The duration was successfully updated.");                   
 
             return $this->redirectToRoute('backend.duration.index');
         }

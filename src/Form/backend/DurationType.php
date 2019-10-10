@@ -13,25 +13,25 @@ class DurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('duration', TextType::class)
-            ->add('daysNumber', ChoiceType::class, array('choices'  => array('2' => 2, 
-                                                                             '3' => 3,
-                                                                             '4' => 4,
-                                                                             '5' => 5,
-                                                                             '6' => 6,
-                                                                             '7' => 7
-                                                                            )
-                                                        )
-                 )
-        ;
+            ->add('daysNumber', ChoiceType::class, array('choices'  => $options['missingDurations']));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Duration::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Duration::class,
+                                    'missingDurations' => null,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }
