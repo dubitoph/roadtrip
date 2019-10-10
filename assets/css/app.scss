@@ -318,6 +318,29 @@ input[type="search"]::-ms-clear {
       height: 100%;
     }
 }
+/* jumbotron */
+.jumbotron {
+  margin-bottom: 0;
+  color: $white;
+  padding: 0;
+  background-color: $gray-600;
+  background-size: cover;
+  @include border-radius(0);
+  .jumbotron-dark{
+    background-color: rgba(0,0,0,.5);
+    padding: $jumbotron-padding ($jumbotron-padding / 2);
+    @include media-breakpoint-up(sm) {
+      padding: ($jumbotron-padding * 2) $jumbotron-padding;
+    }
+  }
+  .jumbotron-light{
+    background-color: rgba(255,255,255,.5);
+    padding: $jumbotron-padding ($jumbotron-padding / 2);
+    @include media-breakpoint-up(sm) {
+      padding: ($jumbotron-padding * 2) $jumbotron-padding;
+    }
+  }
+}
 /* images bg */
 .container-image{
   background-repeat:no-repeat;

@@ -12,14 +12,14 @@
         {% endblock %}
 
     </head>
-    <body>
+    <body id="page-">
 
     <header class="topbar">
       <nav class="navbar fixed-top navbar-expand-lg">
         <a class="navbar-brand" href="{{ path('home') }}"><img src="/images/roadtripr.svg" alt="Roadtripr" /></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>        
+        </button>
         {% if is_granted('ROLE_ADMIN') %}
           <a href="{{ path('backend') }}">Backend</a>
         {% endif %}
@@ -172,7 +172,6 @@
               <br />Copyright © 2019 ‐ 2029 Roadtrip ‐ All rights reserved
               <br />Last site update : June 20, 2019</p>
           </center>
-
       </footer>
 
       <script src="https://js.stripe.com/v3/"></script>

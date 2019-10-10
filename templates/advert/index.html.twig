@@ -3,121 +3,101 @@
 {% block title %}
 
     Roadtripr - The adverts
-    
+
 {% endblock %}
 
 {% block body %}
 
-    <div class="jumbotron">
+    <section class="jumbotron" style="background-image:url('images/motorhome1-l.jpg');">
+      <div  class="jumbotron-dark">
+      <div class="container">
+          <h1 class="h3 text-white">Find the motorhome of your dreams.</h1>
+          {{ form_start(form) }}
 
-        <div class="container">
+              <div class="form-row align-items-end">
 
-            {{ form_start(form) }}
-
-                <div class="form-row align-items-end">
-
-                    <div class="col">
-
-                        {{ form_row(form.minimumBedsNumber) }}
-
+                  <div class="col-md-2">
+                    <div class="select">
+                        {{ form_widget(form.minimumBedsNumber) }}
                     </div>
-                  
-                    <div class="col">
+                  </div>
 
-                      {{ form_row(form.beginAt) }} {{ form_row(form.endAt) }}
-                      
+                  <div class="col-md-2">
+                    {{ form_row(form.beginAt) }} {{ form_row(form.endAt) }}
+                  </div>
+
+                  <div class="col-md-2">
+                      {{ form_row(form.maximumPrice) }}
+                  </div>
+
+                  <div class="col-md-2">
+                      {{ form_row(form.cellEquipments) }}
+                  </div>
+
+                  <div class="col-md-2">
+                      {{ form_row(form.carrierEquipments) }}
+                  </div>
+
+                  <div class="col-md-2">
+                    <div class="select">
+                      {{ form_widget(form.distance) }}
                     </div>
+                  </div>
 
-                    <div class="col">
+              </div>
 
-                        {{ form_row(form.maximumPrice) }}
+              <div class="form-row">
 
-                    </div>
-
-                    <div class="col">
-
-                        {{ form_row(form.cellEquipments) }}
-
-                    </div>
-
-                    <div class="col">
-
-                        {{ form_row(form.carrierEquipments) }}
-
-                    </div>
-
-                    <div class="col">
-
-                        {{ form_row(form.distance) }}
-
-                    </div>
-
+                <div class="col-md-3">
+                  {{ form_row(form.address, {'id': 'search_address'}) }}
                 </div>
-
-                <div class="form-row">                    
-
-                    <div class="col">
-        
-                        {{ form_row(form.address, {'id': 'search_address'}) }}
-        
-                    </div>
-
+                <div class="col-md-3">
+                  {{ form_row(form.city) }}
                 </div>
-
-                {{ form_row(form.city) }}
-
-                <div class="form-row">                    
-
-                    <div class="col">
-        
-                        {{ form_row(form.sorting) }}
-        
-                    </div>
-
+                <div class="col-md-3">
+                  {{ form_row(form.sorting) }}
                 </div>
-
-                <div class="col">
-                    <div class="form-group">
-                        <button class="btn btn-primary">Search</button>
-                    </div>
+                <div class="col-md-3">
+                  <button class="btn btn-primary">Search</button>
                 </div>
-                
-            {{ form_end(form) }}
+              </div>
 
-        </div>
+          {{ form_end(form) }}
+      </div>
+      </div>
+    </section>
 
-    </div>
+    <section id="SearchResults" class="pt-2 pb-5">
+      <div class="container">
 
-    <div class='container mt-4'>
-
-        <h1>All mobilehomes</h1>
+        <h2>Results</h2>
 
         {% set i = 0 %}
 
         <div class="row">
 
             {% for advert in adverts %}
-            
+
                 <div class="col-md-4">
 
-                        {% if distances[advert.id] is defined %}    
-                        
+                        {% if distances[advert.id] is defined %}
+
                             {% set distance = distances[advert.id] %}
 
                         {% else %}
 
                             {% set distance = null %}
-    
+
                         {% endif %}
 
-                        {% if minPrices[advert.id] is defined %}    
-                        
+                        {% if minPrices[advert.id] is defined %}
+
                             {% set minPrice = minPrices[advert.id] %}
 
                             {% else %}
-    
+
                                 {% set minPrice = null %}
-    
+
                         {% endif %}
 
                         {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'userCity': userCity}) }}
@@ -125,25 +105,25 @@
                 </div>
 
                 {% set i = i + 1 %}
-                
+
             {% endfor %}
-            
+
         </div>
-        
+
         <div class="pagination">
 
             {{ knp_pagination_render(adverts) }}
 
         </div>
 
-    </div>
-   
+    </section>
+
     {% block javascripts %}
-        
+
         {{ parent() }}
 
         {{ encore_entry_script_tags('advertsSearch') }}
-        
+
     {% endblock %}
 
 {% endblock %}
