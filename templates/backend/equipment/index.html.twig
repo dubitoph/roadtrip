@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Gérer les équipements {% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : equipments management
+    
+{% endblock %}
 
 {% block body %}
 
@@ -8,7 +12,7 @@
 
         {{ include('_messages.html.twig') }}
 
-        <h1>Gérer les équipements</h1>
+        <h1>Equipments management</h1>
 
         <table class="table striped">
 
@@ -16,8 +20,8 @@
 
                 <tr>
 
-                    <th>Equipement</th>
-                    <th>Appartenance</th>
+                    <th>Equipment</th>
+                    <th>Belonging</th>
                     <th>Actions</th>
 
                 </tr>
@@ -34,12 +38,12 @@
                         <td>{{ equipment.belonging }}</td>
                         <td>
                             
-                            <a href="{{ path('backend.equipment.edit', { 'id': equipment.id }) }}" class="btn btn-secondary">Editer</a>
+                            <a href="{{ path('backend.equipment.edit', { 'id': equipment.id }) }}" class="btn btn-secondary">Edit</a>
                             <form method = "post" action="{{ path('backend.equipment.delete', { 'id': equipment.id }) }}" style="display: inline-block">
 
                                 <input type="hidden"  name="_method" value="DELETE">
                                 <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ equipment.id ) }}">
-                                <button class="btn btn-danger">Supprimer</button>
+                                <button class="btn btn-danger">Remove</button>
 
                             </form>
 
@@ -55,7 +59,7 @@
 
         <div class="text-right">
 
-            <a href="{{ path('backend.equipment.create') }}" class="btn btn-primary">Créer un nouvel équipement</a>
+            <a href="{{ path('backend.equipment.create') }}" class="btn btn-primary">Create a new equipment</a>
 
         </div>
 

@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les équipements{% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : create an equipment
+    
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt4">
 
-        <h1>Créer un nouvel équipement</h1>
+        <h1>Create an equipment</h1>
 
-        {{ include('backend/equipment/_form.html.twig', { button: 'Créer' }) }}
+        {{ include('backend/equipment/_form.html.twig') }}
 
     </div>
 

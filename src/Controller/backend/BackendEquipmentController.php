@@ -15,6 +15,8 @@ class BackendEquipmentController extends AbstractController
 {
     
     /**
+     * Equipments list
+     * 
      * @Route("/backend/equipments", name="backend.equipment.index")
      * @param EquipmentRepository $equipmentRepository
      * @return Response
@@ -29,9 +31,13 @@ class BackendEquipmentController extends AbstractController
     }
 
     /**
+     * Create an equipment
+     * 
      * @Route("/backend/equipment/create", name="backend.equipment.create")
+     * 
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function new(Request $request, ObjectManager $manager): Response
@@ -48,7 +54,7 @@ class BackendEquipmentController extends AbstractController
             $manager->persist($equipment);
             $manager->flush();    
 
-            $this->addFlash('success', "L'équipement a été créé avec succès.");      
+            $this->addFlash('success', "The equipment was successfully created.");      
 
             return $this->redirectToRoute('backend.equipment.index');
         }
@@ -62,10 +68,14 @@ class BackendEquipmentController extends AbstractController
     }
 
     /**
+     * Edit a equipment
+     * 
      * @Route("/backend/equipment/edit/{id}", name="backend.equipment.edit")
+     * 
      * @param Equipment $equipment
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function edit(Equipment $equipment, Request $request, ObjectManager $manager): Response
@@ -79,7 +89,7 @@ class BackendEquipmentController extends AbstractController
 
             $manager->flush();
 
-            $this->addFlash('success', "L'équipement a été modifié avec succès.");                   
+            $this->addFlash('success', "The equipment was successfully updated.");                   
 
             return $this->redirectToRoute('backend.equipment.index');
         }
@@ -94,21 +104,26 @@ class BackendEquipmentController extends AbstractController
     }
 
     /**
+     * Delete an equipment
+     * 
      * @Route("/backend/equipment/delete/{id}", name="backend.equipment.delete", methods = "DELETE")
+     * 
      * @param Equipment $equipment
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function delete(Equipment $equipment, Request $request, ObjectManager $manager): Response
     {
 
-        if ($this->isCsrfTokenValid('delete'. $equipment->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $equipment->getId(), $request->get('_token'))) 
+        {
 
             $manager->remove($equipment);
             $manager->flush();
 
-            $this->addFlash('success', "L'équipement a été supprimé avec succès."); 
+            $this->addFlash('success', "The equipment was successfully removed."); 
 
         } 
             

@@ -14,53 +14,32 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class EquipmentRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Equipment::class);
+
     }
     
-    public function queryFindByBelonging($belonging) {
+    public function queryFindByBelonging(String $belonging) 
+    {
 
         $query = $this->createQueryBuilder('r')
                       ->andWhere('r.belonging = :belonging')
                       ->setParameter('belonging', $belonging);
     
         return $query;
+
     }
     
     public function findByBelonging(String $belonging)
     {
+
         return $this->createQueryBuilder('r')
                     ->getQuery()
                     ->getResult();
-    }
 
-    // /**
-    //  * @return Equipment[] Returns an array of Equipment objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Equipment
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

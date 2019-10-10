@@ -11,26 +11,34 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class EquipmentType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('equipment', TextType::class)
             ->add('belonging', ChoiceType::class, array(
                                                         'choices'  => array(
-                                                                            'Porteur' => 'Porteur', 
-                                                                            'Cellule' => 'Cellule',
-                                                                           ), 
-                                                        'placeholder' => "Veuillez choisir l'appartenance de l'équipement",
+                                                                            'Carrier' => 'Carrier', 
+                                                                            'Cell' => 'Cell',
+                                                                           )
                                                        )
                  )
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Equipment::class,
-            'translation_domain' => 'forms',
-        ]);
+
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Equipment::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
+
     }
+
 }

@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @UniqueEntity(
  *     fields={"equipment", "belonging"},
- *     message="Cet équipement existe déjà pour cette appartenance."
+ *     message="This equipment already exists for this belonging."
  * )
  */
 class Equipment
@@ -31,13 +31,13 @@ class Equipment
      * @ORM\Column(type="string", length=255)
      * 
      * @Assert\NotBlank(
-     *      message = "L'équipement ne peut pas être vide."
+     *      message = "The equipment can't be empty."
      * )
      * @Assert\Length(
      *      min = 3,
      *      max = 255,
-     *      minMessage = "L'équipement doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "L'équipement ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The equipment must at least contain {{limit}} characters.",
+     *      maxMessage = "The equipment can not exceed {{limit}} characters."
      * )
      */
     private $equipment;
@@ -46,9 +46,9 @@ class Equipment
      * @ORM\Column(type="string", length=25)
      * 
      * @Assert\NotBlank(
-     *      message = "L'appartenance ne peut pas être vide."
+     *      message = "The belonging can't be empty."
      * )
-     * @Assert\Choice({"Porteur", "Cellule"})
+     * @Assert\Choice({"Carrier", "Cell"})
      */
     private $belonging;
 
@@ -57,48 +57,100 @@ class Equipment
      */
     private $vehicles;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
+
         $this->vehicles = new ArrayCollection();
+
     }
 
-    public function __toString(){
+    /**
+     * Get a string representing the equipment
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+
         return $this->equipment;
+
     }
 
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the equipment
+     *
+     * @return string|null
+     */
     public function getEquipment(): ?string
     {
+
         return $this->equipment;
+
     }
 
+    /**
+     * Set the equipment
+     *
+     * @param string $equipment
+     * 
+     * @return self
+     */
     public function setEquipment(string $equipment): self
     {
+
         $this->equipment = $equipment;
 
         return $this;
+
     }
 
+    /**
+     * Get the belonging
+     *
+     * @return string|null
+     */
     public function getBelonging(): ?string
     {
+
         return $this->belonging;
+
     }
 
+    /**
+     * Set the belonging
+     *
+     * @param string $belonging
+     * 
+     * @return self
+     */
     public function setBelonging(string $belonging): self
     {
+
         $this->belonging = $belonging;
 
         return $this;
+
     }
 
     /**
      * Get vehicles
      *
-     * @return Collection
+     * @return Collection|Vehicle[]
      */
     public function getVehicles(): Collection
     {
@@ -111,6 +163,7 @@ class Equipment
      * Set vehicles
      *
      * @param ArrayCollection $vehicles
+     * 
      * @return void
      */
     public function setVehicles(ArrayCollection $vehicles)
@@ -124,6 +177,7 @@ class Equipment
      * Add vehicle
      *
      * @param Vehicle $vehicle
+     * 
      * @return self
      */
     public function addVehicle(Vehicle $vehicle): self
@@ -144,6 +198,7 @@ class Equipment
      * Remove vehicle
      *
      * @param Vehicle $vehicle
+     * 
      * @return self
      */
     public function removeVehicle(Vehicle $vehicle): self
@@ -171,4 +226,5 @@ class Equipment
         return $slugify = (new Slugify())->slugify($this->equipment . '-' . $this->belonging->getBelonging());
 
     }
+
 }

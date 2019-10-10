@@ -21,13 +21,13 @@ class Duration
      * @ORM\Column(type="string", length=50)
      * 
      * @Assert\NotBlank(
-     *      message = "La durée ne peut pas être vide."
+     *      message = "The duration can't be empty."
      * )
      * @Assert\Length(
      *      min = 3,
      *      max = 50,
-     *      minMessage = "La durée doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "La durée ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The duration must at least contain {{limit}} characters.",
+     *      maxMessage = "The duration can not exceed {{limit}} characters."
      * )
      */
     private $duration;
@@ -46,27 +46,56 @@ class Duration
      */
     private $daysNumber;
 
-    public function __toString(){
+    /**
+     * Get a string representing the equipment
+     *
+     * @return string
+     */
+    public function __toString()
+    {
 
         return $this->duration;
 
     }
 
+    /**
+     * Get the id
+     *
+     * @return integer|null
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the duration
+     *
+     * @return string|null
+     */
     public function getDuration(): ?string
     {
+
         return $this->duration;
+
     }
 
+    /**
+     * Set the duration
+     *
+     * @param string $duration
+     * 
+     * @return self
+     */
     public function setDuration(string $duration): self
     {
+
         $this->duration = $duration;
 
         return $this;
+
     }
 
     /**
@@ -76,19 +105,25 @@ class Duration
      */
     public function getDaysNumber(): ?int
     {
+
         return $this->daysNumber;
+
     }
 
     /**
      * Set days number
      *
      * @param integer $daysNumber
+     * 
      * @return self
      */
     public function setDaysNumber(int $daysNumber): self
     {
+
         $this->daysNumber = $daysNumber;
 
         return $this;
+
     }
+    
 }

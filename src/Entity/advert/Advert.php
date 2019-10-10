@@ -432,6 +432,7 @@ class Advert
      * Set photos
      *
      * @param Collection $photos
+     * 
      * @return void
      */
     public function setPhotos(Collection $photos = null)
