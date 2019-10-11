@@ -25,7 +25,12 @@ class BackendVATController extends AbstractController
      
         $allVAT = $VATRepository->findAll();
     
-        return $this->render('backend/VAT/index.html.twig', compact('allVAT'));  
+        return $this->render('backend/VAT/index.html.twig', array(
+                                                                    'allVAT' => $allVAT,
+                                                                    'bodyId' => 'VATIndex'
+                                                                 )
+                            )
+        ;  
         
     }
 
@@ -87,6 +92,7 @@ class BackendVATController extends AbstractController
      
         return $this->render('backend/VAT/new.html.twig', [
                                                                 'VAT' => $VAT,
+                                                                'bodyId' => 'VATCreation',
                                                                 'form' => $form->createView(),
                                                                ]
                             )
@@ -161,6 +167,7 @@ class BackendVATController extends AbstractController
      
         return $this->render('backend/VAT/edit.html.twig', [
                                                                     'VAT' => $VAT,
+                                                                    'bodyId' => 'VATEdition',
                                                                     'form' => $form->createView(),
                                                                 ]
                             )

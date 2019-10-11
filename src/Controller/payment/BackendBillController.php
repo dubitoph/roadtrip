@@ -27,7 +27,12 @@ class BackendBillController extends AbstractController
      
         $bills = $billRepository->findAll();
     
-        return $this->render('backend/bill/index.html.twig', compact('bills'));  
+        return $this->render('backend/bill/index.html.twig', array(
+                                                                    'bills' => $bills,
+                                                                    'bodyId' =>  'billsIndex'
+                                                                  )
+                            )
+        ;  
         
     }
 

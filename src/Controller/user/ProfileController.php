@@ -67,10 +67,11 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('user.profile.update');
         }
      
-        return $this->render('user/profile/update.html.twig', [
-                                                                'profile' => $profile,
-                                                                'form' => $form->createView()
-                                                              ]
+        return $this->render('user/profile/update.html.twig', array(
+                                                                        'profile' => $profile,
+                                                                        'bodyId' =>  'profileUpdate',
+                                                                        'form' => $form->createView()
+                                                                   )
                             )
         ;        
     }

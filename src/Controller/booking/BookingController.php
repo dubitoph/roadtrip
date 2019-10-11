@@ -110,6 +110,7 @@ class BookingController extends AbstractController
 
         return $this->render('booking/request.html.twig', [
                                                             'booking' => $booking,
+                                                            'bodyId' => 'bookingCreation',
                                                             'form' => $form->createView(),
                                                           ]
                             )
@@ -126,7 +127,12 @@ class BookingController extends AbstractController
     public function show(Booking $booking): Response
     {
 
-        return $this->render('booking/show.html.twig', ['booking' => $booking]);
+        return $this->render('booking/show.html.twig', array(
+                                                                'booking' => $booking,
+                                                                'bodyId' => 'bookingShow'
+                                                            )
+                            )
+        ;
 
     }
 
@@ -163,7 +169,8 @@ class BookingController extends AbstractController
         return $this->render('user/bookingRequests.html.twig', [
                                                                 'openedRequests' => $openedRequests,
                                                                 'refusedRequests' => $refusedRequests,
-                                                                'ownerVehicles' => $ownerVehicles
+                                                                'ownerVehicles' => $ownerVehicles,
+                                                                'bodyId' => 'bookingsRequests'
                                                                ]
                             )
         ;
@@ -261,6 +268,7 @@ class BookingController extends AbstractController
         return $this->render('booking/edit.html.twig', [
                                                             'booking' => $booking,
                                                             'action' => $action,
+                                                            'bodyId' => 'bookingEdition',
                                                             'form' => $form->createView(),
                                                        ]
                             )
@@ -295,7 +303,8 @@ class BookingController extends AbstractController
         
         return $this->render('user/bookings.html.twig', [
                                                             'bookings' => $bookings,
-                                                            'mainPhotos' => $mainPhotos
+                                                            'mainPhotos' => $mainPhotos,
+                                                            'bodyId' => 'bookingsIndex'
                                                         ]
                             )
         ;
@@ -384,6 +393,7 @@ class BookingController extends AbstractController
         
         return $this->render('booking/remove.html.twig', [
                                                             'booking' => $booking,
+                                                            'bodyId' => 'bookingRemoving',
                                                             'form' => $form->createView()
                                                          ]
                             )
@@ -392,7 +402,11 @@ class BookingController extends AbstractController
     }
 
     /**
+     * Show the calendar
+     * 
      * @Route("/owner/calendar", name="owner.calendar")
+     *
+     * @return Response
      */
     public function calendar(): Response
     {

@@ -19,7 +19,7 @@ class BackendController extends AbstractController
     public function index(): Response
     {
      
-        return $this->render('backend/index.html.twig');  
+        return $this->render('backend/index.html.twig', array('bodyId' => 'backendDashboard'));  
         
     }
 

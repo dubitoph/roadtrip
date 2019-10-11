@@ -40,7 +40,8 @@ class BackendRatingController extends AbstractController
     
         return $this->render('backend/rating/ratingsToApprove.html.twig', [
                                                                             'ratings' => $ratings,
-                                                                            'responses' => $responses
+                                                                            'responses' => $responses,
+                                                                            'bodyId' => 'ratingsToApprove'
                                                                           ]
                             )
         ;  

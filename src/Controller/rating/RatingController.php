@@ -32,7 +32,12 @@ class RatingController extends AbstractController
      
         $ratings = $ratingnRepository->findAll();
     
-        return $this->render('rating/index.html.twig', compact('ratings'));  
+        return $this->render('rating/index.html.twig', array(
+                                                                'ratings' => $ratings,
+                                                                'bodyId' =>  'ratingsIndex'
+                                                            )
+                            )
+        ;  
         
     } 
 
@@ -87,14 +92,15 @@ class RatingController extends AbstractController
 
         $givenOwnerRatings = $ratingRepository->findGivenOwnerRatings($user);
     
-        return $this->render('rating/ratingsDashbord.html.twig',[
-                                                                 'bookingsWithoutRating' => $bookingsWithoutRating,
-                                                                 'receivedUserRatings' => $receivedUserRatings,
-                                                                 'receivedOwnerRatings' => $receivedOwnerRatings,
-                                                                 'givenUserRatings' => $givenUserRatings,
-                                                                 'givenOwnerRatings' => $givenOwnerRatings,
-                                                                 'mainPhotos' => $mainPhotos
-                                                                ]
+        return $this->render('rating/ratingsDashbord.html.twig',array(
+                                                                        'bookingsWithoutRating' => $bookingsWithoutRating,
+                                                                        'receivedUserRatings' => $receivedUserRatings,
+                                                                        'receivedOwnerRatings' => $receivedOwnerRatings,
+                                                                        'givenUserRatings' => $givenUserRatings,
+                                                                        'givenOwnerRatings' => $givenOwnerRatings,
+                                                                        'mainPhotos' => $mainPhotos,
+                                                                        'bodyId' =>  'ratingsDashbooard'
+                                                                     )
                             )
         ;  
         
@@ -163,6 +169,7 @@ class RatingController extends AbstractController
         
             return $this->render('rating/new.html.twig', [
                                                             'rating' => $rating,
+                                                            'bodyId' =>  'ratingsCreation',
                                                             'form' => $form->createView(),
                                                          ]
                                 )
@@ -198,10 +205,11 @@ class RatingController extends AbstractController
                 
             }
         
-            return $this->render('rating/show.html.twig', [
-                                                            'rating' => $rating,
-                                                            'form' => $form->createView(),
-                                                          ]
+            return $this->render('rating/show.html.twig', array(
+                                                                    'rating' => $rating,
+                                                                    'bodyId' =>  'ratingsShow',
+                                                                    'form' => $form->createView()
+                                                               )
                                 )
             ; 
 
@@ -209,7 +217,12 @@ class RatingController extends AbstractController
         else 
         {
         
-            return $this->render('rating/show.html.twig', ['rating' => $rating]);
+            return $this->render('rating/show.html.twig', array(
+                                                                    'rating' => $rating,
+                                                                    'bodyId' =>  'ratingsShow'
+                                                               )
+                                )
+            ;
 
         } 
         
@@ -238,10 +251,11 @@ class RatingController extends AbstractController
             return $this->redirectToRoute('advert.rating.index');
         }
      
-        return $this->render('rating/edit.html.twig', [
-                                                        'rating' => $rating,
-                                                        'form' => $form->createView(),
-                                                      ]
+        return $this->render('rating/edit.html.twig', array(
+                                                                'rating' => $rating,
+                                                                'bodyId' =>  'ratingsEdition',
+                                                                'form' => $form->createView()
+                                                           )
                             )
         ;  
         

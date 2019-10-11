@@ -110,7 +110,8 @@ class PhotoController extends AbstractController
 
         return $this->render('advert/photosCreation.html.twig', [
                                                                     'form' => $form->createView(),
-                                                                    'recordedPhotos' => $recordedPhotos, 
+                                                                    'recordedPhotos' => $recordedPhotos,
+                                                                    'bodyId' =>  'photosCreation',
                                                                     'editMode' => $editMode,
                                                                     'current_menu' => $current_menu
                                                                 ]

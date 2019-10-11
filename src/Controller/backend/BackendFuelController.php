@@ -24,7 +24,12 @@ class BackendFuelController extends AbstractController
      
         $fuels = $fuelRepository->findAll();
     
-        return $this->render('backend/fuel/index.html.twig', compact('fuels'));  
+        return $this->render('backend/fuel/index.html.twig', array(
+                                                                    'fuels' => $fuels,
+                                                                    'bodyId' => 'durationCreation'
+                                                                  )
+                            )
+        ;  
         
     }
 
@@ -55,6 +60,7 @@ class BackendFuelController extends AbstractController
      
         return $this->render('backend/fuel/new.html.twig', [
                                                             'fuel' => $fuel,
+                                                            'bodyId' => 'fuelCreation',
                                                             'form' => $form->createView(),
                                                            ]
                             )
@@ -86,6 +92,7 @@ class BackendFuelController extends AbstractController
      
         return $this->render('backend/fuel/edit.html.twig', [
                                                                 'fuel' => $fuel,
+                                                                'bodyId' => 'fuelEdition',
                                                                 'form' => $form->createView(),
                                                             ]
                             )

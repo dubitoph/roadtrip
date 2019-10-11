@@ -24,7 +24,12 @@ class BackendMarkController extends AbstractController
      
         $marks = $markRepository->findAll();
     
-        return $this->render('backend/mark/index.html.twig', compact('marks'));  
+        return $this->render('backend/mark/index.html.twig', array(
+                                                                    'marks' => $marks,
+                                                                    'bodyId' => 'marksIndex'
+                                                                  )
+                            )
+        ;  
         
     }
 
@@ -55,6 +60,7 @@ class BackendMarkController extends AbstractController
      
         return $this->render('backend/mark/new.html.twig', [
                                                             'mark' => $mark,
+                                                            'bodyId' => 'marksCreation',
                                                             'form' => $form->createView(),
                                                            ]
                             )
@@ -86,6 +92,7 @@ class BackendMarkController extends AbstractController
      
         return $this->render('backend/mark/edit.html.twig', [
                                                                 'mark' => $mark,
+                                                                'bodyId' => 'marksEdition',
                                                                 'form' => $form->createView(),
                                                             ]
                             )

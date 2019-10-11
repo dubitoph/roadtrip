@@ -58,7 +58,8 @@ class PaymentController extends AbstractController
                                                                 'chargeFailed' => $chargeFailed,
                                                                 'customerId' => $customerId,
                                                                 'requiredAction' => $requiredAction,
-                                                                'clientSecret' => $clientSecret
+                                                                'clientSecret' => $clientSecret,
+                                                                'bodyId' =>  'payment'
                                                           ]
                             )
         ;

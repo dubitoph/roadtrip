@@ -1,4 +1,4 @@
-import '../css/app.scss';
+require('../css/app.scss');
 
 import $ from 'jquery';
 global.$ = global.jQuery = $;

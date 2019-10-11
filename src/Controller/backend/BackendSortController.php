@@ -24,7 +24,12 @@ class BackendSortController extends AbstractController
      
         $sorts = $sortRepository->findAll();
     
-        return $this->render('backend/sort/index.html.twig', compact('sorts'));  
+        return $this->render('backend/sort/index.html.twig', array(
+                                                                    'sorts' => $sorts,
+                                                                    'bodyId' => 'sortsIndex'
+                                                                  )
+                            )
+        ;  
         
     }
 
@@ -55,6 +60,7 @@ class BackendSortController extends AbstractController
      
         return $this->render('backend/sort/new.html.twig', [
                                                             'sort' => $sort,
+                                                            'bodyId' => 'sortsCreation',
                                                             'form' => $form->createView(),
                                                            ]
                             )
@@ -86,6 +92,7 @@ class BackendSortController extends AbstractController
      
         return $this->render('backend/sort/edit.html.twig', [
                                                                 'sort' => $sort,
+                                                                'bodyId' => 'sortsEdition',
                                                                 'form' => $form->createView(),
                                                             ]
                             )

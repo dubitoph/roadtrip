@@ -6,6 +6,7 @@ use App\Entity\advert\Advert;
 use App\Entity\user\Favorite;
 use App\Repository\media\PhotoRepository;
 use App\Repository\advert\AdvertRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,12 +25,12 @@ class FavoriteController extends AbstractController
      
         $user = $this->getUser();        
         $favorites = $user->getFavorites(); 
-        $favoriteAdverts = array()       ;
+        $favoriteAdverts = ArrayCollection();
         
         foreach ($favorites as $favorite) 
         {
 
-            $favoriteAdverts[] = $favorite->getAdvert();
+            $favoriteAdverts->add($favorite->getAdvert());
 
         }
 
@@ -95,13 +96,14 @@ class FavoriteController extends AbstractController
 
         }
 
-        return $this->render('user/favorites.html.twig', [
-                                                            'adverts' => $adverts,
-                                                            'distances' => $distances,
-                                                            'minPrices' => $minPrices,
-                                                            'mainPhotos' => $mainPhotos,
-                                                            'userCity' => $this->container->get('session')->get('userCity')
-                                                         ]
+        return $this->render('user/favorites.html.twig', array(
+                                                                'adverts' => $adverts,
+                                                                'distances' => $distances,
+                                                                'minPrices' => $minPrices,
+                                                                'mainPhotos' => $mainPhotos,
+                                                                'userCity' => $this->container->get('session')->get('userCity'),
+                                                                'bodyId' =>  'userFavorites'
+                                                              )
                             )
         ;  
         

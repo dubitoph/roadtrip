@@ -145,10 +145,11 @@ class UserOwnerController extends AbstractController
 
         }
 
-        return $this->render('user/owner/owner.html.twig', [
-                                                            'form' => $form->createView(), 
-                                                            'editMode' => $owner->getId() !== null
-                                                           ]
+        return $this->render('user/owner/owner.html.twig', array(
+                                                                    'form' => $form->createView(),
+                                                                    'bodyId' =>  'ownerCreation',
+                                                                    'editMode' => $owner->getId() !== null
+                                                                )
                             )
         ;
         
@@ -184,7 +185,12 @@ class UserOwnerController extends AbstractController
 
         }
 
-        return $this->render('user/owner/edit.html.twig', ['form' => $form->createView()]);
+        return $this->render('user/owner/edit.html.twig', array(
+                                                                    'bodyId' =>  'ownerEdition',
+                                                                    'form' => $form->createView()
+                                                               )
+                            )
+        ;
 
     }
 

@@ -20,7 +20,12 @@ class BackendBookingController extends AbstractController
      
         $bookings = $bookingRepository->findAll();
     
-        return $this->render('backend/booking/index.html.twig', compact('bookings'));
+        return $this->render('backend/booking/index.html.twig', array(
+                                                                        'bookings' => $bookings,
+                                                                        'bodyId' => 'bookingsIndex'
+                                                                     )
+                            )
+        ;
 
     }
 

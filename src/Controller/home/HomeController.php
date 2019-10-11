@@ -166,6 +166,7 @@ class HomeController extends AbstractController
                                                       'mainPhotos' => $mainPhotos,
                                                       'lastAdvertRatings' => $lastAdvertRatings,
                                                       'subscriptions' => $subscriptions,
+                                                      'bodyId' => 'homepage',
                                                       'form' => $form->createView()
                                                    ]
                             )

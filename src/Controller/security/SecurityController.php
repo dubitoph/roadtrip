@@ -134,10 +134,11 @@ class SecurityController extends AbstractController
 
         }
 
-        return $this->render('security/registration.html.twig', [
-                                                                    'current_menu' => 'registration',
-                                                                    'form' => $form->createView()
-                                                                ]
+        return $this->render('security/registration.html.twig', array(
+                                                                        'current_menu' => 'registration',
+                                                                        'bodyId' =>  'userRegistration',
+                                                                        'form' => $form->createView()
+                                                                     )
                             )
         ;
 
@@ -431,7 +432,12 @@ class SecurityController extends AbstractController
 
         }
 
-        return $this->render('security/passwordResetting.html.twig', ['form' => $form->createView()]);
+        return $this->render('security/passwordResetting.html.twig', array(
+                                                                                'bodyId' =>  'passwordUpdating',
+                                                                                'form' => $form->createView()
+                                                                          )
+                            )
+        ;
 
     }
 

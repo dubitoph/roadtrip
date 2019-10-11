@@ -31,7 +31,12 @@ class UserUserController extends AbstractController
      
         $users = $userRepository->findAll();
     
-        return $this->render('user/index.html.twig', compact('users'));  
+        return $this->render('user/index.html.twig', array(
+                                                            'users' => $users,
+                                                            'bodyId' =>  'usersIndex'
+                                                          )
+                            )
+        ;  
         
     }
 
@@ -74,6 +79,7 @@ class UserUserController extends AbstractController
      
         return $this->render('user/edit.html.twig', [
                                                         'user' => $user,
+                                                        'bodyId' =>  'userEdition',
                                                         'form' => $form->createView()
                                                     ]
                             )
@@ -189,7 +195,8 @@ class UserUserController extends AbstractController
                                                             'bookingRequestsNumber' => $bookingRequestsNumber,
                                                             'adverts' => $adverts,
                                                             'advertsNumber' => $advertsNumber,
-                                                            'advertsToShow' => $advertsToShow
+                                                            'advertsToShow' => $advertsToShow,
+                                                            'bodyId' =>  'userDashboard'
                                                         ]
                             )
         ; 

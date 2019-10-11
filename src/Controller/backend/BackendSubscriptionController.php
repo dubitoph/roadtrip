@@ -24,7 +24,12 @@ class BackendSubscriptionController extends AbstractController
      
         $subscriptions = $subscriptionRepository->findAll();
     
-        return $this->render('backend/subscription/index.html.twig', compact('subscriptions'));  
+        return $this->render('backend/subscription/index.html.twig', array(
+                                                                            'subscriptions' => $subscriptions,
+                                                                            'bodyId' => 'subscriptionsIndex'
+                                                                          )
+                            )
+        ;  
         
     }
 
@@ -86,6 +91,7 @@ class BackendSubscriptionController extends AbstractController
      
         return $this->render('backend/subscription/new.html.twig', [
                                                                         'subscription' => $subscription,
+                                                                        'bodyId' => 'subscriptionsCreation',
                                                                         'form' => $form->createView(),
                                                                    ]
                             )
@@ -185,6 +191,7 @@ class BackendSubscriptionController extends AbstractController
      
         return $this->render('backend/subscription/edit.html.twig', [
                                                                         'subscription' => $subscription,
+                                                                        'bodyId' => 'subscriptionsEdition',
                                                                         'form' => $form->createView(),
                                                                     ]
                             )

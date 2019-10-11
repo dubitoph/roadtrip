@@ -20,7 +20,12 @@ class BackendAdvertController extends AbstractController
      
         $adverts = $advertRepository->findAll();
     
-        return $this->render('backend/advert/index.html.twig', compact('adverts'));  
+        return $this->render('backend/advert/index.html.twig', array(
+                                                                        'adverts' => $adverts,
+                                                                        'bodyId' => 'advertsIndex'
+                                                                    )
+                            )
+        ;  
         
     }
 

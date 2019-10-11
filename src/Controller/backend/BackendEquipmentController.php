@@ -26,7 +26,12 @@ class BackendEquipmentController extends AbstractController
      
         $equipments = $equipmentRepository->findAll();
     
-        return $this->render('backend/equipment/index.html.twig', compact('equipments'));  
+        return $this->render('backend/equipment/index.html.twig', array(
+                                                                            'equipments'=> $equipments,
+                                                                            'bodyId' => 'equipmentsIndex'
+                                                                       )
+                            )
+        ;  
         
     }
 
@@ -61,6 +66,7 @@ class BackendEquipmentController extends AbstractController
      
         return $this->render('backend/equipment/new.html.twig', [
                                                                     'equipment' => $equipment,
+                                                                    'bodyId' => 'equipmentCreation',
                                                                     'form' => $form->createView(),
                                                                 ]
                             )
@@ -96,6 +102,7 @@ class BackendEquipmentController extends AbstractController
      
         return $this->render('backend/equipment/edit.html.twig', [
                                                                     'equipment' => $equipment,
+                                                                    'bodyId' => 'equipmentEdition',
                                                                     'form' => $form->createView(),
                                                                  ]
                             )

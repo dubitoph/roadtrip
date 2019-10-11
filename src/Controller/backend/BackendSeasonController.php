@@ -24,7 +24,12 @@ class BackendSeasonController extends AbstractController
      
         $seasons = $seasonRepository->findAll();
     
-        return $this->render('Backend/season/index.html.twig', compact('seasons'));  
+        return $this->render('Backend/season/index.html.twig', array(
+                                                                        'seasons' => $seasons,
+                                                                        'bodyId' => 'seasonsIndex'
+                                                                    )
+                            )
+        ;  
         
     }
 
@@ -55,6 +60,7 @@ class BackendSeasonController extends AbstractController
      
         return $this->render('backend/season/new.html.twig', [
                                                                 'season' => $season,
+                                                                'bodyId' => 'seasonsCreation',
                                                                 'form' => $form->createView(),
                                                              ]
                             )
@@ -86,6 +92,7 @@ class BackendSeasonController extends AbstractController
      
         return $this->render('backend/season/edit.html.twig', [
                                                                 'season' => $season,
+                                                                'bodyId' => 'seasonsEdition',
                                                                 'form' => $form->createView(),
                                                               ]
                             )

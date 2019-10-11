@@ -28,7 +28,12 @@ class BackendDurationController extends AbstractController
      
         $durations = $durationRepository->findAll();
     
-        return $this->render('backend/duration/index.html.twig', compact('durations'));  
+        return $this->render('backend/duration/index.html.twig', array(
+                                                                        'durations',
+                                                                        'bodyId' => 'durationsIndex'
+                                                                      )
+                            )
+        ;  
         
     }
 
@@ -66,6 +71,7 @@ class BackendDurationController extends AbstractController
      
         return $this->render('backend/duration/new.html.twig', [
                                                                 'duration' => $duration,
+                                                                'bodyId' => 'durationCreation',
                                                                 'form' => $form->createView()
                                                                ]
                             )
@@ -108,6 +114,7 @@ class BackendDurationController extends AbstractController
      
         return $this->render('backend/duration/edit.html.twig', [
                                                                     'duration' => $duration,
+                                                                    'bodyId' => 'durationEdition',
                                                                     'form' => $form->createView(),
                                                                 ]
                             )
@@ -129,7 +136,8 @@ class BackendDurationController extends AbstractController
     public function delete(Duration $duration, Request $request, ObjectManager $manager): Response
     {
 
-        if ($this->isCsrfTokenValid('delete'. $duration->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $duration->getId(), $request->get('_token'))) 
+        {
 
             $manager->remove($duration);
             $manager->flush();

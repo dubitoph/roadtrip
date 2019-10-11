@@ -162,6 +162,7 @@ class AdvertController extends AbstractController
                                                         'minPrices' => $minPrices,
                                                         'form' => $form->createView(),
                                                         'mainPhotos' => $mainPhotos,
+                                                        'bodyId' => 'advertsIndex',
                                                         'userCity' => $search->getCity()
                                                        ]
                             )
@@ -190,7 +191,8 @@ class AdvertController extends AbstractController
         return $this->render('advert/ownerAdverts.html.twig', [
                                                                 'adverts' => $adverts,
                                                                 'locale' => $request->getLocale(),
-                                                                'mainPhotos' => $mainPhotos
+                                                                'mainPhotos' => $mainPhotos,
+                                                                'bodyId' => 'ownerAdverts'
                                                               ]
                             )
         ;  
@@ -257,6 +259,7 @@ class AdvertController extends AbstractController
         return $this->render('advert/descriptionCreation.html.twig', [
                                                                         'editMode' => $editMode,
                                                                         'current_menu' => $current_menu,
+                                                                        'bodyId' => 'advertDescriptionCreation',
                                                                         'form' => $form->createView(),
                                                                      ]
                             )
@@ -342,6 +345,7 @@ class AdvertController extends AbstractController
         return $this->render('advert/vehicleCreation.html.twig', [
                                                                     
                                                                     'current_menu' => $current_menu,
+                                                                    'bodyId' => 'advertVehicleCreation',
                                                                     'form' => $form->createView()
                                                                  ]
                             )
@@ -595,6 +599,7 @@ class AdvertController extends AbstractController
                                                             'seasons' => $seasons,
                                                             'locale' => $request->getLocale(),
                                                             'minimumCreationPeriods' => $this->getParameter('minimum_creation_periods'),
+                                                            'bodyId' => 'advertPeriodsCreation',
                                                             'limitCreationPeriods' => $limitCreationPeriods
                                                          ]
                             )
@@ -770,6 +775,7 @@ class AdvertController extends AbstractController
                                                             'editMode' => $editMode,
                                                             'missingDurations' => $missingDurations, 
                                                             'configuredDurations' => $durations,
+                                                            'bodyId' => 'advertPricesCreation',
                                                             'idsSeasonsPrices' => $idsSeasonsPrices
                                                         ]
                             )
@@ -989,6 +995,7 @@ class AdvertController extends AbstractController
                                                                 'includedMileages' => $includedMileages, 
                                                                 'idInsurancePricesDurations' => $idInsurancePricesDurations, 
                                                                 'idIncludedMileagesDurations' => $idIncludedMileagesDurations, 
+                                                                'bodyId' => 'advertVariousCostsCreation',
                                                                 'editMode' => $insurance->getId() !== null
                                                               ]
                             )
@@ -1014,6 +1021,7 @@ class AdvertController extends AbstractController
         return $this->render('advert/subscription.html.twig', [
                                                                 'advert' => $advert,
                                                                 'subscriptions' => $subscriptions,
+                                                                'bodyId' => 'advertSubscriptionCreation',
                                                                 'vat' => $vat
                                                               ]
                             )
@@ -1177,6 +1185,7 @@ class AdvertController extends AbstractController
                                                             'cellEquipments' => $cellEquipments,
                                                             'carrierEquipments' => $carrierEquipments,
                                                             'favorite' => $favorite,
+                                                            'bodyId' => 'advertShow',
                                                             'form' => $form->createView(),
                                                         ]
                                 )
@@ -1193,7 +1202,8 @@ class AdvertController extends AbstractController
                                                             'minPrice' => $minPrice,
                                                             'mainPhoto' => $mainPhoto,
                                                             'cellEquipments' => $cellEquipments,
-                                                            'carrierEquipments' => $carrierEquipments
+                                                            'carrierEquipments' => $carrierEquipments,
+                                                            'bodyId' => 'advertShow'
                                                           ]
                                 )
             ;
@@ -1274,7 +1284,13 @@ class AdvertController extends AbstractController
         
     }
 
-    public function getMinPrice($advert)
+    /**
+     * Get minimum advert price
+     *
+     * @param Advert $advert
+     * @return float
+     */
+    private function getMinPrice(Advert $advert)
     {
 
         $minPrices = $this->getDoctrine()->getRepository(Price::class)->getAdvertMinPrice($advert);
