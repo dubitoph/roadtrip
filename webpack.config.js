@@ -57,7 +57,7 @@ Encore
 
     .addEntry('calendar', './assets/css/calendar.css')
 
-    .addAliases({'@images': path.resolve(__dirname, 'public/images')})
+//    .addAliases({'@images': path.resolve(__dirname, 'App/public/images')})
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app

@@ -5,9 +5,12 @@ namespace App\Controller\security;
 use App\Entity\user\User;
 use App\Form\user\UserType;
 use App\Entity\communication\Mail;
+use App\Repository\user\UserRepository;
+use App\Form\user\ShortRegistrationType;
 use App\Form\security\PasswordResettingType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,8 +22,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use App\Repository\user\UserRepository;
-use Symfony\Component\HttpFoundation\Response;
 
 class SecurityController extends AbstractController
 {
@@ -28,8 +29,9 @@ class SecurityController extends AbstractController
     /**
      * User registration
      * 
-     * @Route("/security/registration", name="security.registration")
+     * @Route("/security/registration/{shortForm}", name="security.registration")
      *
+     * @param bool $shortForm
      * @param Request $request
      * @param ObjectManager $manager
      * @param UserPasswordEncoderInterface $encoder
@@ -39,7 +41,7 @@ class SecurityController extends AbstractController
      * 
      * @return Response
      */
-     public function registration(Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
+     public function registration(bool $shortForm = false, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
                                   AuthorizationCheckerInterface $authChecker, \Swift_Mailer $mailer, UserRepository $userRepository): Response
     {
 
@@ -58,7 +60,20 @@ class SecurityController extends AbstractController
 
         }
         
-        $form = $this->createForm(UserType::class, $user, array('isAdmin' => $isAdmin, 'roles' => $this->getParameter('security.role_hierarchy.roles')));
+        if(! $shortForm)
+        {
+
+            $form = $this->createForm(UserType::class, $user, array('isAdmin' => $isAdmin, 'roles' => $this->getParameter('security.role_hierarchy.roles')));
+            $template = 'security/registration.html.twig';
+
+        }
+        else 
+        {
+
+            $form = $this->createForm(ShortRegistrationType::class, $user);
+            $template = 'security/shortRegistration.html.twig';
+
+        }
 
         $form->handleRequest($request);
 
@@ -134,11 +149,11 @@ class SecurityController extends AbstractController
 
         }
 
-        return $this->render('security/registration.html.twig', array(
-                                                                        'current_menu' => 'registration',
-                                                                        'bodyId' =>  'userRegistration',
-                                                                        'form' => $form->createView()
-                                                                     )
+        return $this->render($template, array(
+                                                'current_menu' => 'registration',
+                                                'bodyId' =>  'userRegistration',
+                                                'form' => $form->createView()
+                                             )
                             )
         ;
 

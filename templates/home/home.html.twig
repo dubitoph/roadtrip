@@ -116,7 +116,7 @@
         </div>
         <div class="col-md-5 offset-md-2 container-image-content">
           <h2>Je m'inscris gratuitement</h2>
-          {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
+          {{ render(controller('App\\Controller\\security\\SecurityController::registration',{'shortForm': true})) }}
         </div>
       </div>
     </section>

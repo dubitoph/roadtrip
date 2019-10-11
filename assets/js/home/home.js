@@ -1,5 +1,7 @@
 import { setSessionLocation } from '../app';
 
+localStorage.clear();
+
 //Setup the date format according to navigator locale
 var localData = moment.localeData();
 var localeDateFormat = localData['_longDateFormat']['L'];
@@ -26,23 +28,30 @@ jQuery( document ).ready( function( $ ) {
   if (userAddress == null || userLatitude == null || userLongitude == null || userCity == null) 
   { 
 
-    if(navigator.geolocation)
-    {
-
-      navigator.geolocation.getCurrentPosition(function(position) {
+    console.log('creation 1');
+    
+    navigator.geolocation.getCurrentPosition(function(position) {
             
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
 
-        $('#latitude').val(latitude);
-        $('#longitude').val(longitude);
-                  
-        geocode(latitude + ', ' + longitude);                
-            
+      geolocation(latitude, longitude);
+
+    },
+    function(failure) {
+
+      $.getJSON('https://ipinfo.io/geo', function(response) {
+
+        var loc = response.loc.split(',');
+
+        console.log('creation after failure');
+
+        geolocation(loc[0], loc[1]);
+
       });
 
-    }
-
+    });
+ 
   }
   else
   {
@@ -91,6 +100,7 @@ jQuery( document ).ready( function( $ ) {
   });
 */
 });
+
 /*    
 //Dates formatting to ISO before submit
 $("form").submit(function(event) {
@@ -104,10 +114,21 @@ $("form").submit(function(event) {
 
     });
 */
-function geocode(query) 
+
+function geolocation(latitude, longitude) 
 {
-    
-    $.ajax(
+
+  $('#latitude').val(latitude);
+  $('#longitude').val(longitude);
+            
+  geocode(latitude + ', ' + longitude);
+
+}
+
+function geocode(query) 
+{ 
+  
+  $.ajax(
 
       {
 

@@ -1,0 +1,19 @@
+{{ include('_messages.html.twig') }}
+
+{{ form_start(form) }}
+
+  {{ form_row ( form.email, { 'label': 'Email address', 'attr': { 'placeholder' : 'Email address...' } } ) }}
+  {{ form_row ( form.username, { 'label': "Username", 'attr': { 'placeholder' : "Username..." } } ) }}
+  {{ form_row ( form.password, { 'label': 'Password', 'attr': { 'placeholder' : 'Password...' } } ) }}
+  {{ form_row ( form.termsAccepted ) }}
+
+  <button type="submit" class="btn btn-primary">Sign up</button>
+
+{{ form_end(form) }}
+
+
+{% block javascripts %}
+
+  {{ encore_entry_script_tags('registration') }}
+
+{% endblock %}

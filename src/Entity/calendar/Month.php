@@ -2,11 +2,6 @@
 
 namespace App\Entity\calendar;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity(repositoryClass="App\Repository\calendar\MonthRepository")
- */
 class Month
 {
 
