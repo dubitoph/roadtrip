@@ -14,8 +14,11 @@ class AuthenticationHandler implements AuthenticationFailureHandlerInterface, Lo
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     { 
 
+        $session = $request->getSession();
+        
         $referer = $request->headers->get('referer');       
-        $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
+        $session->getFlashBag()->add('error', $exception->getMessage());
+        $session->set('errorFomAuthentication', true);
 
         return new RedirectResponse($referer);
 

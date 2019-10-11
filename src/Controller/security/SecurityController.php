@@ -43,6 +43,8 @@ class SecurityController extends AbstractController
                                   AuthorizationCheckerInterface $authChecker, \Swift_Mailer $mailer, UserRepository $userRepository): Response
     {
 
+        $this->container->get('session')->set('errorFomRegistration', false);
+        
         $administrator = $userRepository->findOneBy(array('name' => 'administrator'));
 
         $user = new User;
@@ -60,62 +62,73 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
+        if ($form->isSubmitted())
         {                       
 
-            $password = $user->getPassword();
-            
-            if ($password != $user->getConfirmedPassword()) 
+            if ($form->isValid()) 
             {
-
-                $this->addFlash('error', "The password and the password confirmation are different.");
-
-            }
-            else
-            {
-            
-                $hash = $encoder->encodePassword($user, $password);
-
-                $user->setPassword($hash);  
-
-                if (! $isAdmin)
+                
+                $password = $user->getPassword();
+                
+                if ($password != $user->getConfirmedPassword()) 
                 {
 
-                    $user->setRoles(['ROLE_USER']);
-
-                }
-
-                $manager->persist($user);
-                $manager->flush(); 
-
-                $mail = new Mail;
-
-                $mail->setReceiver($user)
-                     ->setSubject($this->getParameter('registration_email_subject'))
-                     ->setSender($administrator)
-                     ->setMessage('Account creation')
-                     ->setBody($this->renderView(
-                                                    'security/registrationEmail.html.twig', 
-                                                    ['user' => $user]
-                                                )
-                              )
-                ;
-
-                if ($mail->sendEmail($mailer))
-                {                
-
-                    $manager->persist($mail);
-                    $manager->flush();
-
-                    $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
+                    $this->addFlash('error', "The password and the password confirmation are different.");
 
                 }
                 else
                 {
+                
+                    $hash = $encoder->encodePassword($user, $password);
 
-                    $this->addFlash('error', "An email could not be sent to the completed email address to activate your account.");
+                    $user->setPassword($hash);  
+
+                    if (! $isAdmin)
+                    {
+
+                        $user->setRoles(['ROLE_USER']);
+
+                    }
+
+                    $manager->persist($user);
+                    $manager->flush(); 
+
+                    $mail = new Mail;
+
+                    $mail->setReceiver($user)
+                        ->setSubject($this->getParameter('registration_email_subject'))
+                        ->setSender($administrator)
+                        ->setMessage('Account creation')
+                        ->setBody($this->renderView(
+                                                        'security/registrationEmail.html.twig', 
+                                                        ['user' => $user]
+                                                    )
+                                )
+                    ;
+
+                    if ($mail->sendEmail($mailer))
+                    {                
+
+                        $manager->persist($mail);
+                        $manager->flush();
+
+                        $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
+
+                    }
+                    else
+                    {
+
+                        $this->addFlash('error', "An email could not be sent to the completed email address to activate your account.");
+
+                    }
 
                 }
+
+            }
+            else 
+            {
+
+                $this->container->get('session')->set('errorFomRegistration', true);
 
             }
 
@@ -177,6 +190,8 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
             
+        $this->container->get('session')->set('errorFomAuthentication', false);
+        
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 

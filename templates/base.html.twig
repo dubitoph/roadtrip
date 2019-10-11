@@ -55,71 +55,65 @@
 
         </div>
       </nav>
-    </header>
-        {% set messages = app.flashes %}
-
-        <!-- Login modal -->
-        {% if messages|length > 0 %}
-          <div id="loginModal" class="modal fade" role="dialog" data-visibility='1' data-active='0'>
-        {% else %}
-          <div id="loginModal" class="modal fade" role="dialog" data-visibility='0' data-active='0'>
-        {% endif %}
-
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">Login</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div>
-                        {% for message in messages %}
-                          <div class="alert alert-danger">
-                            {{ message[0] }}
-                          </div>
-                        {% endfor %}
-                      </div>
-                      {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
-                    </div>
-                </div>
+    </header>   
+      
+    {% set messages = app.flashes %}  
+    
+    {% if app.session.get('errorFomAuthentication') %}
+      <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
+    {% else %}
+      <div id="loginModal" class="modal fade" role="dialog" data-visibility='0'>
+    {% endif %}
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Login</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-        </div>
-
-        </div>
-
-        <!-- Registration modal -->
-        {% if messages|length > 0 %}
-          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1' data-active='0'>
-        {% else %}
-          <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0' data-active='0'>
-        {% endif %}
-
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Sign up</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                      <div>
-                        {% for message in messages %}
-                          <div class="alert alert-danger">
-                            {{ message[0] }}
-                          </div>
-                        {% endfor %}
-                      </div>
-                      {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
-                    </div>
-                </div>
+            <div class="modal-body">
+              <div>
+                {% for message in messages %}
+                  <div class="alert alert-danger">
+                    {{ message[0] }}
+                  </div>
+                {% endfor %}
+              </div>
+              {{ render(controller('App\\Controller\\security\\SecurityController::login')) }}
             </div>
+          </div>
         </div>
-
+      </div>
+      </div>  
+    
+      {% if app.session.get('errorFomRegistration') %}
+        <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1'>
+      {% else %}
+        <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0'>
+      {% endif %}  
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Sign up</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div>
+                  {% for message in messages %}
+                    <div class="alert alert-danger">
+                      {{ message[0] }}
+                    </div>
+                  {% endfor %}
+                </div>
+                {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
+              </div>
+            </div>
+          </div>
         </div>
-
+        </div>
       <main>
         {% block body %}
         {% endblock %}
