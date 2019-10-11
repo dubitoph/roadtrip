@@ -41,24 +41,24 @@
             {% if app.user %}
                 <a href="{{ path('security.logout') }}" class="nav-link">Logout</a>
             {% else %}
-                <a id="call_login_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
+                <a id="call_login_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'login' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#loginModal">Login</a>
             {% endif %}
 
               {% if app.user %}
-              <a class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
+              <a class="btn btn-secondary {% if current_menu is defined and current_menu == 'dashboard' %}active{% endif %}" href="{{ path('user.dashboard') }}">My dashboard</a>
               {% endif %}
 
               {% if not app.user %}
-              <a id="call_registration_modal_btn" class="btn btn-secondary btn-white {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
+              <a id="call_registration_modal_btn" class="btn btn-secondary {% if current_menu is defined and current_menu == 'registration' %}active{% endif %}" data-focus=true data-backdrop="static" data-keyboard="false" data-toggle="modal" href="#registrationModal">Sign up</a>
               {% endif %}
             </div>
 
         </div>
       </nav>
-    </header>   
-      
-    {% set messages = app.flashes %}  
-    
+    </header>
+
+    {% set messages = app.flashes %}
+
     {% if app.session.get('errorFomAuthentication') %}
       <div id="loginModal" class="modal fade" role="dialog" data-visibility='1'>
     {% else %}
@@ -85,13 +85,13 @@
           </div>
         </div>
       </div>
-      </div>  
-    
+      </div>
+
       {% if app.session.get('errorFomRegistration') %}
         <div id="registrationModal" class="modal fade" role="dialog" data-visibility='1'>
       {% else %}
         <div id="registrationModal" class="modal fade" role="dialog" data-visibility='0'>
-      {% endif %}  
+      {% endif %}
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">

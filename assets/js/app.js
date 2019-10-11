@@ -33,11 +33,9 @@ jQuery( document ).ready( function( $ ){
   $(window).scroll(function () {
      if ($(this).scrollTop() > 80) {
         $('.topbar').addClass('topbar-sticky');
-        $('#navbar .btn-secondary').removeClass('btn-white');
      }
      if ($(this).scrollTop() < 80) {
         $('.topbar').removeClass('topbar-sticky');
-        $('#navbar .btn-secondary').addClass('btn-white');
      }
   });
 

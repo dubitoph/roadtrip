@@ -68,6 +68,8 @@ $btn-border-radius:           5px;
 $btn-border-radius-lg:        10px;
 $btn-border-radius-sm:        5px;
 $btn-line-height:             1;
+/* nav */
+$navbar-nav-link-padding-x:   1rem;
 /* card */
 $card-spacer-x:               20px;
 $card-spacer-y:               20px;
@@ -162,7 +164,7 @@ h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
   .nav-link{
       text-decoration: none;
       color: $white;
-      font-size: 0.8em;
+      font-size: 0.75em;
       font-weight: 700;
       &:hover{text-decoration: underline;}
   }
@@ -176,7 +178,9 @@ h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
 }
 .topbar{
   .navbar{
+    height: 64px;
     @include transition(0.5s all);
+    background-color: $white;
     &:before{
       position: absolute;
       content: " ";
@@ -188,6 +192,12 @@ h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
       @include transition(0.5s all);
       z-index: -1;
     }
+    li a,
+    .navbar-nav .nav-link {
+      @include transition(0.5s all);
+      color: $black;
+      &:hover{color: $black;}
+    }
   }
 }
 .topbar-sticky{
@@ -198,15 +208,52 @@ h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
       @include box-shadow(0 .125rem .25rem rgba($black, .075));
       top:0;
     }
+    .btn-secondary{
+      background: transparent;
+      border-color: $black!important;
+      color: $black!important;
+      &:hover,
+      &.hover,
+      &:focus,
+      &.focus,
+      &:active,
+      &.active{
+        background: transparent;
+        color: $link-hover-color!important;
+        border-color: $black!important;
+      }
+    }
   }
-  li a,
+}
+#homepage .topbar .navbar{
+  background: transparent;
   .navbar-nav .nav-link {
-    @include transition(0.5s all);
+    color: $white;
+    &:hover{color: $white;}
+  }
+  .btn-secondary{
+    background: transparent;
+    border-color: $white;
+    color: $white;
+    &:hover,
+    &.hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active{
+      background: transparent;
+      color: $white;
+      border-color: $white;
+    }
+  }
+}
+#homepage .topbar-sticky .navbar{
+  .navbar-nav .nav-link {
     color: $black;
     &:hover{color: $black;}
   }
-
 }
+
 /* forms */
 label{
   font-size: 0.8rem;
