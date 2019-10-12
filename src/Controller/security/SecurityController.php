@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
      * 
      * @return Response
      */
-     public function registration(bool $shortForm = false, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
+    public function registration(bool $shortForm = false, Request $request, ObjectManager $manager, UserPasswordEncoderInterface $encoder, 
                                   AuthorizationCheckerInterface $authChecker, \Swift_Mailer $mailer, UserRepository $userRepository): Response
     {
 
@@ -78,64 +78,53 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted())
-        {                       
+        {
 
-            if ($form->isValid()) 
+            if ($form->isValid())
             {
                 
                 $password = $user->getPassword();
                 
-                if ($password != $user->getConfirmedPassword()) 
+                $hash = $encoder->encodePassword($user, $password);
+
+                $user->setPassword($hash);  
+
+                if (! $isAdmin)
                 {
 
-                    $this->addFlash('error', "The password and the password confirmation are different.");
+                    $user->setRoles(['ROLE_USER']);
+
+                }
+
+                $manager->persist($user);
+                $manager->flush(); 
+
+                $mail = new Mail;
+
+                $mail->setReceiver($user)
+                     ->setSubject($this->getParameter('registration_email_subject'))
+                     ->setSender($administrator)
+                     ->setMessage('Account creation')
+                     ->setBody($this->renderView(
+                                                    'security/registrationEmail.html.twig', 
+                                                    ['user' => $user]
+                                                )
+                              )
+                ;
+
+                if ($mail->sendEmail($mailer))
+                {                
+
+                    $manager->persist($mail);
+                    $manager->flush();
+
+                    $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
 
                 }
                 else
                 {
-                
-                    $hash = $encoder->encodePassword($user, $password);
 
-                    $user->setPassword($hash);  
-
-                    if (! $isAdmin)
-                    {
-
-                        $user->setRoles(['ROLE_USER']);
-
-                    }
-
-                    $manager->persist($user);
-                    $manager->flush(); 
-
-                    $mail = new Mail;
-
-                    $mail->setReceiver($user)
-                        ->setSubject($this->getParameter('registration_email_subject'))
-                        ->setSender($administrator)
-                        ->setMessage('Account creation')
-                        ->setBody($this->renderView(
-                                                        'security/registrationEmail.html.twig', 
-                                                        ['user' => $user]
-                                                    )
-                                )
-                    ;
-
-                    if ($mail->sendEmail($mailer))
-                    {                
-
-                        $manager->persist($mail);
-                        $manager->flush();
-
-                        $this->addFlash('success', "An email was sent to the completed email address to activate your account.");
-
-                    }
-                    else
-                    {
-
-                        $this->addFlash('error', "An email could not be sent to the completed email address to activate your account.");
-
-                    }
+                    $this->addFlash('error', "An email could not be sent to the completed email address to activate your account.");
 
                 }
 

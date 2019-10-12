@@ -108,7 +108,7 @@
                     </div>
                   {% endfor %}
                 </div>
-                {{ render(controller('App\\Controller\\security\\SecurityController::registration')) }}
+                {{ render(controller('App\\Controller\\security\\SecurityController::registration', {'request': app.request})) }}
               </div>
             </div>
           </div>

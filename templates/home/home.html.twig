@@ -115,8 +115,12 @@
           <p class="text-white">Inscrivez-vous pour réserver votre motorhome et accéder à l’ensemble des fonctionnalités du site. Une fois inscrit, vous pouvez également mettre en vente votre véhicule.</p>
         </div>
         <div class="col-md-5 offset-md-2 container-image-content">
-          <h2>Je m'inscris gratuitement</h2>
-          {{ render(controller('App\\Controller\\security\\SecurityController::registration',{'shortForm': true})) }}
+          {% if not app.user %}
+            <h2>Je m'inscris gratuitement</h2>
+            {{ render(controller('App\\Controller\\security\\SecurityController::registration', {'shortForm': true, 'request': app.request})) }}
+          {% else %}
+            Afficher autre chose que le formulaire d'inscription
+          {% endif %}
         </div>
       </div>
     </section>
