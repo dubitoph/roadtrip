@@ -15,8 +15,12 @@ class BackendMarkController extends AbstractController
 {
     
     /**
+     * Marks list
+     * 
      * @Route("/backend/marks", name="backend.mark.index")
+     * 
      * @param MarkRepository $markRepository
+     * 
      * @return Response
      */
     public function index(MarkRepository $markRepository): Response
@@ -34,9 +38,13 @@ class BackendMarkController extends AbstractController
     }
 
     /**
+     * Create a mark
+     * 
      * @Route("/backend/mark/create", name="backend.mark.create")
+     * 
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function new(Request $request, ObjectManager $manager): Response
@@ -48,12 +56,13 @@ class BackendMarkController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {            
+        if ($form->isSubmitted() && $form->isValid()) 
+        {            
 
             $manager->persist($mark);
             $manager->flush();    
 
-            $this->addFlash('success', "La marque de véhicule a été créée avec succès.");      
+            $this->addFlash('success', "The mark was successfully created.");      
 
             return $this->redirectToRoute('backend.mark.index');
         }
@@ -61,17 +70,21 @@ class BackendMarkController extends AbstractController
         return $this->render('backend/mark/new.html.twig', [
                                                             'mark' => $mark,
                                                             'bodyId' => 'marksCreation',
-                                                            'form' => $form->createView(),
+                                                            'form' => $form->createView()
                                                            ]
                             )
         ;        
     }
 
     /**
+     * Edit a mark
+     * 
      * @Route("/backend/mark/edit/{id}", name="backend.mark.edit")
+     * 
      * @param Mark $mark
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function edit(Mark $mark, Request $request, ObjectManager $manager): Response
@@ -81,19 +94,21 @@ class BackendMarkController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {           
+        if ($form->isSubmitted() && $form->isValid()) 
+        {           
 
             $manager->flush();
 
-            $this->addFlash('success', "La marque de véhicule a été modifiée avec succès.");                   
+            $this->addFlash('success', "The mark was successfully updated.");                   
 
             return $this->redirectToRoute('backend.mark.index');
+
         }
      
         return $this->render('backend/mark/edit.html.twig', [
                                                                 'mark' => $mark,
                                                                 'bodyId' => 'marksEdition',
-                                                                'form' => $form->createView(),
+                                                                'form' => $form->createView()
                                                             ]
                             )
         ;  
@@ -101,21 +116,26 @@ class BackendMarkController extends AbstractController
     }
 
     /**
+     * Remove a mark
+     * 
      * @Route("/backend/mark/delete/{id}", name="backend.mark.delete", methods = "DELETE")
+     * 
      * @param Mark $mark
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function delete(Mark $mark, Request $request, ObjectManager $manager): Response
     {
 
-        if ($this->isCsrfTokenValid('delete'. $mark->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $mark->getId(), $request->get('_token'))) 
+        {
 
             $manager->remove($mark);
             $manager->flush();
 
-            $this->addFlash('success', "La marque de véhicule a été supprimée avec succès."); 
+            $this->addFlash('success', "The mark was successfully removed."); 
 
         } 
             

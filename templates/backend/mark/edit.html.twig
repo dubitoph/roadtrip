@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les marques de véhicule{% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : update a mark
+    
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt-4">
 
-        <h1>Editer la marque</h1>
+        <h1>Mark update</h1>
 
-        {{ include('backend/mark/_form.html.twig', { button: 'Editer' }) }}
+        {{ include('backend/mark/_form.html.twig') }}
         
     </div>
 

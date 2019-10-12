@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @UniqueEntity(
  *     fields={"mark"},
- *     message="La marque encodée existe déjà"
+ *     message="The encoded mark already exists."
  * )
  */
 class Mark
@@ -36,8 +36,8 @@ class Mark
      * @Assert\Length(
      *      min = 3,
      *      max = 255,
-     *      minMessage = "La marque doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "La marque ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The mark must at least contain {{limit}} characters.",
+     *      maxMessage = "Mark can't exceed {{characters}}."
      * )
      */
     private $mark;
@@ -47,29 +47,59 @@ class Mark
      */
     private $vehicles;
 
+    /**
+     * The constructor
+     */
     public function __construct()
     {
+
         $this->vehicles = new ArrayCollection();
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getMark(): ?string
-    {
-        return $this->mark;
-    }
-
-    public function setMark(string $mark): self
-    {
-        $this->mark = $mark;
-
-        return $this;
     }
 
     /**
+     * Get the id
+     *
+     * @return integer|null
+     */
+    public function getId(): ?int
+    {
+
+        return $this->id;
+
+    }
+
+    /**
+     * Get the mark
+     *
+     * @return string|null
+     */
+    public function getMark(): ?string
+    {
+
+        return $this->mark;
+
+    }
+
+    /**
+     * Set the mark
+     *
+     * @param string $mark
+     * 
+     * @return self
+     */
+    public function setMark(string $mark): self
+    {
+
+        $this->mark = $mark;
+
+        return $this;
+
+    }
+
+    /**
+     * Get vehicles with this mark
+     *
      * @return Collection|Vehicle[]
      */
     public function getVehicles(): Collection
@@ -79,6 +109,13 @@ class Mark
 
     }
 
+    /**
+     * Add a vehicle with this mark
+     *
+     * @param Vehicle $vehicle
+     * 
+     * @return self
+     */
     public function addVehicle(Vehicle $vehicle): self
     {
 
@@ -94,6 +131,13 @@ class Mark
 
     }
 
+    /**
+     * Remove a vehicle with this mark
+     *
+     * @param Vehicle $vehicle
+     * 
+     * @return self
+     */
     public function removeVehicle(Vehicle $vehicle): self
     {
 
@@ -116,6 +160,11 @@ class Mark
         
     }
 
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
     public function getSlug(): string 
     {
 

@@ -1,5 +1,5 @@
 $('body').on('click',".btn-danger",function(){
 
-    return confirm("Etes-vous certain de vouloir supprimer cette marque de véhicule ?");
+    return confirm("Are you certain you want to remove this mark?");
 
 });

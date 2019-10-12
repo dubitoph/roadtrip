@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les marques de véhicule{% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : create a mark
+
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt4">
 
-        <h1>Créer une nouvelle marque de véhicule</h1>
+        <h1>Create a mark</h1>
 
-        {{ include('backend/mark/_form.html.twig', { button: 'Créer' }) }}
+        {{ include('backend/mark/_form.html.twig') }}
 
     </div>
 

@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Gérer les marques de véhicule {% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : marks management
+    
+{% endblock %}
 
 {% block body %}
 
@@ -8,7 +12,7 @@
 
         {{ include('_messages.html.twig') }}
 
-        <h1>Gérer les marques de véhicule</h1>
+        <h1>Maks management</h1>
 
         <table class="table striped">
 
@@ -16,7 +20,7 @@
 
                 <tr>
 
-                    <th>Marque</th>
+                    <th>Mark</th>
                     <th>Actions</th>
 
                 </tr>
@@ -32,12 +36,12 @@
                         <td>{{ mark.mark }}</td>
                         <td>
                             
-                            <a href="{{ path('backend.mark.edit', { 'id': mark.id }) }}" class="btn btn-secondary">Editer</a>
+                            <a href="{{ path('backend.mark.edit', { 'id': mark.id }) }}" class="btn btn-secondary">Edit</a>
                             <form method = "post" action="{{ path('backend.mark.delete', { 'id': mark.id }) }}" style="display: inline-block">
 
                                 <input type="hidden"  name="_method" value="DELETE">
                                 <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ mark.id ) }}">
-                                <button class="btn btn-danger">Supprimer</button>
+                                <button class="btn btn-danger">Remove</button>
 
                             </form>
 
@@ -53,7 +57,7 @@
 
         <div class="text-right">
 
-            <a href="{{ path('backend.mark.create') }}" class="btn btn-primary">Créer une nouvelle marque</a>
+            <a href="{{ path('backend.mark.create') }}" class="btn btn-primary">Create a new mark</a>
 
         </div>
 
