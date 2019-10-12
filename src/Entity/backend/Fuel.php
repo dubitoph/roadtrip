@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity ;
  * @ORM\Entity(repositoryClass="App\Repository\backend\FuelRepository")
  * @UniqueEntity(
  *     fields={"fuel"},
- *     message="Le carburant encodé existe déjà"
+ *     message="The encoded fuel already exists."
  * )
  */
 class Fuel
@@ -30,13 +30,13 @@ class Fuel
      * @ORM\Column(type="string", length=255)
      * 
      * @Assert\NotBlank(
-     *      message = "Le carburant ne peut pas être vide."
+     *      message = "The fuel can't be empty."
      * )
      * @Assert\Length(
      *      min = 3,
      *      max = 255,
-     *      minMessage = "Le carburant doit au moins contenir {{ limit }} caractères",
-     *      maxMessage = "Le carburant ne peut dépasser {{ limit }} caractères"
+     *      minMessage = "The fuel must at least contain {{limit}} characters.",
+     *      maxMessage = "Fuel can't exceed {{characters}}."
      * )
      */
     private $fuel;
@@ -46,29 +46,59 @@ class Fuel
      */
     private $vehicles;
 
+    /**
+     * The constructor
+     */
     public function __construct()
     {
+
         $this->vehicles = new ArrayCollection();
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getFuel(): ?string
-    {
-        return $this->fuel;
-    }
-
-    public function setFuel(string $fuel): self
-    {
-        $this->fuel = $fuel;
-
-        return $this;
     }
 
     /**
+     * Get the id
+     *
+     * @return integer|null
+     */
+    public function getId(): ?int
+    {
+
+        return $this->id;
+
+    }
+
+    /**
+     * Get the fuel
+     *
+     * @return string|null
+     */
+    public function getFuel(): ?string
+    {
+
+        return $this->fuel;
+
+    }
+
+    /**
+     * Set the fuel
+     *
+     * @param string $fuel
+     * 
+     * @return self
+     */
+    public function setFuel(string $fuel): self
+    {
+
+        $this->fuel = $fuel;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the vehicles with this fuel type
+     *
      * @return Collection|Vehicle[]
      */
     public function getVehicles(): Collection
@@ -76,29 +106,62 @@ class Fuel
         return $this->vehicles;
     }
 
+    /**
+     * Add a vehicle with this fuel type
+     *
+     * @param Vehicle $vehicle
+     * 
+     * @return self
+     */
     public function addVehicle(Vehicle $vehicle): self
     {
-        if (!$this->vehicles->contains($vehicle)) {
+
+        if (!$this->vehicles->contains($vehicle)) 
+        {
+
             $this->vehicles[] = $vehicle;
             $vehicle->setFuel($this);
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Remove a vehicle with this fuel type
+     *
+     * @param Vehicle $vehicle
+     * 
+     * @return self
+     */
     public function removeVehicle(Vehicle $vehicle): self
     {
-        if ($this->vehicles->contains($vehicle)) {
+
+        if ($this->vehicles->contains($vehicle)) 
+        {
+
             $this->vehicles->removeElement($vehicle);
+
             // set the owning side to null (unless already changed)
-            if ($vehicle->getFuel() === $this) {
+            if ($vehicle->getFuel() === $this) 
+            {
+
                 $vehicle->setFuel(null);
+
             }
+
         }
 
         return $this;
+
     }
 
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
     public function getSlug(): string 
     {
 

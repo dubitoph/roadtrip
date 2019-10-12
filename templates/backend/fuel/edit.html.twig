@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les types de carburant{% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : update a fuel
+    
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt-4">
 
-        <h1>Editer le type de carburant</h1>
+        <h1>Fuel update</h1>
 
-        {{ include('backend/fuel/_form.html.twig', { button: 'Editer' }) }}
+        {{ include('backend/fuel/_form.html.twig') }}
         
     </div>
 

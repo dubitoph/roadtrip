@@ -40,7 +40,6 @@ class User implements UserInterface
      *      minMessage = "Your first name must contain at least {{ limit }} characters.",
      *      maxMessage = "Your first name can't contain more than {{ limit }} characters."
      * )
-     * @Assert\NotBlank()
      */
     private $firstname;
 
@@ -53,7 +52,6 @@ class User implements UserInterface
      *      minMessage = "Your name must contain at least {{ limit }} characters.",
      *      maxMessage = "Your name can't contain more than {{ limit }} characters."
      * )
-     * @Assert\NotBlank()
      */
     private $name;
 

@@ -1,14 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Gérer les types de carburant {% endblock %}
+{% block title %}
+
+    Roadtripr - Backend : fuels management
+    
+{% endblock %}
+
 
 {% block body %}
 
     <div class="container mt4">
 
-        {{ include('_messages.html.twig') }}
+        <h1>Fuels management</h1>
 
-        <h1>Gérer les types de carburant</h1>
+        {{ include('_messages.html.twig') }}
 
         <table class="table striped">
 
@@ -16,7 +21,7 @@
 
                 <tr>
 
-                    <th>Type de carburant</th>
+                    <th>Fuel</th>
                     <th>Actions</th>
 
                 </tr>
@@ -32,12 +37,12 @@
                         <td>{{ fuel.fuel }}</td>
                         <td>
                             
-                            <a href="{{ path('backend.fuel.edit', { 'id': fuel.id }) }}" class="btn btn-secondary">Editer</a>
+                            <a href="{{ path('backend.fuel.edit', { 'id': fuel.id }) }}" class="btn btn-secondary">Edit</a>
                             <form method = "post" action="{{ path('backend.fuel.delete', { 'id': fuel.id }) }}" style="display: inline-block">
 
                                 <input type="hidden"  name="_method" value="DELETE">
                                 <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ fuel.id ) }}">
-                                <button class="btn btn-danger">Supprimer</button>
+                                <button class="btn btn-danger">Remove</button>
 
                             </form>
 
@@ -53,7 +58,7 @@
 
         <div class="text-right">
 
-            <a href="{{ path('backend.fuel.create') }}" class="btn btn-primary">Créer un nouveau type de carburant</a>
+            <a href="{{ path('backend.fuel.create') }}" class="btn btn-primary">Create a new fuel</a>
 
         </div>
 
