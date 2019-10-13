@@ -9,13 +9,15 @@ $root-url:                    'http://127.0.0.1:8000';
 /* theme color */
 $black:                       #322A1D;
 $body-color:                  #322A1D;
+$gray:                        #CCCAC6;
+$gray-100:                    #F2F2F1;
 $gray-600:                    #98948E;
 $red:                         #D73517;
 $orange:                      #E7553A;
 $yellow:                      #FBDF8F;
 $green:                       #C9DB0D;
 $blue:                        #578ACC;
-$gray:                        #CCCAC6;
+
 $theme-colors: (
   primary: #E7553A,
   warning: #D73517,
@@ -98,6 +100,15 @@ $body-weight: 100;
 h1, .h1 { margin-top: 1.5rem; }
 h2, .h2 { margin-top: 1.5rem; }
 h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
+h6, .h6 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1;
+  font-weight: normal;
+  font-size: 0.8rem;
+  color:$gray-600;
+}
 /* buttons */
 .btn{
   text-decoration: none;
@@ -253,7 +264,15 @@ h5, .h5 { margin-top: 1.5rem;text-transform: uppercase;letter-spacing: 1;}
     &:hover{color: $black;}
   }
 }
-
+#advertsIndex {
+  .topbar .navbar{
+    @include box-shadow(0 .125rem .25rem rgba($black, .075));
+  }
+  main {
+  background-color: $gray-100;
+  padding-top: 65px;
+  }
+}
 /* forms */
 label{
   font-size: 0.8rem;
@@ -300,7 +319,11 @@ input[type="text"]::-ms-clear,
 input[type="search"]::-ms-clear {
     display: none;
 }
-
+.form-check-label{
+  text-transform: none;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
 /* hero */
 .hero {
   position: relative;
