@@ -92,7 +92,11 @@ class AdvertSearchType extends AbstractType
             ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
             ->add('distance', ChoiceType::class, array(
+                                                        'placeholder' => 'Choose an option',
                                                         'required' => false,
+                                                        'attr' => [
+                                                                    'class' => 'select-hidden'
+                                                                  ],
                                                         'choices' => array('5 km'  => 5,
                                                                             '10 km'  => 10,
                                                                             '20 km'  => 20,
@@ -106,6 +110,10 @@ class AdvertSearchType extends AbstractType
             ->add('address', TextType::class, array('required' => false))
             ->add('city', HiddenType::class)
             ->add('sorting', ChoiceType::class, array(
+                                                      'placeholder' => 'Choose an option',
+                                                      'attr' => [
+                                                                  'class' => 'select-hidden'
+                                                                ],
                                                       'required' => false,
                                                       'choices' => array(
                                                                             'Proximity'  => 'Proximity',

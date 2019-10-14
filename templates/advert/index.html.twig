@@ -49,7 +49,10 @@
           {{ form_row(form.address, {'id': 'search_address'}) }}
 
           {{ form_row(form.city) }}
-          {{ form_widget(form.sorting) }}
+
+          <div class="select">
+            {{ form_widget(form.sorting) }}
+          </div>
           <button class="btn btn-primary">Search</button>
         {{ form_end(form) }}
         </section>
@@ -105,7 +108,7 @@
                   {% set i = i + 1 %}
 
               {% endfor %}
-              
+
 
           </div>
 
