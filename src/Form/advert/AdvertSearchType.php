@@ -23,9 +23,9 @@ class AdvertSearchType extends AbstractType
         $belongingCarrier = 'Porteur';
         $belongingCell = 'Cellule';
 
-        $builder 
+        $builder
             ->add('beginAt', DateTimeType::class, array(
-                                                            'widget' => 'single_text', 
+                                                            'widget' => 'single_text',
                                                             'html5' => false,
                                                             'attr' => [
                                                                         'class' => 'js-datepicker',
@@ -35,7 +35,7 @@ class AdvertSearchType extends AbstractType
                                                        )
                  )
             ->add('endAt', DateTimeType::class, array(
-                                                        'widget' => 'single_text', 
+                                                        'widget' => 'single_text',
                                                         'html5' => false,
                                                         'attr' => [
                                                                     'class' => 'js-datepicker',
@@ -43,20 +43,24 @@ class AdvertSearchType extends AbstractType
                                                                   ],
                                                         'required' => false
                                                      )
-                 )        
+                 )
             ->add('minimumBedsNumber', ChoiceType::class, [
+                                                            'placeholder' => 'Choose an option',
                                                             'choices' => [
-                                                                            'Mobilhome 1 place' => 1, 
-                                                                            'Mobilhome 2 places' => 2, 
-                                                                            'Mobilhome 3 places' => 3, 
-                                                                            'Mobilhome 4 places' => 4, 
-                                                                            'Mobilhome 5 places' => 5, 
-                                                                            'Mobilhome 6 places' => 6, 
-                                                                            'Mobilhome 7 places' => 7, 
-                                                                            'Mobilhome 8 places' => 8, 
-                                                                            'Mobilhome 9 places' => 9, 
+                                                                            'Mobilhome 1 place' => 1,
+                                                                            'Mobilhome 2 places' => 2,
+                                                                            'Mobilhome 3 places' => 3,
+                                                                            'Mobilhome 4 places' => 4,
+                                                                            'Mobilhome 5 places' => 5,
+                                                                            'Mobilhome 6 places' => 6,
+                                                                            'Mobilhome 7 places' => 7,
+                                                                            'Mobilhome 8 places' => 8,
+                                                                            'Mobilhome 9 places' => 9,
                                                                             'Mobilhome 10 places' => 10
                                                                          ],
+                                                           'attr' => [
+                                                                       'class' => 'select-hidden'
+                                                                     ],
                                                             'required' => false
                                                           ]
                  )
@@ -69,7 +73,7 @@ class AdvertSearchType extends AbstractType
                                                             'required' => false,
                                                             'class' => 'App\Entity\backend\Equipment',
                                                             'choice_label' => 'equipment',
-                                                            'multiple' => true, 
+                                                            'multiple' => true,
                                                             'query_builder' => function(EquipmentRepository $er) use ($belongingCell) {
                                                                                     return $er->queryFindByBelonging($belongingCell);
                                                                             }
@@ -117,7 +121,7 @@ class AdvertSearchType extends AbstractType
                  )
         ;
 
-    }           
+    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
