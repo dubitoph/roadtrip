@@ -18,25 +18,26 @@
               {{ form_widget(form.minimumBedsNumber) }}
           </div>
 
-          {{ form_row(form.beginAt) }} {{ form_row(form.endAt) }}
+          <label for="beginAt">Disponibilité</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Du</span>
+            </div>
+            {{ form_widget(form.beginAt) }}
+            <div class="input-group-prepend">
+              <span class="input-group-text">Au</span>
+            </div>
+            {{ form_widget(form.endAt) }}
+          </div>
 
+          <label for="maximumPrice">Prix par jour</label>
           {{ form_widget(form.maximumPrice) }}
           <input type="range" class="custom-range" id="customRange1" min="0" max="500" step="5">
 
+          <label for="cellEquipments">Options de la cellule</label>
           {{ form_widget(form.cellEquipments) }}
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-              Default checkbox
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-              Default checkbox
-            </label>
-          </div>
 
+          <label for="carrierEquipments">Options du porteur</label>
           {{ form_widget(form.carrierEquipments) }}
 
           <label for="">Dans un rayon de</label>

@@ -72,7 +72,7 @@ class AdvertSearchType extends AbstractType
             ->add('cellEquipments', EntityType::class, [
                                                             'required' => false,
                                                             'class' => 'App\Entity\backend\Equipment',
-                                                            'choice_label' => 'equipment',
+                                                            'expanded' => true,
                                                             'multiple' => true,
                                                             'query_builder' => function(EquipmentRepository $er) use ($belongingCell) {
                                                                                     return $er->queryFindByBelonging($belongingCell);
@@ -83,6 +83,7 @@ class AdvertSearchType extends AbstractType
                                                             'required' => false,
                                                             'class' => 'App\Entity\backend\Equipment',
                                                             'choice_label' => 'equipment',
+                                                            'expanded' => true,
                                                             'multiple' => true,
                                                             'query_builder' => function(EquipmentRepository $er) use ($belongingCarrier) {
                                                                                    return $er->queryFindByBelonging($belongingCarrier);
