@@ -19,8 +19,13 @@ class BackendRatingController extends AbstractController
 {
     
     /**
+     * List of ratings and response to these to approuve
+     * 
      * @Route("/backend/rating/toAppove", name="backend.rating.toApprove")
+     * 
      * @param RatingRepository $ratingRepository
+     * @param ResponseToRatingRepository $responseToRatingRepository
+     * 
      * @return Response
      */
     public function ratingsToApprove(RatingRepository $ratingRepository, ResponseToRatingRepository $responseToRatingRepository): Response
@@ -104,10 +109,14 @@ class BackendRatingController extends AbstractController
     }
 
     /**
+     * Approve a rating
+     * 
      * @Route("/backend/rating/approve/{id}", name="backend.rating.approve")
+     * 
      * @param Rating $rating
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function approve(Rating $rating, UserRepository $userRepository, ObjectManager $manager, \Swift_Mailer $mailer): Response

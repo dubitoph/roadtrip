@@ -57,7 +57,7 @@ Encore
 
     .addEntry('calendar', './assets/css/calendar.css')
 
-//    .addAliases({'@images': path.resolve(__dirname, 'App/public/images')})
+    .addAliases({'@images': path.resolve(__dirname, 'public/images')})
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
@@ -88,29 +88,6 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
-
-    .addLoader({
-        test: /\.(png|jpg|jpeg|gif|ico|svg)$/,
-        use: [{
-            loader: 'file-loader',
-            options: {
-                name: '[path][name].[hash:8].[ext]',
-                context: './assets',
-            }
-        }]
-    })
 ;
-
-/*
-var config = Encore.getWebpackConfig();
-var path = require('path');
-
-config.resolve.alias = {
-                            '@images': path.resolve(__dirname, '../images')
-                       }
-;
-
-module.exports = config;
-*/
 
 module.exports = Encore.getWebpackConfig();

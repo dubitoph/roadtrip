@@ -14,37 +14,12 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class ResponseToRatingRepository extends ServiceEntityRepository
 {
+
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, ResponseToRating::class);
+        
     }
-
-    // /**
-    //  * @return ResponseToRating[] Returns an array of ResponseToRating objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?ResponseToRating
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

@@ -19,7 +19,9 @@ class RatingRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
+
         parent::__construct($registry, Rating::class);
+        
     }
     
     /**

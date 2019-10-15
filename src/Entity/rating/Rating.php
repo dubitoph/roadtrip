@@ -82,6 +82,9 @@ class Rating
     private $tenant;
 
 
+    /**
+     * The constructor
+     */
     public function __construct() 
 	{
         
@@ -89,35 +92,75 @@ class Rating
 
     }
 
+    /**
+     * Get the id
+     */
     public function getId(): ?int
     {
+
         return $this->id;
+
     }
 
+    /**
+     * Get the comment
+     *
+     * @return string|null
+     */
     public function getComment(): ?string
     {
+
         return $this->comment;
+
     }
 
+    /**
+     * Set the comment
+     *
+     * @param string|null $comment
+     * @return self
+     */
     public function setComment(?string $comment): self
     {
+
         $this->comment = $comment;
 
         return $this;
+
     }
 
+    /**
+     * Get the score
+     *
+     * @return integer|null
+     */
     public function getScore(): ?int
     {
+
         return $this->score;
     }
 
+    /**
+     * Set the score
+     *
+     * @param integer|null $score
+     * 
+     * @return self
+     */
     public function setScore(?int $score): self
     {
+
         $this->score = $score;
 
         return $this;
+
     }
 
+    /**
+     * Get the creation date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
 
@@ -125,6 +168,11 @@ class Rating
 
     }
 
+    /**
+     * Get the formatted creation date
+     *
+     * @return \DateTimeInterface|null
+     */
     public function getFormattedCreatedAt(): string
     {
 
@@ -132,44 +180,99 @@ class Rating
 
     }
 
+    /**
+     * Set the creation date
+     *
+     * @param \DateTimeInterface $createdAt
+     * 
+     * @return self
+     */
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
+
         $this->createdAt = $createdAt;
 
         return $this;
+
     }
 
+    /**
+     * Get if the rating is approfed
+     *
+     * @return boolean|null
+     */
     public function getRatingApproved(): ?bool
     {
+
         return $this->ratingApproved;
+
     }
 
+    /**
+     * Set if the rating is approfed
+     *
+     * @param boolean|null $ratingApproved
+     * 
+     * @return self
+     */
     public function setRatingApproved(?bool $ratingApproved): self
     {
+
         $this->ratingApproved = $ratingApproved;
 
         return $this;
+
     }
 
+    /**
+     * Get the booking
+     *
+     * @return Booking|null
+     */
     public function getBooking(): ?Booking
     {
+
         return $this->booking;
+
     }
 
+    /**
+     * Set the booking
+     *
+     * @param Booking|null $booking
+     * @return self
+     */
     public function setBooking(?Booking $booking): self
     {
+
         $this->booking = $booking;
 
         return $this;
+
     }
 
+    /**
+     * Get the response
+     *
+     * @return ResponseToRating|null
+     */
     public function getResponseToRating(): ?ResponseToRating
     {
+
         return $this->responseToRating;
+
     }
 
+    /**
+     * Set the response
+     *
+     * @param ResponseToRating|null $responseToRating
+     * 
+     * @return self
+     */
     public function setResponseToRating(?ResponseToRating $responseToRating): self
     {
+
         $this->responseToRating = $responseToRating;
 /*
         // set the owning side of the relation if necessary
@@ -178,37 +281,81 @@ class Rating
         }
 */
         return $this;
+
     }
 
+    /**
+     * Get the advert
+     *
+     * @return Advert|null
+     */
     public function getAdvert(): ?Advert
     {
         return $this->advert;
     }
 
+    /**
+     * Set the advert
+     *
+     * @param Advert|null $advert
+     * 
+     * @return self
+     */
     public function setAdvert(?Advert $advert): self
     {
+
         $this->advert = $advert;
 
         return $this;
+
     }
 
+    /**
+     * Get the user who create the rating
+     *
+     * @return User|null
+     */
     public function getUser(): ?User
     {
+
         return $this->user;
+
     }
 
+    /**
+     * Set the user who create the rating
+     *
+     * @param User|null $user
+     * 
+     * @return self
+     */
     public function setUser(?User $user): self
     {
+
         $this->user = $user;
 
         return $this;
+
     }
 
+    /**
+     * Get the tenant
+     *
+     * @return User|null
+     */
     public function geTenant(): ?User
     {
+
         return $this->tenant;
+
     }
 
+    /**
+     * Set the tenant
+     *
+     * @param User|null $tenant
+     * @return self
+     */
     public function setTenant(?User $tenant): self
     {
         $this->tenant = $tenant;

@@ -1,4 +1,10 @@
 liip_imagine:
+  resolvers:
+      default:
+          web_path:
+              web_root: "%kernel.project_dir%/public"
+              # en écrivant ici on garde le cache entre chaque release
+              cache_prefix: "images/cache"
   filter_sets:
     thumb:
       quality: 75
