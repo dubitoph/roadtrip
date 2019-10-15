@@ -5,7 +5,6 @@
 @import "icons";
 
 /* 2. begin customization -------- */
-$root-url:                    'http://127.0.0.1:8000';
 /* theme color */
 $black:                       #322A1D;
 $body-color:                  #322A1D;
@@ -352,7 +351,7 @@ input[type="search"]::-ms-clear {
         z-index: 100;
         width: 168px;
         height: 400px;
-        background:transparent url($root-url+'/images/track.svg') no-repeat left top;
+        background:transparent url('~@images/track.svg') no-repeat left top;
       }
   }
 
@@ -448,31 +447,31 @@ input[type="search"]::-ms-clear {
 }
 
 #home-hero{
-  background-image: url($root-url+'/images/landscape1-m.jpg');
+  background-image: url('~@images/landscape1-m.jpg');
   @include media-breakpoint-up(md) {
-    background-image: url($root-url+'/images/landscape1-m.jpg');
+    background-image: url('~@images/landscape1-m.jpg');
   }
   @include media-breakpoint-up(lg) {
-    background-image: url($root-url+'/images/landscape1-l.jpg');
+    background-image: url('~@images/landscape1-l.jpg');
   }
 
 }
 #home-why{
-  background-image: url($root-url+'/images/landscape2-m.jpg');
+  background-image: url('~@images/landscape2-m.jpg');
   @include media-breakpoint-up(md) {
-    background-image: url($root-url+'/images/landscape2-m.jpg');
+    background-image: url('~@images/landscape2-m.jpg');
   }
   @include media-breakpoint-up(lg) {
-    background-image: url($root-url+'/images/landscape2-l.jpg');
+    background-image: url('~@images/landscape2-l.jpg');
   }
 }
 #home-subscribe{
-  background-image: url($root-url+'/images/landscape3-m.jpg');
+  background-image: url('~@images/landscape3-m.jpg');
   @include media-breakpoint-up(md) {
-    background-image: url($root-url+'/images/landscape3-m.jpg');
+    background-image: url('~@images/landscape3-m.jpg');
   }
   @include media-breakpoint-up(lg) {
-    background-image: url($root-url+'/images/landscape3-l.jpg');
+    background-image: url('~@images/landscape3-l.jpg');
   }
 }
 /* footer */
