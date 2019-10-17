@@ -1,13 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-
     Roadtripr - The adverts
-
 {% endblock %}
 
 {% block body %}
-  <div class="container">
+  <div class="container pb-5">
     <h2>Results</h2>
     <div class="row">
       <div class="col-md-4">
@@ -45,7 +43,7 @@
             {{ form_widget(form.distance) }}
           </div>
 
-          <input type="range" class="custom-range" id="customRange1" min="0" max="200" step="5">
+          <input type="range" class="custom-range" id="customRange2" min="0" max="200" step="5">
 
           {{ form_row(form.address, {'id': 'search_address'}) }}
 
@@ -55,6 +53,7 @@
             {{ form_widget(form.sorting) }}
           </div>
           <button class="btn btn-primary">Search</button>
+          <div id="slider"></div>
         {{ form_end(form) }}
         </section>
       </div>
