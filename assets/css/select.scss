@@ -18,14 +18,14 @@
 	outline: none;
 
 	&:active{
-		border-color: $orange;
+		border-color: $gray-600;
 		&:after{
 			transform:rotate(-180deg);
 		}
 	}
 	&:focus{
 		outline: none;
-		border-color: $orange;
+		border-color: $gray-600;
 		&:after{
 			transform:rotate(-180deg);
 		}
@@ -40,11 +40,11 @@
   color: $gray-600;
   width: 100%;
   margin-right: 0px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   &.isActive{
 		z-index:999;
 		.select-styled{
-			border-color: $orange;
+			border-color: $gray-600;
 			&:after{
 				transform:rotate(-180deg);
 			}
@@ -101,7 +101,7 @@
 	}
 
 	.isActive{
-		border-color: $orange;
+		border-color: $gray-600;
 		&:after{
 			transform:rotate(-180deg);
 		}
@@ -116,7 +116,7 @@
 	pointer-events:none;
 	opacity:0;
   z-index: 999;
-  border: 1px solid $orange;
+  border: 1px solid $gray-600;
   border-radius: $border-radius;
   background-color: $white;
   font-size: 0.9rem;

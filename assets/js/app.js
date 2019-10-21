@@ -34,6 +34,7 @@ import 'bootstrap';
 import './polyfill/svg.js'
 */
 import './actions/select/init.js'
+import './actions/range/init.js'
 
 jQuery( document ).ready( function( $ ){
   // stickybar scrollspy
