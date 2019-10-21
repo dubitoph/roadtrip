@@ -62,11 +62,6 @@ class AdvertSimplifiedSearchType extends AbstractType
             ->add('longitude', HiddenType::class)
             ->add('address', HiddenType::class, array('required' => false))
             ->add('city', HiddenType::class)
-            ->add('urlAjaxSession', HiddenType::class, array(
-                                                                'mapped' => false,
-                                                                'data' => $options['url']
-                                                            )
-                 )
         ;
 
     }

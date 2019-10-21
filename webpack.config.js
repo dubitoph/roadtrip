@@ -22,6 +22,9 @@ Encore
      */
 
     .addEntry('app', './assets/js/app.js')
+
+    .addEntry('polyfill', 'babel-polyfill')
+
     .addEntry('indexAdvert', './assets/js/backend/indexAdvert.js')
     .addEntry('indexEquipment', './assets/js/backend/indexEquipment.js')
     .addEntry('indexSort', './assets/js/backend/indexSort.js')

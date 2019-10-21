@@ -1,5 +1,12 @@
 require('../css/app.scss');
 
+require('babel-polyfill');
+
+const routes = require('../../public/js/fos_js_routes.json');
+import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
+Routing.setRoutingData(routes);
+window['Routing'] = Routing;
+
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
@@ -150,17 +157,18 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
           localStorage.setItem('userLongitude', e.suggestion.latlng.lng);
           localStorage.setItem('userCity', e.suggestion.city);
           localStorage.setItem('userAddress', e.query);
+          localStorage.setItem('userCountryCode', e.suggestion.countryCode);
 
-            if (typeof idInputDefaultAddress !== 'undefined')
-            {
+          if (typeof idInputDefaultAddress !== 'undefined')
+          {
 
-              document.querySelector('#' + idInputDefaultAddress).checked = true;
-
-            }
-
-            setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city);
+            document.querySelector('#' + idInputDefaultAddress).checked = true;
 
           }
+
+          setSessionLocation(e.query, e.suggestion.latlng.lat, e.suggestion.latlng.lng, e.suggestion.city, e.suggestion.countryCode.toUpperCase());
+
+        }
 
       }
 
@@ -194,42 +202,100 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 
 }
 
-export function setSessionLocation(address, latitude, longitude, city)
+export function setSessionLocation(address, latitude, longitude, city, countryCode)
 {
 
-  $.ajax(
+  var setSessionVariables = async function()
+                       {
 
-      {
+                          var response = await getAjax(Routing.generate(
+                                                                                    'user.geolocation.session', 
+                                                                                    {
+                                                                                        userLatitude: latitude,
+                                                                                        userLongitude: longitude,
+                                                                                        userCity: city,
+                                                                                        userAddress: address,
+                                                                                        userCountryCode: countryCode
+                                                                                    }
+                                                                                  )
+                                                                 )
+                          ;
 
-        url: $('#urlAjaxSession').val(),
-        method: 'POST',
-        data: {
-                'userLatitude': latitude,
-                'userLongitude': longitude,
-                'userCity': city,
-                'userAddress': address
+                          return response;
 
-              },
-        dataType: 'json',
-        success: function(response)
-                {
+                       }
+  ;
 
-                  localStorage.setItem('userLatitude',  latitude);
-                  localStorage.setItem('userLongitude',  longitude);
-                  localStorage.setItem('userCity',  city);
-                  localStorage.setItem('userAddress',  address);
+  setSessionVariables().then(function(response)
+                        {
 
-                  console.log(response);
+                          localStorage.setItem('userLatitude',  latitude);
+                          localStorage.setItem('userLongitude',  longitude);
+                          localStorage.setItem('userCity',  city);
+                          localStorage.setItem('userAddress',  address);
+                          localStorage.setItem('userCountryCode',  countryCode);        
+                          sessionStorage.setItem('phpSessionVariablesExist', '1');
+        
+                          console.log(localStorage.getItem('userCountryCode'));
 
-                  sessionStorage.setItem('phpSessionVariablesExist', '1');
+                        }
+                            )
+                  .catch(function(error)
+                          {
 
-                },
-        error : function(response)
-                {
+                            console.error("Error during the ajax call to get the set session user's location variables", error);
 
-                  console.log('Error from Ajax call to create session variables');
+                          }
+                        )
+  ;
 
-                },
+}
+
+export function getAjax(url) 
+{
+
+  return new Promise(function(resolve, reject)
+                     {
+  
+                        var req = new XMLHttpRequest();
+                      
+                        req.onreadystatechange = function() {
+                      
+                          if (req.readyState === 4) 
+                          {
+                      
+                            if (req.status === 200) 
+                            {
+                      
+                              resolve(req.responseText);
+                              
+                            }
+                            else
+                            {
+                      
+                              reject(req);
+                      
+                            }
+                            
+                          }
+                      
+                        }
+                      
+                        req.open('GET', url, true);
+                        req.send();
+
+                     }
+                    )
+  ;
+
+}
+
+export function getCurrentPosition(options = {}) 
+{
+
+  return new Promise((resolve, reject) => {
+
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
 
   });
 

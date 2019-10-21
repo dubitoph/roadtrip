@@ -123,11 +123,6 @@ class AdvertSearchType extends AbstractType
                                                                         )
                                                      )
                  )
-            ->add('urlAjaxSession', HiddenType::class, array(
-                                                                'mapped' => false,
-                                                                'data' => $options['url']
-                                                            )
-                 )
         ;
 
     }

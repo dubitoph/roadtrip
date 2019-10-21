@@ -1,6 +1,9 @@
+/*
+
 $(document).ready(function() {
 
     var inputTel = document.querySelector('#user_phoneNumber');
+    var access_key = '55fa64477541d7840caf1e605e1359cc';
   
     //Plugin intl-tel-input initialisation
     var iti = window.intlTelInput(inputTel, {
@@ -8,15 +11,21 @@ $(document).ready(function() {
       initialCountry: "auto",
       geoIpLookup: function(callback) 
                    {
+
+                      $.ajax(Routing.generate('user.IP'), function() {}, "jsonp").always(function(response) {
+
+                        var ip = response.IP;
+                    
+                        $.ajax('http://api.ipstack.com/' + ip + '?access_key=' + access_key, function() {}, "jsonp").always(function(json) {
+                          
+                          var countryCode = (json && json.country_code) ? json.country_code : "";
+                          callback(countryCode);
   
-                      $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) 
-                                                                                {
-  
-                                                                                  var countryCode = (resp && resp.country) ? resp.country : "";
-                                                                                  callback(countryCode);
-  
-                                                                                });
-                                      },
+                        });
+                        
+                      });
+
+                   },
       initialDialCode: true,
       utilsScript: 'utils.js'
   
@@ -32,3 +41,5 @@ $(document).ready(function() {
     }, false);
 
 });
+
+*/

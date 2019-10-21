@@ -1,57 +1,73 @@
 import { setSessionLocation } from '../app';
-
-localStorage.clear();
+import { getAjax } from '../app';
+import { getCurrentPosition } from '../app';
 
 //Setup the date format according to navigator locale
 var localData = moment.localeData();
 var localeDateFormat = localData['_longDateFormat']['L'];
 
+var userAddress = localStorage.getItem("userAddress");
+var userLatitude = localStorage.getItem("userLatitude");
+var userLongitude = localStorage.getItem("userLongitude");
+var userCity = localStorage.getItem("userCity");
+var userCountryCode = localStorage.getItem("userCountryCode");
+
 jQuery( document ).ready( function( $ ) {
 
-  var userAddress = localStorage.getItem("userAddress");
-  var userLatitude = localStorage.getItem("userLatitude");
-  var userLongitude = localStorage.getItem("userLongitude");
-  var userCity = localStorage.getItem("userCity");
-/*    
-  //Dates formatting according user's locale
-  $('.js-datepicker').each(function() {
-
-      if($(this).val())
-      {
-      
-          $(this).val(moment($(this).val(), 'YYYY-MM-DD').format('L'));
-
-      }
-
-  });
-*/    
-  if (userAddress == null || userLatitude == null || userLongitude == null || userCity == null) 
+  if (userAddress == null || userLatitude == null || userLongitude == null || userCity == null || userCountryCode == null) 
   { 
 
-    console.log('creation 1');
-    
-    navigator.geolocation.getCurrentPosition(function(position) {
-            
-      var latitude = position.coords.latitude;
-      var longitude = position.coords.longitude;
+    var getUserLocation = async function()
+                          {
 
-      geolocation(latitude, longitude);
+                            var position = await getCurrentPosition();
+                            var latitude = position.coords.latitude;
+                            var longitude = position.coords.longitude;
 
-    },
-    function(failure) {
+                            var apikey = '49990332282e4e40aa80d8b1481e4152';
+                            var api_url = 'https://api.opencagedata.com/geocode/v1/json';
 
-      $.getJSON('https://ipinfo.io/geo', function(response) {
+                            var request_url = api_url
+                              + '?'
+                              + 'key=' + apikey
+                              + '&q=' + encodeURIComponent(latitude + ',' + longitude)
+                              + '&pretty=1'
+                              + '&no_annotations=1'
+                            ;
+                                
+                            var response = await getAjax(request_url);
+                            var dataLocation = JSON.parse(response);
+                                                                                                                          
+                            return dataLocation;
+                                                                                                                        
+                          }
+    ;
 
-        var loc = response.loc.split(',');
+    getUserLocation().then(function(dataLocation)
+                          {
 
-        console.log('creation after failure');
+                              var userAddress = dataLocation.results[0].formatted;
+                              var userLatitude = dataLocation.results[0].geometry.lat;
+                              var userLongitude = dataLocation.results[0].geometry.lng;
+                              var userCity = dataLocation.results[0].components.village;
+                              var userCountryCode = dataLocation.results[0].components['ISO_3166-1_alpha-2'];
 
-        geolocation(loc[0], loc[1]);
+                              $('#address').val(userAddress);
+                              $('#city').val(userCity);
 
-      });
+                              setSessionLocation(userAddress, userLatitude, userLongitude, userCity, userCountryCode);
 
-    });
- 
+                          }
+                              )
+                    .catch(function(error)
+                            {
+
+                              console.error("Error during the ajax call to get the user's data location", error);
+
+                            }
+                          )
+    ;
+
   }
   else
   {
@@ -66,9 +82,10 @@ jQuery( document ).ready( function( $ ) {
   if (! sessionStorage.getItem("phpSessionVariablesExist") && userAddress)
   {
     
-    setSessionLocation($('#address').val(), $('#latitude').val(), $('#longitude').val(), $('#city').val());
+    setSessionLocation($('#address').val(), $('#latitude').val(), $('#longitude').val(), $('#city').val(), $('#countryCode').val());
 
   }
+  
 /*
   //Use a calendar for the start and end dates of booking 
   $(".js-datepicker").datepicker({
@@ -99,6 +116,7 @@ jQuery( document ).ready( function( $ ) {
 
   });
 */
+
 });
 
 /*    
@@ -114,62 +132,3 @@ $("form").submit(function(event) {
 
     });
 */
-
-function geolocation(latitude, longitude) 
-{
-
-  $('#latitude').val(latitude);
-  $('#longitude').val(longitude);
-            
-  geocode(latitude + ', ' + longitude);
-
-}
-
-function geocode(query) 
-{ 
-  
-  $.ajax(
-
-      {
-
-        url: 'https://api.opencagedata.com/geocode/v1/json',
-        method: 'GET',
-        data: {
-                'key': 'e603b8a1c9f242028b5c69de78e33877',
-                'q': query,
-                'no_annotations': 1
-
-              },
-        dataType: 'json',
-        statusCode: {
-
-                     200: function(response)
-                          {  
-                              
-                            // success
-                            var address = response.results[0].formatted;
-                            var city = response.results[0].components.village;
-                            var latitude = response.results[0].geometry.lat;
-                            var longitude = response.results[0].geometry.lng;
-
-                            $('#address').val(address);
-                            $('#city').val(response.results[0].components.village);
-
-                            console.log('Geocode Ajax call succeed');
-
-                            setSessionLocation($('#address').val(), latitude, longitude, city);
-
-                          },
-                     402: function()
-                          {
-
-                            console.log('hit free-trial daily limit');
-                            console.log('become a customer: https://opencagedata.com/pricing');
-
-                          }
-                        
-                    }
-
-  });
-
-}

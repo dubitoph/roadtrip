@@ -206,7 +206,7 @@ class UserUserController extends AbstractController
     /**
      * Get the user geolocation
      * 
-     * @Route("/user/geolocation/session", name="user.geolocation.session")
+     * @Route("/user/geolocation/session", options={"expose"=true}, name="user.geolocation.session")
      *
      * @param Request $request
      * 
@@ -221,15 +221,17 @@ class UserUserController extends AbstractController
             $userLatitude = $request->request->get('userLatitude');
             $userLongitude = $request->request->get('userLongitude');
             $userCity = $request->request->get('userCity');
-            $userAddress = $request->request->get('userAddress'); 
+            $userAddress = $request->request->get('userAddress');
+            $userCountryCode = $request->request->get('userCountryCode'); 
 
             $this->container->get('session')->set('userLatitude', $userLatitude);
             $this->container->get('session')->set('userLongitude', $userLongitude);
             $this->container->get('session')->set('userCity', $userCity);
             $this->container->get('session')->set('userAddress', $userAddress);
+            $this->container->get('session')->set('userCountryCode', $userCountryCode);
              
             $response = new JsonResponse();
-            $response->setData(array('success'=> "Session user's geolocation variables created")); 
+            $response->setData(array('success'=> "Session user geolocation variables created")); 
 
             return $response;
             
@@ -243,6 +245,83 @@ class UserUserController extends AbstractController
             return $response;
          
         }
+
+    }
+
+    /**
+     * Get the user's IP address
+     * 
+     * @Route("/user/IP", options={"expose"=true}, name="user.IP")
+     *
+     * @param Request $request
+     * 
+     * @return Response
+     */
+    public function getIP(Request $request): Response
+    {
+
+        $userIP = '';
+
+        if(isset($_SERVER['HTTP_CLIENT_IP']))
+        {
+
+            $userIP =   $_SERVER['HTTP_CLIENT_IP'];
+
+        }
+        elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        {
+
+            $userIP =   $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+        }
+        elseif(isset($_SERVER['HTTP_X_FORWARDED']))
+        {
+
+            $userIP =   $_SERVER['HTTP_X_FORWARDED'];
+
+        }
+        elseif(isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']))
+        {
+
+            $userIP =   $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+
+        }
+        elseif(isset($_SERVER['HTTP_FORWARDED_FOR']))
+        {
+
+            $userIP =   $_SERVER['HTTP_FORWARDED_FOR'];
+
+        }
+        elseif(isset($_SERVER['HTTP_FORWARDED']))
+        {
+
+            $userIP =   $_SERVER['HTTP_FORWARDED'];
+
+        }
+        elseif(isset($_SERVER['REMOTE_ADDR']))
+        {
+
+            $userIP =   $_SERVER['REMOTE_ADDR'];
+
+        }
+        else
+        {
+
+            $userIP =   'UNKNOWN';
+
+        }
+
+        if ($userIP === '127.0.0.1') 
+        {
+
+            $userIP = '85.201.85.232';
+
+        }
+             
+        $response = new JsonResponse();
+        $response->setData(array('IP'=> $userIP)); 
+
+        return $response;
 
     }
 

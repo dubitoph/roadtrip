@@ -131,6 +131,7 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
             'FontLib\\' => 8,
             'Fig\\Link\\' => 9,
             'Faker\\' => 6,
+            'FOS\\JsRoutingBundle\\' => 20,
         ),
         'E' => 
         array (
@@ -492,6 +493,10 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
         ),
+        'FOS\\JsRoutingBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/friendsofsymfony/jsrouting-bundle',
+        ),
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
@@ -632,6 +637,13 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
             'Knp\\Component' => 
             array (
                 0 => __DIR__ . '/..' . '/knplabs/knp-components/src',
+            ),
+        ),
+        'J' => 
+        array (
+            'JsonpCallbackValidator' => 
+            array (
+                0 => __DIR__ . '/..' . '/willdurand/jsonp-callback-validator/src',
             ),
         ),
         'I' => 
