@@ -1,3 +1,5 @@
+require('jquery-ui/ui/widgets/slider');
+
 function collision($div1, $div2) {
       var x1 = $div1.offset().left;
       var w1 = 40;

@@ -24,10 +24,7 @@ import intlTelInput from 'intl-tel-input';
 import '../../node_modules/intl-tel-input/build/css/intlTelInput.css';
 import 'intl-tel-input/build/js/utils.js'
 window['intlTelInput'] = intlTelInput;
-/*
-import select2 from'select2';
-window['select2'] = select2;
-*/
+
 import 'bootstrap';
 
 /*
@@ -46,8 +43,6 @@ jQuery( document ).ready( function( $ ){
         $('.topbar').removeClass('topbar-sticky');
      }
   });
-
-  //  $('[select]').select2();
 
   $('[data-slider]').slick({
 
@@ -123,7 +118,7 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 
   var places = require('places.js');
   var inputAddress = document.querySelector('#' + idInputAddress);
-//  $('#' + idInputCountry).select2();
+
   $('#' + idInputCountry);
 
   if (inputAddress !== null)
@@ -145,7 +140,6 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
       document.querySelector('#' + idInputLongitude).value = e.suggestion.latlng.lng;
 
       $('#' + idInputCountry).val(e.suggestion.countryCode.toUpperCase());
-//      $('#' + idInputCountry).select2().trigger('change');
       $('#' + idInputCountry).trigger('change');
 
       if (typeof defaultLocationQuestion !== 'undefined')
@@ -187,7 +181,6 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
       document.querySelector('#' + idInputLongitude).value = '';
 
       $('#' + idInputCountry).val(-1);
-//      $('#' + idInputCountry).select2().trigger('change');
       $('#' + idInputCountry).trigger('change');
 
       if (typeof idInputDefaultAddress !== 'undefined')

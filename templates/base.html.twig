@@ -8,6 +8,7 @@
         {% block stylesheets %}
 
           {{ encore_entry_link_tags ( 'app' ) }}
+          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
         {% endblock %}
 
@@ -172,7 +173,7 @@
 #}
       {% block javascripts %}
 
-          {{ encore_entry_script_tags ('app') }}
+        {{ encore_entry_script_tags ('app') }}
 
       {% endblock %}
 
