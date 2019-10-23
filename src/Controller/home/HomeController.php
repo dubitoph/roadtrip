@@ -84,6 +84,8 @@ class HomeController extends AbstractController
         $subscriptions = $subscriptionRepository->findAll();
            
         $search = new AdvertSearch();
+        //Set the default value for the minimum beds number select
+        $search->setMinimumBedsNumber(4);
 
         $userAddress = $this->container->get('session')->get('userAddress');
 

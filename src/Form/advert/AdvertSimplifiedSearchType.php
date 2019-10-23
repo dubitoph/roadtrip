@@ -54,8 +54,7 @@ class AdvertSimplifiedSearchType extends AbstractType
                                                             'attr' => [
                                                                         'class' => 'select-hidden'
                                                                       ],
-                                                            'required' => false,
-                                                            'data' => 4
+                                                            'required' => false
                                                       ]
                  )
             ->add('latitude', HiddenType::class)

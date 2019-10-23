@@ -58,6 +58,8 @@ class AdvertController extends AbstractController
 
         $search = $this->container->get('session')->get('search');
 
+        dump($search);
+
         if($search)
         {
 
