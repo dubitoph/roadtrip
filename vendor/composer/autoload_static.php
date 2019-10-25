@@ -132,6 +132,7 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
             'Fig\\Link\\' => 9,
             'Faker\\' => 6,
             'FOS\\JsRoutingBundle\\' => 20,
+            'FOS\\CKEditorBundle\\' => 19,
         ),
         'E' => 
         array (
@@ -496,6 +497,10 @@ class ComposerStaticInit68f52aa84ad8471df6d7e88d0c20d7ca
         'FOS\\JsRoutingBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/friendsofsymfony/jsrouting-bundle',
+        ),
+        'FOS\\CKEditorBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/friendsofsymfony/ckeditor-bundle/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (

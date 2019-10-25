@@ -16,7 +16,7 @@ class DescriptionType extends AbstractType
 
         $builder
             ->add('title', TextareaType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', CKEditorType::class, array('config_name' => 'user_config'))
         ;
 
     }

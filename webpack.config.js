@@ -38,6 +38,8 @@ Encore
     .addEntry('indexVAT', './assets/js/backend/indexVAT.js')
     .addEntry('VAT', './assets/js/backend/VAT.js')
     .addEntry('indexRating', './assets/js/backend/indexRating.js')
+    .addEntry('indexFaqCategory', './assets/js/backend/faq/indexFaqCategory.js')
+    .addEntry('indexFaqQuestion', './assets/js/backend/faq/indexFaqQuestion.js')
     .addEntry('vehicleCreation', './assets/js/advert/vehicleCreation.js')
     .addEntry('photosCreation', './assets/js/advert/photosCreation.js')
     .addEntry('periodsCreation', './assets/js/advert/periodsCreation.js')

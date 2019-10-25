@@ -5,6 +5,7 @@ namespace App\Entity\backend;
 use Cocur\Slugify\Slugify;
 use App\Entity\advert\Vehicle;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -29,6 +30,7 @@ class Equipment
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @OrderBy({"equipment" = "ASC"})
      * 
      * @Assert\NotBlank(
      *      message = "The equipment can't be empty."

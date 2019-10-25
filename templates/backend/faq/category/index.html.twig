@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - Backend : FAQ categories management
+    
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>FAQ categories management</h1>
+
+        {{ include('_messages.html.twig') }}
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Category</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for category in faqCategories %}
+
+                    <tr>
+
+                        <td>{{ category.category }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.FAQ.category.edit', { 'id': category.id }) }}" class="btn btn-secondary">Edit</a>
+                            <form method = "post" action="{{ path('backend.FAQ.category.delete', { 'id': category.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ category.id ) }}">
+                                <button class="btn btn-danger">Remove</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.FAQ.category.create') }}" class="btn btn-primary">Create a new category</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexFaqCategory') }}
+        
+    {% endblock %}
+
+{% endblock %}

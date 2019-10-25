@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - Backend : FAQ questions management
+    
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>FAQ questions management</h1>
+
+        {{ include('_messages.html.twig') }}
+
+        <table class="table striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Question</th>
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+            
+                {% for question in faqQuestions %}
+
+                    <tr>
+
+                        <td>{{ question.question }}</td>
+                        <td>
+                            
+                            <a href="{{ path('backend.FAQ.question.edit', { 'id': question.id }) }}" class="btn btn-secondary">Edit</a>
+                            <form method = "post" action="{{ path('backend.FAQ.question.delete', { 'id': question.id }) }}" style="display: inline-block">
+
+                                <input type="hidden"  name="_method" value="DELETE">
+                                <input type="hidden"  name="_token" value="{{ csrf_token('delete' ~ question.id ) }}">
+                                <button class="btn btn-danger">Remove</button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+            
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="text-right">
+
+            <a href="{{ path('backend.FAQ.question.create') }}" class="btn btn-primary">Create a new question</a>
+
+        </div>
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('indexFaqQuestion') }}
+        
+    {% endblock %}
+
+{% endblock %}

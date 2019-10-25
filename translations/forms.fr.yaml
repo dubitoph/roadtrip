@@ -40,6 +40,7 @@
 Abbreviation: Abréviation
 About me: A propos de moi
 Address: Adresse
+Answer: Réponse
 Automatic: Automatique
 Bed: Couchage
 Beds number: Nombre de couchages
@@ -51,6 +52,7 @@ Box: Boîte
 Card code: Code de la carte
 Carrier: Porteur
 Carrier equipments: Options du porteur
+Category: Catégorie
 Cell: Cellule
 Cell equipments: Options de la cellule
 Choose an option: Choisissez une option
@@ -134,6 +136,7 @@ Price: Prix
 Proximity: Proximité
 Proximity + price: Proximité + prix
 Power: Puissance
+Question: Question
 Rental beginning: Date de début de la location
 Rental end: Date de fin de la locationRepeat Password
 Repeat your password: Répétez votre mot de passe

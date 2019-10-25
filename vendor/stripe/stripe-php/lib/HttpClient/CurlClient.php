@@ -46,6 +46,8 @@ class CurlClient implements ClientInterface
 
     protected $curlHandle = null;
 
+    protected $requestStatusCallback = null;
+
     /**
      * CurlClient constructor.
      *
@@ -122,6 +124,33 @@ class CurlClient implements ClientInterface
     public function setEnableHttp2($enable)
     {
         $this->enableHttp2 = $enable;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getRequestStatusCallback()
+    {
+        return $this->requestStatusCallback;
+    }
+
+    /**
+     * Sets a callback that is called after each request. The callback will
+     * receive the following parameters:
+     *
+     * 1. string $rbody The response body
+     * 2. integer $rcode The response status code
+     * 3. \Stripe\Util\CaseInsensitiveArray $rheaders The response headers
+     * 4. integer $errno The curl error number
+     * 5. string|null $message The curl error message
+     * 6. boolean $shouldRetry Whether the request will be retried
+     * 7. integer $numRetries The number of the retry attempt
+     *
+     * @param callable|null $requestStatusCallback
+     */
+    public function setRequestStatusCallback($requestStatusCallback)
+    {
+        $this->requestStatusCallback = $requestStatusCallback;
     }
 
     // USER DEFINED TIMEOUTS
@@ -204,18 +233,6 @@ class CurlClient implements ClientInterface
             }
         }
 
-        // Create a callback to capture HTTP headers for the response
-        $rheaders = new Util\CaseInsensitiveArray();
-        $headerCallback = function ($curl, $header_line) use (&$rheaders) {
-            // Ignore the HTTP request line (HTTP/1.1 200 OK)
-            if (strpos($header_line, ":") === false) {
-                return strlen($header_line);
-            }
-            list($key, $value) = explode(":", trim($header_line), 2);
-            $rheaders[trim($key)] = trim($value);
-            return strlen($header_line);
-        };
-
         // By default for large request body sizes (> 1024 bytes), cURL will
         // send a request without a body and with a `Expect: 100-continue`
         // header, which gives the server a chance to respond with an error
@@ -235,7 +252,6 @@ class CurlClient implements ClientInterface
         $opts[CURLOPT_RETURNTRANSFER] = true;
         $opts[CURLOPT_CONNECTTIMEOUT] = $this->connectTimeout;
         $opts[CURLOPT_TIMEOUT] = $this->timeout;
-        $opts[CURLOPT_HEADERFUNCTION] = $headerCallback;
         $opts[CURLOPT_HTTPHEADER] = $headers;
         $opts[CURLOPT_CAINFO] = Stripe::getCABundlePath();
         if (!Stripe::getVerifySslCerts()) {
@@ -247,7 +263,7 @@ class CurlClient implements ClientInterface
             $opts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_2TLS;
         }
 
-        list($rbody, $rcode) = $this->executeRequestWithRetries($opts, $absUrl);
+        list($rbody, $rcode, $rheaders) = $this->executeRequestWithRetries($opts, $absUrl);
 
         return [$rbody, $rcode, $rheaders];
     }
@@ -263,6 +279,20 @@ class CurlClient implements ClientInterface
         while (true) {
             $rcode = 0;
             $errno = 0;
+            $message = null;
+
+            // Create a callback to capture HTTP headers for the response
+            $rheaders = new Util\CaseInsensitiveArray();
+            $headerCallback = function ($curl, $header_line) use (&$rheaders) {
+                // Ignore the HTTP request line (HTTP/1.1 200 OK)
+                if (strpos($header_line, ":") === false) {
+                    return strlen($header_line);
+                }
+                list($key, $value) = explode(":", trim($header_line), 2);
+                $rheaders[trim($key)] = trim($value);
+                return strlen($header_line);
+            };
+            $opts[CURLOPT_HEADERFUNCTION] = $headerCallback;
 
             $this->resetCurlHandle();
             curl_setopt_array($this->curlHandle, $opts);
@@ -278,9 +308,18 @@ class CurlClient implements ClientInterface
                 $this->closeCurlHandle();
             }
 
-            if ($this->shouldRetry($errno, $isPost, $rcode, $rbody, $numRetries)) {
+            $shouldRetry = $this->shouldRetry($errno, $rcode, $rheaders, $numRetries);
+
+            if (is_callable($this->getRequestStatusCallback())) {
+                call_user_func_array(
+                    $this->getRequestStatusCallback(),
+                    [$rbody, $rcode, $rheaders, $errno, $message, $shouldRetry, $numRetries]
+                );
+            }
+
+            if ($shouldRetry) {
                 $numRetries += 1;
-                $sleepSeconds = $this->sleepTime($numRetries);
+                $sleepSeconds = $this->sleepTime($numRetries, $rheaders);
                 usleep(intval($sleepSeconds * 1000000));
             } else {
                 break;
@@ -291,7 +330,7 @@ class CurlClient implements ClientInterface
             $this->handleCurlError($absUrl, $errno, $message, $numRetries);
         }
 
-        return [$rbody, $rcode];
+        return [$rbody, $rcode, $rheaders];
     }
 
     /**
@@ -340,14 +379,13 @@ class CurlClient implements ClientInterface
      * HTTP statuses.
      *
      * @param int $errno
-     * @param bool $isPost
      * @param int $rcode
-     * @param string $rbody
+     * @param array|CaseInsensitiveArray $rheaders
      * @param int $numRetries
      *
      * @return bool
      */
-    private function shouldRetry($errno, $isPost, $rcode, $rbody, $numRetries)
+    private function shouldRetry($errno, $rcode, $rheaders, $numRetries)
     {
         if ($numRetries >= Stripe::getMaxNetworkRetries()) {
             return false;
@@ -365,51 +403,43 @@ class CurlClient implements ClientInterface
             return true;
         }
 
+        // The API may ask us not to retry (eg; if doing so would be a no-op)
+        // or advise us to retry (eg; in cases of lock timeouts); we defer to that.
+        if (isset($rheaders['stripe-should-retry'])) {
+            if ($rheaders['stripe-should-retry'] === 'false') {
+                return false;
+            }
+            if ($rheaders['stripe-should-retry'] === 'true') {
+                return true;
+            }
+        }
+
         // 409 Conflict
         if ($rcode === 409) {
             return true;
         }
 
-        // 429 Too Many Requests
+        // Retry on 500, 503, and other internal errors.
         //
-        // There are a few different problems that can lead to a 429. The most
-        // common is rate limiting, on which we *don't* want to retry because
-        // that'd likely contribute to more contention problems. However, some
-        // 429s are lock timeouts, which is when a request conflicted with
-        // another request or an internal process on some particular object.
-        // These 429s are safe to retry.
-        if ($rcode === 429) {
-            // It's not great that we're doing this here. In a future version,
-            // we should decouple the retry logic from the CurlClient instance,
-            // so that we don't need to deserialize here (and also so that the
-            // retry logic applies to non-curl clients).
-            $resp = json_decode($rbody, true);
-            if ($resp !== null && array_key_exists('error', $resp)) {
-                $error = \Stripe\ErrorObject::constructFrom($resp['error']);
-                if ($error->code === \Stripe\ErrorObject::CODE_LOCK_TIMEOUT) {
-                    return true;
-                }
-            }
-        }
-
-        // 500 Internal Server Error
-        //
-        // We only bother retrying these for non-POST requests. POSTs end up
-        // being cached by the idempotency layer so there's no purpose in
-        // retrying them.
-        if ($rcode >= 500 && !$isPost) {
-            return true;
-        }
-
-        // 503 Service Unavailable
-        if ($rcode == 503) {
+        // Note that we expect the stripe-should-retry header to be false
+        // in most cases when a 500 is returned, since our idempotency framework
+        // would typically replay it anyway.
+        if ($rcode >= 500) {
             return true;
         }
 
         return false;
     }
 
-    private function sleepTime($numRetries)
+    /**
+     * Provides the number of seconds to wait before retrying a request.
+     *
+     * @param int $numRetries
+     * @param array|CaseInsensitiveArray $rheaders
+     *
+     * @return int
+     */
+    private function sleepTime($numRetries, $rheaders)
     {
         // Apply exponential backoff with $initialNetworkRetryDelay on the
         // number of $numRetries so far as inputs. Do not allow the number to exceed
@@ -425,6 +455,12 @@ class CurlClient implements ClientInterface
 
         // But never sleep less than the base sleep seconds.
         $sleepSeconds = max(Stripe::getInitialNetworkRetryDelay(), $sleepSeconds);
+
+        // And never sleep less than the time the API asks us to wait, assuming it's a reasonable ask.
+        $retryAfter = isset($rheaders['retry-after']) ? floatval($rheaders['retry-after']) : 0.0;
+        if (floor($retryAfter) == $retryAfter && $retryAfter <= Stripe::getMaxRetryAfter()) {
+            $sleepSeconds = max($sleepSeconds, $retryAfter);
+        }
 
         return $sleepSeconds;
     }

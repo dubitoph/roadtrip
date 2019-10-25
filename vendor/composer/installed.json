@@ -2027,6 +2027,86 @@
         ]
     },
     {
+        "name": "friendsofsymfony/ckeditor-bundle",
+        "version": "2.1.0",
+        "version_normalized": "2.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FriendsOfSymfony/FOSCKEditorBundle.git",
+            "reference": "7ba78735ea75b9a6d4de403d7aced6c993a0557a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FriendsOfSymfony/FOSCKEditorBundle/zipball/7ba78735ea75b9a6d4de403d7aced6c993a0557a",
+            "reference": "7ba78735ea75b9a6d4de403d7aced6c993a0557a",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*",
+            "ext-zip": "*",
+            "php": "^7.1",
+            "symfony/asset": "^3.4 || ^4.0",
+            "symfony/config": "^3.4 || ^4.0",
+            "symfony/dependency-injection": "^3.4 || ^4.0",
+            "symfony/expression-language": "^3.4 || ^4.0",
+            "symfony/form": "^3.4 || ^4.0",
+            "symfony/framework-bundle": "^3.4 || ^4.0",
+            "symfony/http-foundation": "^3.4 || ^4.0",
+            "symfony/http-kernel": "^3.4 || ^4.0",
+            "symfony/options-resolver": "^3.4 || ^4.0",
+            "symfony/property-access": "^3.4 || ^4.0",
+            "symfony/routing": "^3.4 || ^4.0",
+            "symfony/twig-bundle": "^3.4 || ^4.0",
+            "twig/twig": "^2.0"
+        },
+        "conflict": {
+            "sebastian/environment": "<1.3.4",
+            "sebastian/exporter": "<2.0.0"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.0",
+            "matthiasnoback/symfony-dependency-injection-test": "^1.0 || ^2.0",
+            "phpunit/phpunit": "^6.0",
+            "symfony/console": "^3.4 || ^4.0",
+            "symfony/phpunit-bridge": "^4.1",
+            "symfony/yaml": "^3.4 || ^4.0"
+        },
+        "suggest": {
+            "egeloen/form-extra-bundle": "Allows to load CKEditor asynchronously"
+        },
+        "time": "2019-04-15T16:29:43+00:00",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "FOS\\CKEditorBundle\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Eric GELOEN",
+                "email": "geloen.eric@gmail.com"
+            },
+            {
+                "name": "FriendsOfSymfony Community",
+                "homepage": "https://github.com/FriendsOfSymfony/FOSCKEditorBundle/graphs/contributors"
+            }
+        ],
+        "description": "Provides a CKEditor integration for your Symfony project.",
+        "keywords": [
+            "CKEditor"
+        ]
+    },
+    {
         "name": "friendsofsymfony/jsrouting-bundle",
         "version": "2.4.0",
         "version_normalized": "2.4.0.0",
@@ -3642,17 +3722,17 @@
     },
     {
         "name": "stripe/stripe-php",
-        "version": "v7.0.2",
-        "version_normalized": "7.0.2.0",
+        "version": "v7.7.0",
+        "version_normalized": "7.7.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/stripe/stripe-php.git",
-            "reference": "c3eff79fd668f98170634d4f9f4dbd762b8b86a4"
+            "reference": "9b018a277579b53b3896c35b7edc3299f59cf09c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/stripe/stripe-php/zipball/c3eff79fd668f98170634d4f9f4dbd762b8b86a4",
-            "reference": "c3eff79fd668f98170634d4f9f4dbd762b8b86a4",
+            "url": "https://api.github.com/repos/stripe/stripe-php/zipball/9b018a277579b53b3896c35b7edc3299f59cf09c",
+            "reference": "9b018a277579b53b3896c35b7edc3299f59cf09c",
             "shasum": ""
         },
         "require": {
@@ -3668,7 +3748,7 @@
             "squizlabs/php_codesniffer": "^3.3",
             "symfony/process": "~3.4"
         },
-        "time": "2019-09-06T16:57:26+00:00",
+        "time": "2019-10-23T15:32:59+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
