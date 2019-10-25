@@ -22,6 +22,7 @@
                 <tr>
 
                     <th>Question</th>
+                    <th>Category</th>
                     <th>Actions</th>
 
                 </tr>
@@ -35,6 +36,7 @@
                     <tr>
 
                         <td>{{ question.question }}</td>
+                        <td>{{ question.category.category }}</td>
                         <td>
                             
                             <a href="{{ path('backend.FAQ.question.edit', { 'id': question.id }) }}" class="btn btn-secondary">Edit</a>

@@ -138,7 +138,7 @@ class BackendFaqQuestionController extends AbstractController
 
         } 
             
-         return $this->redirectToRoute('backend.FAQ.Question.index');
+         return $this->redirectToRoute('backend.FAQ.question.index');
         
     }
     
