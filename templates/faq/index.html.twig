@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    Roadtripr - FAQ
+    
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="container mt4">
+
+        <h1>FAQ</h1>
+
+        {{ include('_messages.html.twig') }}
+        
+        {% for category in faqCategories %}
+
+        <div class="container">
+
+            <div>
+
+                <h2>{{ category.category }}</h2>
+
+            </div>
+
+            <div>
+
+                {% for question in category.faqQuestions %}
+
+
+                <div>
+
+                    <ul>
+
+                        <li>
+                            
+                            <div id="question_{{ question.id }}" class="questionDiv">
+
+                                {{ question.question }}
+                            
+                            </div>
+                            
+                            <div id="answer_{{ question.id }}" style="display: none;">
+
+                                {{ question.answer|raw|nl2br }}
+                            
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+            
+
+            
+        {% endfor %}
+
+    </div>
+   
+    {% block javascripts %}
+        
+        {{ parent() }}
+
+        {{ encore_entry_script_tags('faq') }}
+        
+    {% endblock %}
+
+{% endblock %}

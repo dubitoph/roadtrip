@@ -59,6 +59,7 @@ Encore
     .addEntry('profile', './assets/js/user/profile.js')
     .addEntry('ownerAdverts', './assets/js/advert/ownerAdverts.js')
     .addEntry('editOwner', './assets/js/user/editOwner.js')
+    .addEntry('faq', './assets/js/faq/faq.js')
 
     .addEntry('calendar', './assets/css/calendar.css')
 
