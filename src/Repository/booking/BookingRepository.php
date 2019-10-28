@@ -112,14 +112,20 @@ class BookingRepository extends ServiceEntityRepository
     */
   public function findBookingsWithoutRating($user)
   {
+
+    $now = date("Y-m-d");
       
-      return $this->createQueryBuilder('b')
-                  ->leftJoin('App\Entity\rating\Rating', 'r', "WITH", 'r.booking = b AND r.user = :user')
-                  ->andWhere('r.booking is null')
-                  ->setParameter('user', $user)
-                  ->orderBy('b.createdAt', 'ASC')
-                  ->getQuery()
-                  ->getResult()
+    return $this->createQueryBuilder('b')
+                ->where('b.accepted = true')
+                ->andWhere('b.deleted is null')
+                ->andWhere('b.beginAt < :now')
+                ->leftJoin('App\Entity\rating\Rating', 'r', "WITH", 'r.booking = b AND r.user = :user')
+                ->andWhere('r.booking is null')
+                ->setParameter('now', $now)
+                ->setParameter('user', $user)
+                ->orderBy('b.createdAt', 'ASC')
+                ->getQuery()
+                ->getResult()
       ;
   }
   

@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les évaluations{% endblock %}
+{% block title %}
+
+    Roadtripr - Create a rating
+
+{% endblock %}
 
 {% block body %}
 
     <div class="container mt4">
 
-        <h1>Créer une nouvelle évaluation</h1>
+        <h1>Create a rating</h1>
 
         {{ include('rating/_form.html.twig', { button: 'Créer' }) }}
 

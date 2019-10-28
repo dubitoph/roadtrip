@@ -54,10 +54,16 @@ class BackendRatingController extends AbstractController
     }
 
     /**
+     * Rating removing
+     * 
      * @Route("/backend/rating/delete/{id}", name="backend.rating.delete", methods = "DELETE")
+     * 
      * @param Rating $rating
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function delete(Rating $rating, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -114,8 +120,10 @@ class BackendRatingController extends AbstractController
      * @Route("/backend/rating/approve/{id}", name="backend.rating.approve")
      * 
      * @param Rating $rating
+     * @param UserRepository $userRepository
      * @param Request $request
-     * @param ObjectManager $manager
+     * @param ObjectManager $managert
+     * @param \Swift_Mailer $mailer
      * 
      * @return Response
      */
@@ -127,12 +135,14 @@ class BackendRatingController extends AbstractController
         $manager->persist($rating);
         $manager->flush();
 
-        $this->addFlash('success', "The rating was successfully updated.");
-
-        $mail = new Mail();
+        $this->addFlash('success', "The rating was successfully approved.");
         
         $sender = $userRepository->findOneBy(array('username'=> 'administrator'));
         $advert = $rating->getBooking()->getVehicle()->getAdvert();
+        $subject = $this->getParameter('new_rating_subject');        
+
+        // Send an email to the tenant        
+        $mail = new Mail();
         $message = "Your rating about your booking from " . $rating->getBooking()->getFormattedBeginAt() . " to " . $rating->getBooking()->getFormattedEndAt() . 
                    " for the advert \"" . $rating->getBooking()->getVehicle()->getAdvert()->getTitle() . "\" was approved.
                    <br>
@@ -142,7 +152,36 @@ class BackendRatingController extends AbstractController
 
         $mail->setSender($sender)
              ->setReceiver($rating->getUser())
-             ->setSubject($this->getParameter('approved_rating_subject'))
+             ->setSubject($subject)
+             ->setMessage($message)
+             ->setBody($this->renderView(
+                                            'communication\toUserEmail.html.twig', 
+                                            ['mail' => $mail]
+                                        )
+                      )
+        ;
+
+        if($mail->sendEmail($mailer))
+        {
+
+            $manager->persist($mail);
+            $manager->flush();
+
+        }
+
+        // Send an email to the owner        
+        $mail = new Mail();
+        
+        $message = "A rating about your booking from " . $rating->getBooking()->getFormattedBeginAt() . " to " . $rating->getBooking()->getFormattedEndAt() . 
+                   " for the advert \"" . $rating->getBooking()->getVehicle()->getAdvert()->getTitle() . "\" was given.
+                   <br>
+                   <br>
+                   You can see it <a href=\"". $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
+                   "\">here</a>";
+
+        $mail->setSender($sender)
+             ->setReceiver($advert->getOwner()->getUser())
+             ->setSubject($subject)
              ->setMessage($message)
              ->setBody($this->renderView(
                                             'communication\toUserEmail.html.twig', 
@@ -164,10 +203,16 @@ class BackendRatingController extends AbstractController
     }
 
     /**
+     * Response removing
+     * 
      * @Route("/backend/rating/response/delete/{id}", name="backend.rating.response.delete", methods = "DELETE")
+     * 
      * @param ResponseToRating $responseToRating
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function deleteResponse(ResponseToRating $responseToRating, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -222,10 +267,16 @@ class BackendRatingController extends AbstractController
     }
 
     /**
+     * Response approving
+     * 
      * @Route("/backend/rating/response/approve/{id}", name="backend.rating.response.approve")
+     * 
      * @param ResponseToRating $responseToRating
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function approveResponse(ResponseToRating $responseToRating, UserRepository $userRepository, ObjectManager $manager, \Swift_Mailer $mailer): Response

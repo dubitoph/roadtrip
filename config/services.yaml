@@ -7,6 +7,7 @@ parameters:
     locale: 'fr'
     photos_directory: '%kernel.project_dir%/public/uploads/photos'
     home_page_images_directory: 'images/home_page'
+    last_ratings_number: 5
     advert_active_duration: '1 year' 
     limit_creation_periods: '2 years'
     minimum_creation_periods: '1 year'
@@ -25,12 +26,11 @@ parameters:
     booking_request_accepted_subject: 'Your request booking is accepted'
     booking_removing_subject: 'Your booking was removed'
     password_Resetting_email_subject: 'Renew password on Roadtrip'
+    new_rating_subject: "Raodtripr : you received a new rating"
     approved_rating_subject: "Your rating was approved"
     removed_rating_subject: "Rating removed"
     rating_pending_approval_subject: "New rating or response pending approval"
-    rating_email_subject: "Waiting for lease approval"
     rating_approval_subject: "New assessment pending approval"
-    rating_not_confirmed_rental_email_subject: "Rent related to your unconfirmed evaluation"
     removed_rating_response_subject: "Response removed"
     approved_rating_response_subject: "Response approved"
     new_subscription_subject: "Your subscription on Roadtripr"
@@ -79,6 +79,7 @@ services:
             - { name: twig.extension }
     authentication_handler:
         class: App\Handler\AuthenticationHandler
+        arguments: [ '@router' ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones 

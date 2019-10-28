@@ -20,29 +20,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RatingController extends AbstractController
-{
-    
-    /**
-     * @Route("/ratings", name="advert.rating.index")
-     * @param RatingRepository $ratingRepository
-     * @return Response
-     */
-    public function index(RatingRepository $ratingnRepository): Response
-    {
-     
-        $ratings = $ratingnRepository->findAll();
-    
-        return $this->render('rating/index.html.twig', array(
-                                                                'ratings' => $ratings,
-                                                                'bodyId' =>  'ratingsIndex'
-                                                            )
-                            )
-        ;  
-        
-    } 
+{ 
 
     /**
-     * @Route("/rating/dashbord", name="rating.dashbord")
+     * @Route("/rating/dashboard", name="rating.dashboard")
      * @param RatingRepository $ratingRepository
      * @return Response
      */
@@ -92,14 +73,14 @@ class RatingController extends AbstractController
 
         $givenOwnerRatings = $ratingRepository->findGivenOwnerRatings($user);
     
-        return $this->render('rating/ratingsDashbord.html.twig',array(
+        return $this->render('rating/ratingsDashboard.html.twig',array(
                                                                         'bookingsWithoutRating' => $bookingsWithoutRating,
                                                                         'receivedUserRatings' => $receivedUserRatings,
                                                                         'receivedOwnerRatings' => $receivedOwnerRatings,
                                                                         'givenUserRatings' => $givenUserRatings,
                                                                         'givenOwnerRatings' => $givenOwnerRatings,
                                                                         'mainPhotos' => $mainPhotos,
-                                                                        'bodyId' =>  'ratingsDashbooard'
+                                                                        'bodyId' =>  'ratingsDashboard'
                                                                      )
                             )
         ;  
@@ -107,9 +88,16 @@ class RatingController extends AbstractController
     }
 
     /**
+     * Rating creation
+     * 
      * @Route("/rating/create/{id}", name="rating.create")
+     * 
+     * @param Booking $booking
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function new(Booking $booking, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -120,7 +108,7 @@ class RatingController extends AbstractController
         if (! $user) 
         {
 
-            $this->addFlash("error", "Vous devez être connecté pour pouvoir laissez une évaluation");
+            $this->addFlash("error", "You must be logged in to be able to leave a rating.");
 
             return $this->redirectToRoute('security.login');
 
@@ -163,7 +151,7 @@ class RatingController extends AbstractController
                 
                 $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
                 
-                return $this->redirectToRoute('rating.dashbord');
+                return $this->redirectToRoute('rating.dashboard');
 
             }
         

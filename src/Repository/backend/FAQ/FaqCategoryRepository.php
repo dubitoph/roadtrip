@@ -21,5 +21,17 @@ class FaqCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, FaqCategory::class);
 
     }
+
+    /**
+     * Get all categories sorted by alphabetical order
+     *
+     * @return void
+     */
+    public function findAll()
+    {
+
+        return $this->findBy(array(), array('category' => 'ASC'));
+
+    }
     
 }

@@ -2,14 +2,23 @@
 
 namespace App\Handler;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AuthenticationHandler implements AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
 {
+    private $router;
+
+    public function __construct(RouterInterface $router) 
+    {
+
+        $this->router = $router;
+        
+    }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     { 
@@ -27,9 +36,7 @@ class AuthenticationHandler implements AuthenticationFailureHandlerInterface, Lo
     public function onLogoutSuccess(Request $request) 
     {
 
-        $referer = $request->headers->get('referer');
-
-        return new RedirectResponse($referer);
+        return new RedirectResponse($this->router->generate('home'));
 
     }
 

@@ -41,17 +41,16 @@
                   {{ user.owner.billingAddress.zipCode }}  {{ user.owner.billingAddress.city }}, {{ user.owner.billingAddress.country }}
                   {% if user.owner.billingAddress.state %}({{ user.owner.billingAddress.state }}{% endif %})
               </dd>
+              {% endif %}
 
             </dl>
             <hr />
-            {% if user.owner is not null %}
             <ul>
               <li><a href="{{ path('user.profile.update') }}">Modify my profile</a></li>
               <li><a href="{{ path('user.user.edit') }}">My user data</a></li>
               <li><a href="{{ path('security.resetting.dashboard') }}">Modify my password</a></li>
               <li><a href="{{ path('user.owner.edit') }}">My owner contact informations</a></li>
             </ul>
-            {% endif %}
             </div>
         </div>
       </div>
@@ -114,7 +113,5 @@
     </div>
 
 </div>
-
-        {% endif %}
 
 {% endblock %}
