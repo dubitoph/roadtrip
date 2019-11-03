@@ -69,6 +69,12 @@ class AdvertController extends AbstractController
         {
 
             $search = new AdvertSearch();
+        
+            //Set the default value for the minimum beds number select
+            $search->setMinimumBedsNumber(4);
+            $search->setMinimumPrice(10);
+            $search->setMaximumPrice(60);
+            $search->setDistance(100);
 
         }
 
@@ -163,7 +169,11 @@ class AdvertController extends AbstractController
                                                         'form' => $form->createView(),
                                                         'mainPhotos' => $mainPhotos,
                                                         'bodyId' => 'advertsIndex',
-                                                        'userCity' => $search->getCity()
+                                                        'userCity' => $search->getCity(),
+                                                        'minPriceParameter' => $this->getParameter('minimum_price_search'),
+                                                        'maxPriceParameter' => $this->getParameter('maximum_price_search'),
+                                                        'minDistanceParameter' => $this->getParameter('minimum_distance_search'),
+                                                        'maxDistanceParameter' => $this->getParameter('maximum_distance_search')
                                                        ]
                             )
         ;

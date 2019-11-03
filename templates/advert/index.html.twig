@@ -28,9 +28,20 @@
             {{ form_widget(form.endAt) }}
           </div>
 
-          <label for="maximumPrice">Prix par jour</label>
-          {{ form_widget(form.maximumPrice) }}
-          <input type="range" class="custom-range" id="customRange1" min="0" max="500" step="5">
+          <label for="minimumPrice">Prix par jour</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">De</span>
+            </div>
+            {{ form_widget(form.minimumPrice) }}
+            <div class="input-group-prepend">
+              <span class="input-group-text">A</span>
+            </div>
+            {{ form_widget(form.maximumPrice) }}
+          </div> 
+          <div class="slider-range-wrap">
+            <div id ="pricesSlider" data-minPriceParameter={{ minPriceParameter }} data-maxPriceParameter={{ maxPriceParameter }}></div>
+          </div>
 
           <label for="cellEquipments">Options de la cellule</label>
           {{ form_widget(form.cellEquipments) }}
@@ -39,11 +50,10 @@
           {{ form_widget(form.carrierEquipments) }}
 
           <label for="">Dans un rayon de</label>
-          <div class="select">
             {{ form_widget(form.distance) }}
+          <div class="slider-range-wrap">
+            <div id ="distanceSlider" data-minDistanceParameter={{ minDistanceParameter }} data-maxDistanceParameter={{ maxDistanceParameter }}></div>
           </div>
-
-          <input type="range" class="custom-range" id="customRange2" min="0" max="200" step="5">
 
           {{ form_row(form.address, {'id': 'search_address'}) }}
 
@@ -53,7 +63,6 @@
             {{ form_widget(form.sorting) }}
           </div>
           <button class="btn btn-primary">Search</button>
-          <div id="slider"></div>
         {{ form_end(form) }}
         </section>
       </div>

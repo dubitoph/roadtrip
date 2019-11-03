@@ -53,7 +53,7 @@ class AdvertRepository extends ServiceEntityRepository
         $beginAt = $search->getBeginAt();
         $endAt = $search->getEndAt();
 
-        if ($beginAt || $endAt) 
+        if ($beginAt || $endAt)
         {  
                         
             $subquery = $bookingRepository->createQueryBuilder('b')

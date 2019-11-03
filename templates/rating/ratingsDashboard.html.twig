@@ -23,7 +23,6 @@
                         <th>Photo</th>
                         <th>Vehicle</th>
                         <th>Title</th>
-                        <th>Owner</th>
                         <th>Location beginning</th>
                         <th>Location end</th>
                         <th>Action</th>
@@ -54,8 +53,7 @@
                             
                             </td>
                             <td>{{ booking.vehicle.mark.mark }} - {{ booking.vehicle.sort.sort }} ({{ booking.vehicle.getFormattedManufactureDate }})</td>
-                            <td>{{ booking.vehicle.advert.owner.user.firstname }} {{ booking.vehicle.advert.owner.user.name }}</td>
-                            <td>{{ booking.vehicle.advert.title }}</td>
+                           <td>{{ booking.vehicle.advert.title }}</td>
                             <td>{{ booking.getFormattedBeginAt }}</td>
                             <td>{{ booking.getFormattedEndAt }}</td>
                             <td><a href="{{ path('rating.create', { 'id': booking.id }) }}" class="btn btn-secondary">Leave a rating</a></td>
@@ -186,12 +184,171 @@
                             <td>{{ ownerRating.comment|nl2br }}</td>
 
                         </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                {% if not ownerRating.responseToRating %}
+                        
+                                    <form action="{{ path('rating.create.response', { 'id': ownerRating.id }) }}" id="responseFrom_{{ ownerRating.id }}" method="POST">
+                        
+                                        <textarea name="response_{{ ownerRating.id }}" id="response_{{ ownerRating.id }}" cols="30" rows="10"></textarea>
+                        
+                                        <button type="submit">Answer</button>
+                        
+                                    </form>
+                        
+                                {% else %}
+                                        
+                                    {% if ownerRating.responseToRating.approved %}                                            
+                                
+                                        On {{ ownerRating.getFormattedCreatedAt }}, {{ ownerRating.responseToRating.user.firstname }} wrote :<br><br>
+                                
+                                        {{  ownerRating.responseToRating.response|nl2br }}
+
+                                    {% else %}
+
+                                        Response pending administrator approval.                                       
+                                        
+                                    {% endif %}
+                                        
+                                {% endif %}
+
+                            </td>
+                        </tr>
                         
                     {% endfor %}
 
                 </tbody>
 
             </table>
+
+        {% endif %}
+
+        {% if givenOwnerRatings %}
+
+            <h2>Given ratings to owners</h2>
+
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rating date</th>
+                        <th>Owner</th>
+                        <th>Advert</th>
+                        <th>Vehicle</th>
+                        <th>Location period</th>
+                        <th>Score</th>
+                        <th>Comment</th>
+
+                    </tr>
+
+                </thead>
+
+                    <tbody>
+
+                    {% for givenOwnerRating in givenOwnerRatings %}
+
+                        <tr>
+
+                            <td>{{ givenOwnerRating.getFormattedCreatedAt }}</td>
+                            <td>{{ givenOwnerRating.booking.vehicle.advert.owner.user.firstname }} {{ givenOwnerRating.booking.vehicle.advert.owner.user.name }}</td>
+                            <td>{{ givenOwnerRating.booking.vehicle.advert.title }}</td>
+                            <td>{{ givenOwnerRating.booking.vehicle.sort.sort }} {{ givenOwnerRating.booking.vehicle.mark.mark }}</td>
+                            <td>{{ givenOwnerRating.booking.getFormattedBeginAt }} - {{ givenOwnerRating.booking.getFormattedEndAt }}</td>
+                            <td>{{ givenOwnerRating.score }}</td>
+                            <td>{{ givenOwnerRating.comment|nl2br }}</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                {% if givenOwnerRating.responseToRating %}
+                            
+                                    {% if givenOwnerRating.responseToRating.approved %}                                            
+                                    
+                                        On {{ givenOwnerRating.responseToRating.getFormattedCreatedAt }}, {{ givenOwnerRating.responseToRating.user.firstname }} wrote :<br><br>
+                                    
+                                        {{  givenOwnerRating.responseToRating.response|nl2br }}                           
+                                            
+                                    {% endif %}
+                                            
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                            
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+        {% endif %}
+
+        {% if givenTenantRatings %}
+
+            <h2>Given ratings to tenants</h2>
+
+            <table class="table striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Rating date</th>
+                        <th>Tenant</th>
+                        <th>Advert</th>
+                        <th>Vehicle</th>
+                        <th>Location period</th>
+                        <th>Score</th>
+                        <th>Comment</th>
+
+                    </tr>
+
+                </thead>
+
+                    <tbody>
+
+                    {% for givenTenantRating in givenTenantRatings %}
+
+                        <tr>
+
+                            <td>{{ givenTenantRating.getFormattedCreatedAt }}</td>
+                            <td>{{ givenTenantRating.booking.vehicle.advert.owner.user.firstname }} {{ givenTenantRating.booking.vehicle.advert.owner.user.name }}</td>
+                            <td>{{ givenTenantRating.booking.vehicle.advert.title }}</td>
+                            <td>{{ givenTenantRating.booking.vehicle.sort.sort }} {{ givenTenantRating.booking.vehicle.mark.mark }}</td>
+                            <td>{{ givenTenantRating.booking.getFormattedBeginAt }} - {{ givenTenantRating.booking.getFormattedEndAt }}</td>
+                            <td>{{ givenTenantRating.score }}</td>
+                            <td>{{ givenTenantRating.comment|nl2br }}</td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+
+                                {% if givenTenantRating.responseToRating %}
+                            
+                                    {% if givenTenantRating.responseToRating.approved %}                                            
+                                    
+                                        On {{ givenTenantRating.responseToRating.getFormattedCreatedAt }}, {{ givenTenantRating.responseToRating.user.firstname }} wrote :<br><br>
+                                    
+                                        {{  givenTenantRating.responseToRating.response|nl2br }}                           
+                                            
+                                    {% endif %}
+                                            
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                            
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
 
         {% endif %}
         

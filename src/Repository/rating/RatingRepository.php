@@ -126,7 +126,7 @@ class RatingRepository extends ServiceEntityRepository
     }
     
     /**
-     * Get an user's given ratings
+     * Get an user's given ratings to owners
      *
      * @param [type] $user
      * 
@@ -138,6 +138,28 @@ class RatingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('r')
                     ->join('r.booking', 'b')
                     ->where('b.user = :user')
+                    ->andWhere('r.user = :user')
+                    ->orderBy('r.createdAt', 'DESC')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getResult()
+        ;
+
+    }
+    
+    /**
+     * Get an user's given ratings to tenants
+     *
+     * @param [type] $user
+     * 
+     * @return Rating[]|null
+     */
+    public function findGivenTenantRatings(User $user): ?array
+    {
+
+        return $this->createQueryBuilder('r')
+                    ->join('r.booking', 'b')
+                    ->where('b.user <> :user')
                     ->andWhere('r.user = :user')
                     ->orderBy('r.createdAt', 'DESC')
                     ->setParameter('user', $user)

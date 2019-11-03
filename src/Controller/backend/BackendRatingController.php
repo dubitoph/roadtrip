@@ -82,8 +82,8 @@ class BackendRatingController extends AbstractController
                        " for the advert \"" . $rating->getBooking()->getVehicle()->getAdvert()->getTitle() . "\" didn't respect the Raodtripr's rules.
                        So, it's removed.<br>
                        However, you can leave a new response respecting the Roadtripr rules using your <a href=\"". 
-                       $this->generateUrl('rating.dashbord', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
-                       "\">ratings dashbord</a>";
+                       $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
+                       "\">ratings dashboard</a>";
     
             $mail->setSender($sender)
                  ->setReceiver($rating->getUser())
@@ -141,7 +141,7 @@ class BackendRatingController extends AbstractController
         $advert = $rating->getBooking()->getVehicle()->getAdvert();
         $subject = $this->getParameter('new_rating_subject');        
 
-        // Send an email to the tenant        
+        // Send an email to the user who created the rating       
         $mail = new Mail();
         $message = "Your rating about your booking from " . $rating->getBooking()->getFormattedBeginAt() . " to " . $rating->getBooking()->getFormattedEndAt() . 
                    " for the advert \"" . $rating->getBooking()->getVehicle()->getAdvert()->getTitle() . "\" was approved.
@@ -169,8 +169,22 @@ class BackendRatingController extends AbstractController
 
         }
 
-        // Send an email to the owner        
+        // Send an email to the evaluated user        
         $mail = new Mail();
+        $owner = $advert->getOwner()->getUser();
+
+        if($rating->getUser() === $owner)
+        {
+
+            $receiver = $rating->getBooking()->getUser();
+
+        }
+        else 
+        {
+
+            $receiver = $owner;
+
+        }
         
         $message = "A rating about your booking from " . $rating->getBooking()->getFormattedBeginAt() . " to " . $rating->getBooking()->getFormattedEndAt() . 
                    " for the advert \"" . $rating->getBooking()->getVehicle()->getAdvert()->getTitle() . "\" was given.
@@ -180,7 +194,7 @@ class BackendRatingController extends AbstractController
                    "\">here</a>";
 
         $mail->setSender($sender)
-             ->setReceiver($advert->getOwner()->getUser())
+             ->setReceiver($receiver)
              ->setSubject($subject)
              ->setMessage($message)
              ->setBody($this->renderView(
@@ -294,8 +308,8 @@ class BackendRatingController extends AbstractController
             
         $message = "Your response message following the " . $responseToRating->getRating()->getUser()->getFirstname() . "'s rating was approved. 
                     So, you can see it on your <a href=\"". 
-                    $this->generateUrl('rating.dashbord', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
-                    "\">ratings dashbord</a>";
+                    $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
+                    "\">ratings dashboard</a>";
 
         $responseMail->setSender($sender)
              ->setReceiver($responseToRating->getUser())
@@ -321,8 +335,8 @@ class BackendRatingController extends AbstractController
             
         $message = "A response to your rating about your bokking from " . $responseToRating->getRating()->getBooking()->getFormattedBeginAt() . " to" .
                     $responseToRating->getRating()->getBooking()->getFormattedEndAt() . " was posted.<br><br>
-                    So, you can see it on your <a href=\"". $this->generateUrl('rating.dashbord', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
-                    "\">ratings dashbord</a>";
+                    So, you can see it on your <a href=\"". $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
+                    "\">ratings dashboard</a>";
 
         $ratingMail->setSender($sender)
                    ->setReceiver($responseToRating->getRating()->getUser())

@@ -44,13 +44,6 @@ jQuery( document ).ready( function( $ ){
      }
   });
 
-  $('[data-slider]').slick({
-
-    dots: true,
-    arrows: true
-
-  });
-
   // Display the login modal form if there is an autentication error
   var $loginDiv = $('#loginModal');
 

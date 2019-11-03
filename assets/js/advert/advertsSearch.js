@@ -29,6 +29,9 @@ jQuery( document ).ready( function( $ ) {
         format: localeDateFormat.toLowerCase()
     
       });
+
+      pricesceSlider();
+      distanceSlider();
         
       // Avoid end date less than begin date
       $("#beginAt").datepicker().on('changeDate', function (selected) {
@@ -62,4 +65,77 @@ jQuery( document ).ready( function( $ ) {
   autocompleteAddress('profile_address_street', 'profile_address_city', 'profile_address_zipCode', 'profile_address_country', 
                       'profile_address_latitude', 'profile_address_longitude');
 
+  $("#minimumPrice").on('change', function(e) {
+
+    pricesceSlider();
+
+  });
+
+  $("#maximumPrice").on('change', function(e) {
+
+    pricesceSlider();
+
+  });
+
+  $("#distance").on('change', function(e) {
+
+    distanceSlider();
+
+  });
+
 });
+
+function pricesceSlider()
+{
+
+  var $minPriceInput = $("#minimumPrice");
+  var $maxPriceInput = $("#maximumPrice");
+  var $pricesSliderDiv = $("#pricesSlider");
+    
+  var minPrice = parseInt($minPriceInput.val());
+  var maxPrice = parseInt($maxPriceInput.val());
+    
+  var minPriceParameter = parseInt($pricesSliderDiv.attr('data-minPriceParameter'));
+  var maxPriceParameter = parseInt($pricesSliderDiv.attr('data-maxPriceParameter'));
+
+  $pricesSliderDiv.slider({
+                            range: true,
+                            min: minPriceParameter,
+                            max: maxPriceParameter,
+                            values: [minPrice, maxPrice],
+                            slide: function() 
+                                  {
+
+                                      $minPriceInput.val($pricesSliderDiv.slider("values", 0));
+                                      $maxPriceInput.val($pricesSliderDiv.slider("values", 1));
+                                                  
+                                  }
+  });
+
+}
+
+function distanceSlider()
+{
+
+  var $distanceInput = $("#distance");
+  var $distanceSliderDiv = $("#distanceSlider");
+    
+  var distance = parseInt($distanceInput.val());
+    
+  var minDistanceParameter = parseInt($distanceSliderDiv.attr('data-minDistanceParameter'));
+  var maxDistanceParameter = parseInt($distanceSliderDiv.attr('data-maxDistanceParameter'));
+
+  $distanceSliderDiv.slider({
+                              min: minDistanceParameter,
+                              max: maxDistanceParameter,
+                              step: 5,
+                              value: distance,
+                              slide: function() 
+                                     {
+
+                                        $distanceInput.val($distanceSliderDiv.slider("value"));
+                                                    
+                                     }
+  });
+
+}
