@@ -462,4 +462,12 @@ Class AdvertSearch
         return $this;
     }
 
+    /**
+     * Set an attribute
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
 }

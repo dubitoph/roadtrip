@@ -1,4 +1,5 @@
 import { autocompleteAddress } from '../app';
+import { getAjax } from '../app';
 
 //Setup the date format according to navigator locale
 var localData = moment.localeData();
@@ -9,7 +10,9 @@ jQuery( document ).ready( function( $ ) {
   //Dates formatting according user's locale
   $('.js-datepicker').each(function() {
 
-      if($(this).val())
+    ajaxFilteringAdverts();  
+    
+    if($(this).val())
       {
       
           $(this).val(moment($(this).val(), 'YYYY-MM-DD').format('L'));
@@ -30,7 +33,7 @@ jQuery( document ).ready( function( $ ) {
     
       });
 
-      pricesceSlider();
+      pricesSlider();
       distanceSlider();
         
       // Avoid end date less than begin date
@@ -67,13 +70,13 @@ jQuery( document ).ready( function( $ ) {
 
   $("#minimumPrice").on('change', function(e) {
 
-    pricesceSlider();
+    pricesSlider();
 
   });
 
   $("#maximumPrice").on('change', function(e) {
 
-    pricesceSlider();
+    pricesSlider();
 
   });
 
@@ -83,9 +86,17 @@ jQuery( document ).ready( function( $ ) {
 
   });
 
+  var searchControls = $('#search_form').children();
+
+  searchControls.change(function() {
+
+    ajaxFilteringAdverts();
+
+  });
+
 });
 
-function pricesceSlider()
+function pricesSlider()
 {
 
   var $minPriceInput = $("#minimumPrice");
@@ -104,11 +115,28 @@ function pricesceSlider()
                             max: maxPriceParameter,
                             values: [minPrice, maxPrice],
                             slide: function() 
-                                  {
+                                   {
 
                                       $minPriceInput.val($pricesSliderDiv.slider("values", 0));
                                       $maxPriceInput.val($pricesSliderDiv.slider("values", 1));
                                                   
+                                   },
+                            stop: function(event, ui) 
+                                  {
+
+                                    if ($(ui.handle).is('#pricesSlider .ui-slider-handle:first')) 
+                                    {
+
+                                      $minPriceInput.trigger('change');
+                                      
+                                    }
+                                    else
+                                    {
+
+                                      $maxPriceInput.trigger('change');
+
+                                    }
+
                                   }
   });
 
@@ -135,7 +163,105 @@ function distanceSlider()
 
                                         $distanceInput.val($distanceSliderDiv.slider("value"));
                                                     
-                                     }
+                                     },
+                              stop: function(event, ui) 
+                                    {
+         
+                                      $distanceInput.trigger('change');
+         
+                                    }
   });
 
+}
+
+function ajaxFilteringAdverts()
+{  
+
+  var $form = $('#search_form');
+  
+  var filteredAdverts = async function()
+                                  {
+
+                                    var formdata = $('#search_form').serializeArray();
+                                    var data = {};
+
+                                    $(formdata).each(function(index, obj) {
+
+                                        data[obj.name] = obj.value;
+
+                                    });
+                                     
+                                    var response = await getAjax(Routing.generate(
+                                                                                      'advert.ajax.filtering', 
+                                                                                      data
+                                                                                  )
+                                                                  )
+                                      ;
+
+                                      response = JSON.parse(response);
+                              
+                                      if(response.code === 200) 
+                                      {
+                                        
+                                        var form = response.template;
+                                        
+                                        return form;
+
+                                      }
+
+                                  }
+  ;
+
+  filteredAdverts().then(function(form)
+                          {
+                              
+                            $("#SearchResults").replaceWith(form);
+
+                          }
+                              )
+                    .catch(function(error)
+                            {
+
+                              console.error("Error during the ajax call to get filtered advert", error);
+
+                            }
+                          )
+    ;
+
+/*
+  var advertSearch = JSON.stringify(
+                                    {
+
+                                      minimumBedsNumber: $('#minimumBedsNumber').val(),
+                                      minimumPrice: $('#minimumPrice').val(),
+                                      maximumPrice: $('#maximumPrice').val(),
+                                      latitude: $('#latitude').val(),
+                                      longitude: $('#longitude').val(),                        
+                                      address: $('#address').val()
+
+                                    }
+                                   )
+  ;
+
+  $.ajax({  
+            url: Routing.generate('advert.ajax.filtering'),  
+            type: 'GET',
+            data: {advertSearch: 'advert'},
+            dataType: 'json',  
+            async: true,  
+     
+            success: function(data, status) 
+                     {  
+
+                        console.log(data);  
+
+                     },
+
+            error : function(xhr, textStatus, errorThrown) 
+                    {  
+
+                      alert('Ajax adverts filtering request failed.');  
+                    }  
+  });  
+*/
 }

@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-6"><h6><strong>64</strong> résultats</h6></div>
+    <div class="col-md-6 float-right text-right">
+      <div class="btn-group">
+        <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><h6>Sort by</h6></a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <button class="dropdown-item" type="button">Proximité</button>
+          <button class="dropdown-item" type="button">Prix</button>
+          <button class="dropdown-item" type="button">Proximité & prix</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% set i = 0 %}
+
+  <div class="row">
+
+    {% for advert in adverts %}
+
+      <div class="col-md-6">
+
+        {% if distances[advert.id] is defined %}
+
+          {% set distance = distances[advert.id] %}
+
+        {% else %}
+
+          {% set distance = null %}
+
+        {% endif %}
+
+        {% if minPrices[advert.id] is defined %}
+
+          {% set minPrice = minPrices[advert.id] %}
+
+        {% else %}
+
+          {% set minPrice = null %}
+
+        {% endif %}
+
+        {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'userCity': userCity}) }}
+
+      </div>
+
+      {% set i = i + 1 %}
+
+    {% endfor %}
+
+  </div>
+
+  <div class="pagination">
+
+    {{ knp_pagination_render(adverts) }}
+
+  </div>
+  
+</div>

@@ -35,6 +35,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AdvertController extends AbstractController
 {
@@ -1250,6 +1252,7 @@ class AdvertController extends AbstractController
      * @param Advert $advert
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function clone(Advert $advert, Request $request, ObjectManager $manager): Response
@@ -1317,6 +1320,149 @@ class AdvertController extends AbstractController
         }
 
         return  $minPrice;
+
+    }
+
+    /**
+     * Get filtered adverts
+     * 
+     * @Route("/advert/ajax/filtering", options={"expose"=true}, name="advert.ajax.filtering")
+     *
+     * @param AdvertSearch $advertSearch
+     * @param AdvertRepository $advertRepository
+     * @param BookingRepository $bookingRepository
+     * @param PhotoRepository $photoRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * 
+     * @return JsonResponse
+     */
+    public function ajaxFilteringAdverts(AdvertRepository $advertRepository, BookingRepository $bookingRepository, PhotoRepository $photoRepository, 
+                                         Request $request, PaginatorInterface $paginator): JsonResponse
+    {
+          
+            $advertSearch = $request->query->all();
+
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+            $search = new AdvertSearch();
+
+            foreach ($advertSearch as $key => $value) 
+            {
+
+                if($key === 'beginAt' || $key === 'endAt')
+                {
+
+                    $dateTime = new \DateTime();
+                    $dateTime->createFromFormat('Y-m-d', $value);
+                    $value = $dateTime;
+
+                    if($key === 'beginAt')
+                    {
+
+                        $value->setTime('12', '0', '0');
+
+                    }
+                    else 
+                    {
+
+                        $value->setTime('11', '59', '59');
+
+                    }
+
+                }
+
+                if($key === 'latitude' || $key === 'longitude')
+                {
+
+                    $value = floatval($value);
+
+                }
+                
+                $propertyAccessor->setValue($search, $key, $value);
+
+            }
+
+            $results = array();
+            $distances = array();
+            
+            $results = $advertRepository->findSearchedAdverts($search, $bookingRepository);
+            
+            $adverts = array();            
+            $minPrices = array();            
+            $distances = array();
+            
+            foreach ($results as $result) 
+            {
+                if(is_array($result))
+                {
+                    
+                    $adverts[] = $result[0];
+                    $advertId = $result[0]->getId();
+                
+                    if(array_key_exists('minPrice', $result)) 
+                    {
+
+                        $minPrices[$advertId] = round($result["minPrice"]);
+
+                    }
+                
+                    if(array_key_exists('distance', $result)) 
+                    {
+
+                        $distances[$advertId] = round($result["distance"], 2);
+
+                    }
+
+                }
+                else
+                {
+
+                    $adverts[] = $result;
+
+                }
+
+            }
+
+            $mainPhotos = array();
+
+            if (count($adverts) > 0) 
+            {
+            
+                $mainPhotos = $photoRepository->getMainPhotos($adverts);
+
+            }
+            
+            $adverts = $paginator->paginate(
+                                                $adverts, 
+                                                $request->query->getInt('page', 1), 
+                                                12
+                                        )  
+            ;
+            
+            $response = new JsonResponse(); 
+
+            $response->setData(array(
+                                        "code" => 200,
+                                        "template" => $this->render('advert/_filteredAdverts.html.twig', [
+                                                                                                            'adverts' => $adverts,
+                                                                                                            'distances' => $distances,
+                                                                                                            'minPrices' => $minPrices,
+                                                                                                            'mainPhotos' => $mainPhotos,
+                                                                                                            'userCity' => $search->getCity()
+                                                                                                         ]
+                                                                   )->getContent()
+                                    )
+                              )
+            ;
+            
+     
+/*
+        $response = new JsonResponse();      
+            
+        $response->setData(array('success'=> $search->getMinimumBedsNumber()));
+*/
+        return $response;
 
     }
 

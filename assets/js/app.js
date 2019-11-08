@@ -193,24 +193,24 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
 {
 
   var setSessionVariables = async function()
-                       {
+                                  {
 
-                          var response = await getAjax(Routing.generate(
-                                                                                    'user.geolocation.session', 
-                                                                                    {
+                                      var response = await getAjax(Routing.generate(
+                                                                                      'user.geolocation.session', 
+                                                                                      {
                                                                                         userLatitude: latitude,
                                                                                         userLongitude: longitude,
                                                                                         userCity: city,
                                                                                         userAddress: address,
                                                                                         userCountryCode: countryCode
-                                                                                    }
+                                                                                      }
                                                                                   )
-                                                                 )
-                          ;
+                                                                  )
+                                      ;
 
-                          return response;
+                                      return response;
 
-                       }
+                                  }
   ;
 
   setSessionVariables().then(function(response)
@@ -243,22 +243,24 @@ export function getAjax(url)
 
   return new Promise(function(resolve, reject)
                      {
-  
+
                         var req = new XMLHttpRequest();
                       
                         req.onreadystatechange = function() {
                       
                           if (req.readyState === 4) 
                           {
-                      
+
                             if (req.status === 200) 
                             {
-                      
+
                               resolve(req.responseText);
                               
                             }
                             else
                             {
+
+                              console.log('Error');
                       
                               reject(req);
                       
