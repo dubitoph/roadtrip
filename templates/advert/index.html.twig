@@ -11,31 +11,32 @@
       <div class="col-md-4">
         <section id="SearchForm">
           {{ form_start(form, {'attr': {'id': 'search_form'}}) }}
-          <label for="minimumBedsNumber">Nombre de places</label>
+
+          <label for="minimumBedsNumber">Beds number</label>
           <div class="select">
               {{ form_widget(form.minimumBedsNumber) }}
           </div>
 
-          <label for="beginAt">Disponibilité</label>
+          <label for="beginAt">Disponibility</label>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Du</span>
+              <span class="input-group-text">From</span>
             </div>
             {{ form_widget(form.beginAt) }}
             <div class="input-group-prepend">
-              <span class="input-group-text">Au</span>
+              <span class="input-group-text">To</span>
             </div>
             {{ form_widget(form.endAt) }}
           </div>
 
-          <label for="minimumPrice">Prix par jour</label>
+          <label for="minimumPrice">Price per day</label>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">De</span>
+              <span class="input-group-text">From</span>
             </div>
             {{ form_widget(form.minimumPrice) }}
             <div class="input-group-prepend">
-              <span class="input-group-text">A</span>
+              <span class="input-group-text">To</span>
             </div>
             {{ form_widget(form.maximumPrice) }}
           </div> 
@@ -43,13 +44,17 @@
             <div id ="pricesSlider" data-minPriceParameter={{ minPriceParameter }} data-maxPriceParameter={{ maxPriceParameter }}></div>
           </div>
 
-          <label for="cellEquipments">Options de la cellule</label>
-          {{ form_widget(form.cellEquipments) }}
+          <label for="cellEquipments">Cell options</label>
+          <div>
+            {{ form_widget(form.cellEquipments) }}
+          </div>
 
-          <label for="carrierEquipments">Options du porteur</label>
-          {{ form_widget(form.carrierEquipments) }}
+          <label for="carrierEquipments">Carrier options</label>
+          <div>
+            {{ form_widget(form.carrierEquipments) }}
+          </div>
 
-          <label for="">Dans un rayon de</label>
+          <label for="">Within</label>
             {{ form_widget(form.distance) }}
           <div class="slider-range-wrap">
             <div id ="distanceSlider" data-minDistanceParameter={{ minDistanceParameter }} data-maxDistanceParameter={{ maxDistanceParameter }}></div>
@@ -59,18 +64,22 @@
 
           {{ form_row(form.city) }}
 
+        </section>
+      </div>
+      <div class="col-md-6">
+        <div class="text-right">
+          <label for="sorting">Sort by</label>
           <div class="select">
             {{ form_widget(form.sorting) }}
-          </div>
-          <button class="btn btn-primary">Search</button>
-        {{ form_end(form) }}
-        </section>
+          </div>          
+        </div>
+        <div>
+          <section id="SearchResults">
+          </section>
+        </div>       
       </div>
-      <div class="col-md-8">
-        <section id="SearchResults">
-        </section>
-      </div>
-    </div>
+    </div>              
+    {{ form_end(form) }}
   </div>
 
   {% block javascripts %}

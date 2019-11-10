@@ -83,99 +83,15 @@ class AdvertController extends AbstractController
         $form = $this->createForm(AdvertSearchType::class, $search, array('url' => $this->generateUrl('user.geolocation.session', [], UrlGeneratorInterface::ABSOLUTE_URL)));
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) 
-        { 
-
-            $beginAt = $search->getBeginAt();
-                            
-            if($beginAt)
-            {
-                
-                $beginAt->setTime('12', '0', '0');
-                
-            } 
-                      
-            $endAt = $search->getEndAt();
-                                
-            if($endAt)
-            {
-                    
-                $endAt->setTime('11', '59', '59');
-                    
-            }
-
-        }
-
-        $results = array();
-        $distances = array();
-        
-        $results = $advertRepository->findSearchedAdverts($search, $bookingRepository);
-        
-        $adverts = array();            
-        $minPrices = array();            
-        $distances = array();
-        
-        foreach ($results as $result) 
-        {
-            if(is_array($result))
-            {
-                
-                $adverts[] = $result[0];
-                $advertId = $result[0]->getId();
-            
-                if(array_key_exists('minPrice', $result)) 
-                {
-
-                    $minPrices[$advertId] = round($result["minPrice"]);
-
-                }
-            
-                if(array_key_exists('distance', $result)) 
-                {
-
-                    $distances[$advertId] = round($result["distance"], 2);
-
-                }
-
-            }
-            else
-            {
-
-                $adverts[] = $result;
-
-            }
-
-        }
-
-        $mainPhotos = array();
-
-        if (count($adverts) > 0) 
-        {
-        
-            $mainPhotos = $photoRepository->getMainPhotos($adverts);
-
-        }
-        
-        $adverts = $paginator->paginate(
-                                            $adverts, 
-                                            $request->query->getInt('page', 1), 
-                                            12
-                                       )
-        ;
-
         return $this->render('advert/index.html.twig', [
-                                                        'current_menu' => 'adverts',
-                                                        'adverts' => $adverts,
-                                                        'distances' => $distances,
-                                                        'minPrices' => $minPrices,
-                                                        'form' => $form->createView(),
-                                                        'mainPhotos' => $mainPhotos,
-                                                        'bodyId' => 'advertsIndex',
-                                                        'userCity' => $search->getCity(),
-                                                        'minPriceParameter' => $this->getParameter('minimum_price_search'),
-                                                        'maxPriceParameter' => $this->getParameter('maximum_price_search'),
-                                                        'minDistanceParameter' => $this->getParameter('minimum_distance_search'),
-                                                        'maxDistanceParameter' => $this->getParameter('maximum_distance_search')
+                                                            'current_menu' => 'adverts',
+                                                            'form' => $form->createView(),
+                                                            'bodyId' => 'advertsIndex',
+                                                            'userCity' => $search->getCity(),
+                                                            'minPriceParameter' => $this->getParameter('minimum_price_search'),
+                                                            'maxPriceParameter' => $this->getParameter('maximum_price_search'),
+                                                            'minDistanceParameter' => $this->getParameter('minimum_distance_search'),
+                                                            'maxDistanceParameter' => $this->getParameter('maximum_distance_search')
                                                        ]
                             )
         ;
@@ -1387,7 +1303,7 @@ class AdvertController extends AbstractController
             $distances = array();
             
             $results = $advertRepository->findSearchedAdverts($search, $bookingRepository);
-            
+
             $adverts = array();            
             $minPrices = array();            
             $distances = array();
@@ -1455,13 +1371,7 @@ class AdvertController extends AbstractController
                                     )
                               )
             ;
-            
-     
-/*
-        $response = new JsonResponse();      
-            
-        $response->setData(array('success'=> $search->getMinimumBedsNumber()));
-*/
+
         return $response;
 
     }

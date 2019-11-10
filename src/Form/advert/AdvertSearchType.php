@@ -77,6 +77,9 @@ class AdvertSearchType extends AbstractType
                       )
             ->add('cellEquipments', EntityType::class, [
                                                             'required' => false,
+                                                            'attr' => [
+                                                                        'class' => 'select-hidden'
+                                                                      ],
                                                             'class' => 'App\Entity\backend\Equipment',
                                                             'expanded' => true,
                                                             'multiple' => true,
@@ -102,18 +105,18 @@ class AdvertSearchType extends AbstractType
                  )
             ->add('address', TextType::class, array('required' => false))
             ->add('city', HiddenType::class)
-            ->add('sorting', ChoiceType::class, array(
-                                                      'placeholder' => 'Choose an option',
-                                                      'attr' => [
-                                                                  'class' => 'select-hidden'
-                                                                ],
-                                                      'required' => false,
-                                                      'choices' => array(
-                                                                            'Proximity'  => 'Proximity',
-                                                                            'Price'  => 'Price',
-                                                                            'Proximity + price'  => 'Proximity + price'
-                                                                        )
-                                                     )
+            ->add('sorting', ChoiceType::class, [
+                                                  'placeholder' => 'Choose an option',
+                                                  'choices' => [
+                                                                  'Proximity'  => 'Proximity',
+                                                                  'Price'  => 'Price',
+                                                                  'Proximity + price'  => 'Proximity + price'
+                                                               ],
+                                                  'attr' => [
+                                                              'class' => 'select-hidden'
+                                                            ],
+                                                  'required' => false
+                                                ]
                  )
         ;
 

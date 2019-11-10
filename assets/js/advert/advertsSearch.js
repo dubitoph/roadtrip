@@ -103,8 +103,8 @@ function pricesSlider()
   var $maxPriceInput = $("#maximumPrice");
   var $pricesSliderDiv = $("#pricesSlider");
     
-  var minPrice = parseInt($minPriceInput.val());
-  var maxPrice = parseInt($maxPriceInput.val());
+  var minimumPrice = parseInt($minPriceInput.val());
+  var maximumPrice = parseInt($maxPriceInput.val());
     
   var minPriceParameter = parseInt($pricesSliderDiv.attr('data-minPriceParameter'));
   var maxPriceParameter = parseInt($pricesSliderDiv.attr('data-maxPriceParameter'));
@@ -113,7 +113,7 @@ function pricesSlider()
                             range: true,
                             min: minPriceParameter,
                             max: maxPriceParameter,
-                            values: [minPrice, maxPrice],
+                            values: [minimumPrice, maximumPrice],
                             slide: function() 
                                    {
 
@@ -123,7 +123,7 @@ function pricesSlider()
                                    },
                             stop: function(event, ui) 
                                   {
-
+                                    
                                     if ($(ui.handle).is('#pricesSlider .ui-slider-handle:first')) 
                                     {
 
@@ -176,7 +176,7 @@ function distanceSlider()
 
 function ajaxFilteringAdverts()
 {  
-
+  
   var $form = $('#search_form');
   
   var filteredAdverts = async function()
@@ -196,18 +196,18 @@ function ajaxFilteringAdverts()
                                                                                       data
                                                                                   )
                                                                   )
-                                      ;
+                                    ;
 
-                                      response = JSON.parse(response);
+                                    response = JSON.parse(response);
                               
-                                      if(response.code === 200) 
-                                      {
+                                    if(response.code === 200) 
+                                    {
                                         
-                                        var form = response.template;
+                                      var form = response.template;
                                         
-                                        return form;
+                                      return form;
 
-                                      }
+                                    }
 
                                   }
   ;
@@ -215,10 +215,11 @@ function ajaxFilteringAdverts()
   filteredAdverts().then(function(form)
                           {
                               
-                            $("#SearchResults").replaceWith(form);
+                            $('#SearchResults').empty();
+                            $('#SearchResults').append(form);
 
                           }
-                              )
+                        )
                     .catch(function(error)
                             {
 
@@ -228,40 +229,4 @@ function ajaxFilteringAdverts()
                           )
     ;
 
-/*
-  var advertSearch = JSON.stringify(
-                                    {
-
-                                      minimumBedsNumber: $('#minimumBedsNumber').val(),
-                                      minimumPrice: $('#minimumPrice').val(),
-                                      maximumPrice: $('#maximumPrice').val(),
-                                      latitude: $('#latitude').val(),
-                                      longitude: $('#longitude').val(),                        
-                                      address: $('#address').val()
-
-                                    }
-                                   )
-  ;
-
-  $.ajax({  
-            url: Routing.generate('advert.ajax.filtering'),  
-            type: 'GET',
-            data: {advertSearch: 'advert'},
-            dataType: 'json',  
-            async: true,  
-     
-            success: function(data, status) 
-                     {  
-
-                        console.log(data);  
-
-                     },
-
-            error : function(xhr, textStatus, errorThrown) 
-                    {  
-
-                      alert('Ajax adverts filtering request failed.');  
-                    }  
-  });  
-*/
 }

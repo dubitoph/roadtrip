@@ -164,7 +164,7 @@ Class AdvertSearch
     /**
      *  Set the minimum price
      *
-     * @param integer|null $maximumPrice
+     * @param integer|null $minimumPrice
      * 
      * @return AdvertSearch
      */
