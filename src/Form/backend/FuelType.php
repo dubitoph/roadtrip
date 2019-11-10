@@ -14,8 +14,7 @@ class FuelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder
-            ->add('fuel', TextType::class)
+        $builder->add('fuel', TextType::class)
         ;
 
     }
