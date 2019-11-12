@@ -12,7 +12,11 @@ parameters:
     limit_creation_periods: '2 years'
     minimum_creation_periods: '1 year'
     rental_automatically_confirmation: '15 days'
-    periods_durations: [ "Week-end", "Long week-end", "Semaine" ]
+    periods_durations: ["Week-end", "Long week-end", "Semaine"]
+    minimum_price_search: '0'
+    maximum_price_search: '500'
+    minimum_distance_search: '0'
+    maximum_distance_search: '100'
     administrateur_email: 'administrateur@roadtrip.com'  
     contestation_email: "contestation@roadtrip.com"    
     backend_admin_user: "backendAdminUser"

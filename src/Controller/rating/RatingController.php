@@ -72,6 +72,7 @@ class RatingController extends AbstractController
         }
 
         $givenOwnerRatings = $ratingRepository->findGivenOwnerRatings($user);
+        $givenTenantRatings = $ratingRepository->findGivenTenantRatings($user);
     
         return $this->render('rating/ratingsDashboard.html.twig',array(
                                                                         'bookingsWithoutRating' => $bookingsWithoutRating,
@@ -79,6 +80,7 @@ class RatingController extends AbstractController
                                                                         'receivedOwnerRatings' => $receivedOwnerRatings,
                                                                         'givenUserRatings' => $givenUserRatings,
                                                                         'givenOwnerRatings' => $givenOwnerRatings,
+                                                                        'givenTenantRatings' => $givenTenantRatings,
                                                                         'mainPhotos' => $mainPhotos,
                                                                         'bodyId' =>  'ratingsDashboard'
                                                                      )
@@ -105,65 +107,52 @@ class RatingController extends AbstractController
 
         $user = $this->getUser();
         
-        if (! $user) 
+        $rating = new Rating;
+
+        $rating->setBooking($booking);
+        $rating->setUser($user);
+
+        if ($user == $booking->getUser()) 
         {
 
-            $this->addFlash("error", "You must be logged in to be able to leave a rating.");
+            $rating->setAdvert($booking->getVehicle()->getAdvert());
 
-            return $this->redirectToRoute('security.login');
-
-        }
-        else
+        } 
+        else 
         {
-        
-            $rating = new Rating;
 
-            $rating->setBooking($booking);
-            $rating->setUser($user);
+            $rating->setTenant($booking->getUser());
 
-            if ($user == $booking->getUser()) 
-            {
-
-                $rating->setAdvert($booking->getVehicle()->getAdvert());
-
-            } 
-            else 
-            {
-
-                $rating->setTenant($booking->getUser());
-
-            }
-            
-
-            $form = $this->createForm(RatingType::class, $rating);
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) 
-            {            
-
-                $manager->persist($rating);
-                $manager->flush();    
-
-                $this->addFlash('success', "The evaluation was successfully created and is awaiting approval by an administrator for publication."); 
-
-                $message = "A new rating is pending approval. Please manage it in the <a href=\"" . $this->generateUrl('backend.rating.toApprove', array(), UrlGeneratorInterface::ABSOLUTE_URL) . "\">dashboard</a>.";
-                
-                $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
-                
-                return $this->redirectToRoute('rating.dashboard');
-
-            }
-        
-            return $this->render('rating/new.html.twig', [
-                                                            'rating' => $rating,
-                                                            'bodyId' =>  'ratingsCreation',
-                                                            'form' => $form->createView(),
-                                                         ]
-                                )
-            ;  
-            
         }
+            
+
+        $form = $this->createForm(RatingType::class, $rating);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {            
+
+            $manager->persist($rating);
+            $manager->flush();    
+
+            $this->addFlash('success', "The evaluation was successfully created and is awaiting approval by an administrator for publication."); 
+
+            $message = "A new rating is pending approval. Please manage it in the <a href=\"" . $this->generateUrl('backend.rating.toApprove', array(), UrlGeneratorInterface::ABSOLUTE_URL) . "\">dashboard</a>.";
+                
+            $this->sendPendingApprovalRatingMail($mailer, $userRepository, $message);
+                
+            return $this->redirectToRoute('rating.dashboard');
+
+        }
+        
+        return $this->render('rating/new.html.twig', [
+                                                        'rating' => $rating,
+                                                        'bodyId' =>  'ratingCreation',
+                                                        'form' => $form->createView(),
+                                                     ]
+                            )
+        ; 
 
     }
 
@@ -250,9 +239,16 @@ class RatingController extends AbstractController
     }
 
     /**
+     * Answer to a rating
+     * 
      * @Route("/rating/create/response/{id}", name="rating.create.response")
+     * 
+     * @param Rating $rating
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param ObjectManager $manager
+     * @param \Swift_Mailer $mailer
+     * 
      * @return Response
      */
     public function response(Rating $rating, UserRepository $userRepository, Request $request, ObjectManager $manager, \Swift_Mailer $mailer): Response
@@ -288,7 +284,7 @@ class RatingController extends AbstractController
 
         }
 
-        return $this->redirectToRoute('rating.dashbord');
+        return $this->redirectToRoute('rating.dashboard');
 
     }
 

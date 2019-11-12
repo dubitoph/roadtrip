@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class AdvertSearchType extends AbstractType
 {
@@ -69,8 +70,16 @@ class AdvertSearchType extends AbstractType
                                                         'attr' => ['placeholder' => 'Maximum price']
                                                       ]
                  )
+            ->add('minimumPrice', IntegerType::class, [
+                                                        'required' => false,
+                                                        'attr' => ['placeholder' => 'Minimum price']
+                                                      ]
+                      )
             ->add('cellEquipments', EntityType::class, [
                                                             'required' => false,
+                                                            'attr' => [
+                                                                        'class' => 'select-hidden'
+                                                                      ],
                                                             'class' => 'App\Entity\backend\Equipment',
                                                             'expanded' => true,
                                                             'multiple' => true,
@@ -92,36 +101,22 @@ class AdvertSearchType extends AbstractType
                  )
             ->add('latitude', HiddenType::class)
             ->add('longitude', HiddenType::class)
-            ->add('distance', ChoiceType::class, array(
-                                                        'placeholder' => 'Choose an option',
-                                                        'required' => false,
-                                                        'attr' => [
-                                                                    'class' => 'select-hidden'
-                                                                  ],
-                                                        'choices' => array('5 km'  => 5,
-                                                                            '10 km'  => 10,
-                                                                            '20 km'  => 20,
-                                                                            '30 km'  => 30,
-                                                                            '40 km'  => 40,
-                                                                            '50 km'  => 50,
-                                                                            '100 km'  => 100
-                                                                            )
-                                                      )
+            ->add('distance', NumberType::class, array('required' => false)
                  )
             ->add('address', TextType::class, array('required' => false))
             ->add('city', HiddenType::class)
-            ->add('sorting', ChoiceType::class, array(
-                                                      'placeholder' => 'Choose an option',
-                                                      'attr' => [
-                                                                  'class' => 'select-hidden'
-                                                                ],
-                                                      'required' => false,
-                                                      'choices' => array(
-                                                                            'Proximity'  => 'Proximity',
-                                                                            'Price'  => 'Price',
-                                                                            'Proximity + price'  => 'Proximity + price'
-                                                                        )
-                                                     )
+            ->add('sorting', ChoiceType::class, [
+                                                  'placeholder' => 'Choose an option',
+                                                  'choices' => [
+                                                                  'Proximity'  => 'Proximity',
+                                                                  'Price'  => 'Price',
+                                                                  'Proximity + price'  => 'Proximity + price'
+                                                               ],
+                                                  'attr' => [
+                                                              'class' => 'select-hidden'
+                                                            ],
+                                                  'required' => false
+                                                ]
                  )
         ;
 

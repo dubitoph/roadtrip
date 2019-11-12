@@ -108,25 +108,43 @@ class BookingRepository extends ServiceEntityRepository
    }
 
    /**
+    * Get bookings without rating
+    *
+    * @param [type] $user
+    * 
     * @return Booking[]
     */
-  public function findBookingsWithoutRating($user)
-  {
+   public function findBookingsWithoutRating($user)
+   {
 
     $now = date("Y-m-d");
+
+    $subquery = $this->createQueryBuilder('b2')
+                  ->select('u.id')
+                  ->join('b2.vehicle', 'v')
+                  ->join('v.advert', 'a')
+                  ->join('a.owner', 'o')
+                  ->join('o.user', 'u')
+                  ->where('b2.id = b.id')
+    ;   
+
+    $query = $this->createQueryBuilder('b')
+                  ->where('b.accepted = true')
+                  ->andWhere('b.deleted is null')
+                  ->andWhere('b.beginAt < :now')
+    ;
+    
+    $query->andWhere('b.user = :user or ' . $query->expr()->in(':user', $subquery->getDQL()))
+          ->leftJoin('App\Entity\rating\Rating', 'r', "WITH", 'r.booking = b AND r.user = :user')
+          ->andWhere('r.booking is null')
+          ->setParameter('now', $now)
+          ->setParameter('user', $user)
+          ->orderBy('b.createdAt', 'ASC')
+    ;
       
-    return $this->createQueryBuilder('b')
-                ->where('b.accepted = true')
-                ->andWhere('b.deleted is null')
-                ->andWhere('b.beginAt < :now')
-                ->leftJoin('App\Entity\rating\Rating', 'r', "WITH", 'r.booking = b AND r.user = :user')
-                ->andWhere('r.booking is null')
-                ->setParameter('now', $now)
-                ->setParameter('user', $user)
-                ->orderBy('b.createdAt', 'ASC')
-                ->getQuery()
-                ->getResult()
-      ;
+    return $query->getQuery()
+                 ->getResult();
+
   }
   
 }

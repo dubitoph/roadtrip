@@ -36,7 +36,7 @@ class Fuel
      *      min = 3,
      *      max = 255,
      *      minMessage = "The fuel must at least contain {{limit}} characters.",
-     *      maxMessage = "Fuel can't exceed {{characters}}."
+     *      maxMessage = "Fuel can't exceed {{limit}} characters."
      * )
      */
     private $fuel;

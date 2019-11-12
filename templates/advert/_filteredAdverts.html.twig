@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-6">
+    <h6>
+      <strong>
+        {% if adverts is defined %}
+          {% set resultsNumber = adverts|length %}
+          {{ resultsNumber }}
+          </strong>
+          {% if resultsNumber == 1 or resultsNumber == 0 %}
+            result
+          {% else %}
+            results
+          {% endif %}
+        {% endif %}   
+    </h6>
+  </div>
+</div>
+
+{% set i = 0 %}
+
+<div class="row">
+
+  {% for advert in adverts %}
+
+    <div class="col-md-6">
+
+      {% if distances[advert.id] is defined %}
+
+        {% set distance = distances[advert.id] %}
+
+      {% else %}
+
+        {% set distance = null %}
+
+      {% endif %}
+
+      {% if minPrices[advert.id] is defined %}
+
+        {% set minPrice = minPrices[advert.id] %}
+
+      {% else %}
+
+        {% set minPrice = null %}
+
+      {% endif %}
+
+      {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'userCity': userCity}) }}
+
+    </div>
+
+    {% set i = i + 1 %}
+
+  {% endfor %}
+
+</div>
+
+<div class="pagination">
+
+  {{ knp_pagination_render(adverts) }}
+
+</div>
+  
+</div>

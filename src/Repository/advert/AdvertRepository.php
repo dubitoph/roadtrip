@@ -53,7 +53,7 @@ class AdvertRepository extends ServiceEntityRepository
         $beginAt = $search->getBeginAt();
         $endAt = $search->getEndAt();
 
-        if ($beginAt || $endAt) 
+        if ($beginAt || $endAt)
         {  
                         
             $subquery = $bookingRepository->createQueryBuilder('b')
@@ -169,16 +169,15 @@ class AdvertRepository extends ServiceEntityRepository
 
         }
 
-        if ($search->getMaximumPrice()) 
+        if ($search->getMinimumPrice() && $search->getMaximumPrice())
         {
 
             $query = $query
-                        ->andWhere('p.price / d.daysNumber <= :maxPrice')
-                        ->setParameter('maxPrice', $search->getMaximumPrice())
+                        ->andWhere($query->expr()->orX($query->expr()->between('p.price', $search->getMinimumPrice(), $search->getMaximumPrice())))
             ;
 
         }
-
+        
         if (! $search->getSorting() || $search->getSorting() === 'Prix' || $search->getSorting() === 'Proximité + prix') 
         {
 

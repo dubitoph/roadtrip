@@ -10,115 +10,76 @@
     <div class="row">
       <div class="col-md-4">
         <section id="SearchForm">
-        {{ form_start(form) }}
-          <label for="minimumBedsNumber">Nombre de places</label>
+          {{ form_start(form, {'attr': {'id': 'search_form'}}) }}
+
+          <label for="minimumBedsNumber">Beds number</label>
           <div class="select">
               {{ form_widget(form.minimumBedsNumber) }}
           </div>
 
-          <label for="beginAt">Disponibilité</label>
+          <label for="beginAt">Disponibility</label>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Du</span>
+              <span class="input-group-text">From</span>
             </div>
             {{ form_widget(form.beginAt) }}
             <div class="input-group-prepend">
-              <span class="input-group-text">Au</span>
+              <span class="input-group-text">To</span>
             </div>
             {{ form_widget(form.endAt) }}
           </div>
 
-          <label for="maximumPrice">Prix par jour</label>
-          {{ form_widget(form.maximumPrice) }}
-
-          <div class="slider-range"></div>
-
-          <label for="cellEquipments">Options de la cellule</label>
-          {{ form_widget(form.cellEquipments) }}
-
-          <label for="carrierEquipments">Options du porteur</label>
-          {{ form_widget(form.carrierEquipments) }}
-
-          <label for="">Dans un rayon de</label>
-          <div class="select">
-            {{ form_widget(form.distance) }}
+          <label for="minimumPrice">Price per day</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">From</span>
+            </div>
+            {{ form_widget(form.minimumPrice) }}
+            <div class="input-group-prepend">
+              <span class="input-group-text">To</span>
+            </div>
+            {{ form_widget(form.maximumPrice) }}
+          </div>
+          <div class="slider-range-wrap">
+            <div id ="pricesSlider" data-minPriceParameter={{ minPriceParameter }} data-maxPriceParameter={{ maxPriceParameter }}></div>
           </div>
 
-          <div class="slider"></div>
+          <label for="cellEquipments">Cell options</label>
+          <div>
+            {{ form_widget(form.cellEquipments) }}
+          </div>
+
+          <label for="carrierEquipments">Carrier options</label>
+          <div>
+            {{ form_widget(form.carrierEquipments) }}
+          </div>
+
+          <label for="">Within</label>
+            {{ form_widget(form.distance) }}
+          <div class="slider-range-wrap">
+            <div id ="distanceSlider" data-minDistanceParameter={{ minDistanceParameter }} data-maxDistanceParameter={{ maxDistanceParameter }}></div>
+          </div>
 
           {{ form_row(form.address, {'id': 'search_address'}) }}
 
           {{ form_row(form.city) }}
 
-          <button class="btn btn-primary">Search</button>
-
-        {{ form_end(form) }}
         </section>
       </div>
-      <div class="col-md-8">
-        <section id="SearchResults">
-          <div class="row">
-            <div class="col-md-6"><h6><strong>64</strong> résultats</h6></div>
-            <div class="col-md-6 float-right text-right">
-              <div class="btn-group">
-                <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><h6>Sort by</h6></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <button class="dropdown-item" type="button">Proximité</button>
-                  <button class="dropdown-item" type="button">Prix</button>
-                  <button class="dropdown-item" type="button">Proximité & prix</button>
-                </div>
-              </div>
-            </div>
+      <div class="col-md-6">
+        <div class="text-right">
+          <label for="sorting">Sort by</label>
+          <div class="select">
+            {{ form_widget(form.sorting) }}
           </div>
-
-          {% set i = 0 %}
-
-          <div class="row">
-
-              {% for advert in adverts %}
-
-                  <div class="col-md-6">
-
-                          {% if distances[advert.id] is defined %}
-
-                              {% set distance = distances[advert.id] %}
-
-                          {% else %}
-
-                              {% set distance = null %}
-
-                          {% endif %}
-
-                          {% if minPrices[advert.id] is defined %}
-
-                              {% set minPrice = minPrices[advert.id] %}
-
-                              {% else %}
-
-                                  {% set minPrice = null %}
-
-                          {% endif %}
-
-                          {{ include('advert/_advert.html.twig', { 'i': i, 'advert': advert, 'distance': distance, 'minPrice': minPrice, 'userCity': userCity}) }}
-
-                  </div>
-
-                  {% set i = i + 1 %}
-
-              {% endfor %}
-
-
-          </div>
-
-          <div class="pagination">
-
-              {{ knp_pagination_render(adverts) }}
-
-          </div>
-
-      </section>
+        </div>
+        <div>
+          <section id="SearchResults">
+          </section>
+        </div>
       </div>
     </div>
+    {{ form_end(form) }}
   </div>
 
   {% block javascripts %}

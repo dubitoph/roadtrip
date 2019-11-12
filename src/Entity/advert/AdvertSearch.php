@@ -15,7 +15,15 @@ Class AdvertSearch
 
     /**
      * @var int|null
-     * @Assert\Range(min=0, max=2000)
+     * 
+     * @Assert\Range(min=0, max=500)
+     */
+    private $minimumPrice;
+
+    /**
+     * @var int|null
+     * 
+     * @Assert\Range(min=0, max=500)
      */
     private $maximumPrice;
 
@@ -41,6 +49,15 @@ Class AdvertSearch
 
     /**
      * @var Integer|null
+     * 
+     * @Assert\GreaterThanOrEqual(
+     *     value = 0,
+     *     message = "The distance must be greater or equal than {{ value }} km."
+     * )
+     * @Assert\LessThanOrEqual(
+     *     value = 100,
+     *     message = "The power distance be less or equal than {{ value }} km."
+     * )
      */
     private $distance;
 
@@ -141,6 +158,34 @@ Class AdvertSearch
     {
 
         return $this->maximumPrice;
+
+    }
+
+    /**
+     *  Set the minimum price
+     *
+     * @param integer|null $minimumPrice
+     * 
+     * @return AdvertSearch
+     */
+    public function setMinimumPrice(?int $minimumPrice): AdvertSearch
+    {
+
+        $this->minimumPrice = $minimumPrice;
+
+        return $this;
+
+    }
+
+    /**
+     * Get the minimum price
+     *
+     * @return integer|null
+     */
+    public function getMinimumPrice(): ?int
+    {
+
+        return $this->minimumPrice;
 
     }
 
@@ -415,6 +460,14 @@ Class AdvertSearch
         $this->endAt = $endAt;
 
         return $this;
+    }
+
+    /**
+     * Set an attribute
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
     }
 
 }
