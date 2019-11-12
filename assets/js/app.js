@@ -50,7 +50,19 @@ jQuery( document ).ready( function( $ ){
     arrows: true
 
   });
-
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [ 75, 300 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  } );
   // Display the login modal form if there is an autentication error
   var $loginDiv = $('#loginModal');
 
@@ -203,7 +215,7 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
                        {
 
                           var response = await getAjax(Routing.generate(
-                                                                                    'user.geolocation.session', 
+                                                                                    'user.geolocation.session',
                                                                                     {
                                                                                         userLatitude: latitude,
                                                                                         userLongitude: longitude,
@@ -227,9 +239,9 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
                           localStorage.setItem('userLongitude',  longitude);
                           localStorage.setItem('userCity',  city);
                           localStorage.setItem('userAddress',  address);
-                          localStorage.setItem('userCountryCode',  countryCode);        
+                          localStorage.setItem('userCountryCode',  countryCode);
                           sessionStorage.setItem('phpSessionVariablesExist', '1');
-        
+
                           console.log(localStorage.getItem('userCountryCode'));
 
                         }
@@ -245,36 +257,36 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
 
 }
 
-export function getAjax(url) 
+export function getAjax(url)
 {
 
   return new Promise(function(resolve, reject)
                      {
-  
+
                         var req = new XMLHttpRequest();
-                      
+
                         req.onreadystatechange = function() {
-                      
-                          if (req.readyState === 4) 
+
+                          if (req.readyState === 4)
                           {
-                      
-                            if (req.status === 200) 
+
+                            if (req.status === 200)
                             {
-                      
+
                               resolve(req.responseText);
-                              
+
                             }
                             else
                             {
-                      
+
                               reject(req);
-                      
+
                             }
-                            
+
                           }
-                      
+
                         }
-                      
+
                         req.open('GET', url, true);
                         req.send();
 
@@ -284,7 +296,7 @@ export function getAjax(url)
 
 }
 
-export function getCurrentPosition(options = {}) 
+export function getCurrentPosition(options = {})
 {
 
   return new Promise((resolve, reject) => {

@@ -1,3 +1,24 @@
+//
+.ui-widget-content{
+  background-color: $gray !important;
+  border-radius: 50px !important;
+  height: 4px !important;
+}
+.ui-widget-header {
+  background-color: $gray !important;
+}
+.ui-state-default{
+  border:1px solid $gray !important;
+  background-color: $white !important;
+}
+.ui-corner-all{
+  border-radius: 50px !important;
+}
+.ui-slider-horizontal .ui-slider-handle {
+    top: -0.5em !important;
+    margin-left: -0.1em !important;
+}
+// custom
 .value {
   position: absolute;
   top: 30px;
@@ -6,13 +27,8 @@
   width: 40px;
   text-align: center;
   display: block;
-
-  /* optional */
-
-  font-weight: normal;
-  font-family: Verdana,Arial,sans-serif;
-  font-size: 14px;
-  color: #333;
+  font-size: 0.9rem;
+  color: $gray;
 }
 
 .price-range-both.value {

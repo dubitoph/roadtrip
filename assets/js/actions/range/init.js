@@ -14,16 +14,18 @@ function collision($div1, $div2) {
     }
 
 // slider call
-$('#slider').slider({
+$( ".slider" ).slider();
+
+$('.slider-range').slider({
 	range: true,
 	min: 0,
 	max: 500,
 	values: [ 75, 300 ],
 	slide: function(event, ui) {
 
-		$('.ui-slider-handle:eq(0) .price-range-min').html('$' + ui.values[ 0 ]);
-		$('.ui-slider-handle:eq(1) .price-range-max').html('$' + ui.values[ 1 ]);
-		$('.price-range-both').html('<i>$' + ui.values[ 0 ] + ' - </i>$' + ui.values[ 1 ] );
+		$('.ui-slider-handle:eq(0) .price-range-min').html('€' + ui.values[ 0 ]);
+		$('.ui-slider-handle:eq(1) .price-range-max').html('€' + ui.values[ 1 ]);
+		$('.price-range-both').html('<i>€' + ui.values[ 0 ] + ' - </i>€' + ui.values[ 1 ] );
 
 		//
 

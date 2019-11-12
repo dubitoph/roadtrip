@@ -30,7 +30,8 @@
 
           <label for="maximumPrice">Prix par jour</label>
           {{ form_widget(form.maximumPrice) }}
-          <input type="range" class="custom-range" id="customRange1" min="0" max="500" step="5">
+
+          <div class="slider-range"></div>
 
           <label for="cellEquipments">Options de la cellule</label>
           {{ form_widget(form.cellEquipments) }}
@@ -43,17 +44,14 @@
             {{ form_widget(form.distance) }}
           </div>
 
-          <input type="range" class="custom-range" id="customRange2" min="0" max="200" step="5">
+          <div class="slider"></div>
 
           {{ form_row(form.address, {'id': 'search_address'}) }}
 
           {{ form_row(form.city) }}
 
-          <div class="select">
-            {{ form_widget(form.sorting) }}
-          </div>
           <button class="btn btn-primary">Search</button>
-          <div id="slider"></div>
+
         {{ form_end(form) }}
         </section>
       </div>
