@@ -42,7 +42,7 @@ class RatingRepository extends ServiceEntityRepository
                     ->join('App\Entity\advert\Advert', 'a')
                     ->andWhere('a = b.vehicle')
                     ->andWhere('a in (:adverts)')
-                    ->andWhere('r.ratingApproved = true')
+                    ->andWhere('r.approvedRating = true')
                     ->andWhere('b.endAt <= :now')
                     ->groupBy('a.id')
                     ->setParameter('adverts', $adverts)

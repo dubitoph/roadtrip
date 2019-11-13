@@ -32,7 +32,7 @@ class BackendRatingController extends AbstractController
     {
      
         $ratings = $ratingRepository->findBy(
-                                                array('ratingApproved' => null),
+                                                array('approvedRating' => null),
                                                 array('createdAt' => 'asc')
                                             )
         ;
@@ -130,7 +130,7 @@ class BackendRatingController extends AbstractController
     public function approve(Rating $rating, UserRepository $userRepository, ObjectManager $manager, \Swift_Mailer $mailer): Response
     {
 
-        $rating->setRatingApproved(true);
+        $rating->setApprovedRating(true);
         
         $manager->persist($rating);
         $manager->flush();
@@ -249,8 +249,8 @@ class BackendRatingController extends AbstractController
             $message = "Your response message following the " . $responseToRating->getRating()->getUser()->getFirstname() . "'s rating didn't respect the Roadtripr's rules. 
                         So, it's removed.<br>
                         However, you can leave a new response respecting the Roadtripr rules using your <a href=\"". 
-                        $this->generateUrl('rating.dashbord', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
-                        "\">ratings dashbord</a>";
+                        $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
+                        "\">ratings dashboard</a>";
     
             $mail->setSender($sender)
                  ->setReceiver($responseToRating->getUser())

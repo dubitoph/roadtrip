@@ -77,7 +77,7 @@ class HomeController extends AbstractController
         $lastRatingsNumber = $this->getParameter('last_ratings_number');       
         
         $lastAdvertRatings = $ratingRepository->findBy(
-                                                        array('ratingApproved' => true),
+                                                        array('approvedRating' => true),
                                                         array('createdAt' => 'DESC'),
                                                         $limit  = $lastRatingsNumber
                                                       )

@@ -10,18 +10,23 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class RatingResponseType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('response', TextareaType::class)
-        ;
+
+        $builder->add('response', TextareaType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Rating::class,
-            'translation_domain' => 'forms'
-        ]);
+        $resolver->setDefaults(
+                                [
+                                    'data_class' => Rating::class,
+                                    'translation_domain' => 'forms'
+                                ]
+                              )
+        ;
     }
+    
 }

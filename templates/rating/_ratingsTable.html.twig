@@ -1,0 +1,99 @@
+<table class="table striped">
+
+    <thead>
+
+        <tr>
+
+            <th>Date</th>
+            <th>
+                {% if fromOwner %}                 
+                    Owner
+                {% else %}
+                    Tenant
+                {% endif %}
+            </th>
+            <th>Advert</th>
+            <th>Vehicle</th>
+            <th>Location period</th>
+            <th>Score</th>
+            <th>Comment</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for rating in ratings %}
+
+            {% set booking = rating.booking %}
+            {% set vehicle = booking.vehicle %}
+            {% set advert = vehicle.advert %}
+
+            {% if fromOwner %}
+                {% set sender = booking.user.firstname ~ ' ' ~  booking.user.name %}
+            {% else %}
+                {% set sender = advert.owner.user.firstname ~ ' ' ~  advert.owner.user.name %}
+            {% endif %}
+
+            <tr>
+
+                <td>{{ rating.getFormattedCreatedAt }}</td>
+                <td>{{ sender }}</td>
+                <td>{{ advert.title }}</td>
+                <td>{{ vehicle }}</td>
+                <td>From {{ booking.getFormattedBeginAt }} to {{ booking.getFormattedEndAt }}</td>
+                <td>{{ rating.score }}</td>
+                <td>{{ rating.comment|nl2br }}</td>
+
+            </tr>
+
+            {% if showResponse %}
+
+                {% set response = rating.responseToRating %}
+
+                {% if fromOwner %}
+                    {% set responseSender = booking.user %}
+                {% else %}
+                    {% set responseSender = advert.owner %}
+                {% endif %}                    
+            
+                <tr>
+                    <td colspan="7">
+
+                        {% if not response %}
+                            
+                            <form action="{{ path('rating.create.response', { 'id': rating.id }) }}" id="responseFrom_{{ rating.id }}" method="POST">
+                            
+                                <textarea name="response_{{ rating.id }}" id="response_{{ rating.id }}" cols="30" rows="10"></textarea>
+                            
+                                <button type="submit">Answer</button>
+                            
+                            </form>
+                            
+                        {% else %}
+                                            
+                            {% if response.approved %}                                            
+                                    
+                                On {{ rating.getFormattedCreatedAt }}, {{ responseSender.firstname }} wrote :<br><br>
+                                    
+                                {{  response.response|nl2br }}
+
+                            {% else %}
+
+                                Response pending administrator approval.                                       
+                                            
+                            {% endif %}
+                                            
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+            {% endif %}
+                        
+        {% endfor %}
+
+    </tbody>
+
+</table>

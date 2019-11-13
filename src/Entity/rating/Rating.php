@@ -53,7 +53,7 @@ class Rating
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $ratingApproved;
+    private $approvedRating;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\booking\Booking", inversedBy="ratings")
@@ -197,28 +197,28 @@ class Rating
     }
 
     /**
-     * Get if the rating is approfed
+     * Get if the rating is approved
      *
      * @return boolean|null
      */
-    public function getRatingApproved(): ?bool
+    public function getApprovedRating(): ?bool
     {
 
-        return $this->ratingApproved;
+        return $this->approvedRating;
 
     }
 
     /**
-     * Set if the rating is approfed
+     * Set if the rating is approved
      *
-     * @param boolean|null $ratingApproved
+     * @param boolean|null $approvedRating
      * 
      * @return self
      */
-    public function setRatingApproved(?bool $ratingApproved): self
+    public function setApprovedRating(?bool $approvedRating): self
     {
 
-        $this->ratingApproved = $ratingApproved;
+        $this->approvedRating = $approvedRating;
 
         return $this;
 

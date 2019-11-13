@@ -227,43 +227,73 @@
 
                     {% for rating in advert.ratings %}
 
-                        <div class="comment">
-
-                                <div class="row">
+                        <div class="row">            
             
-            
-                                    <div class="col">
-            
-                                        {% if rating.score %}
+                            <div class="col-md-6">
 
-                                            {% for i in 1.. rating.score %}
+                                    Score :
 
-                                                <img src="{{ asset('images/star.png') | imagine_filter('medium') }}" alt="score_star" style="width: 100%; height:auto;"/>
-                                                    
-                                            {% endfor %}
-                                                
-                                        {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+            
+                                {% if rating.score %}
                                             
-                                        ({{ rating.score }}/5)
-            
-                                    </div>
+                                    {{ rating.score }}/5
 
-                                </div>
+                                {% else %}
 
-                            <div class="row">
+                                    -
+                                                
+                                {% endif %}
 
+                            </div>
+                        
+                        </div>
 
-                                <div class="col-3">
+                        <div class="row">
 
-                                    {{ rating.user.userName }} (<small>{{ rating.createdAt | date('d/m/Y à H:i') }})</small>
+                            <div class="col-md-6">
+    
+                                Date :
+    
+                            </div>
 
-                                </div>
+                            <div class="col-md-6">
 
-                                <div class="col">
+                                {{ rating.getFormattedCreatedAt }}
 
-                                    {{ rating.comment | raw }}
+                            </div>
 
-                                </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+    
+                                Author :
+    
+                            </div>
+
+                            <div class="col-md-6">
+
+                                {{ rating.user.firstname }} {{ rating.user.name }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+    
+                                Comment :
+    
+                            </div>
+
+                            <div class="col-md-6">
+
+                                {{ rating.comment | raw }}
 
                             </div>
 
@@ -276,9 +306,7 @@
             </section>
 
         </div>
-{#
-        <div id="map" style="width: 100; height: 400px;" data-latitude="{{ advert.vehicle.situation.latitude }}" data-longitude="{{ advert.vehicle.situation.longitude }}"></div>
-#}
+        
     </div>
    
     {% block javascripts %}
@@ -286,13 +314,7 @@
         {{ parent() }}
 
         {{ encore_entry_script_tags('showAdvert') }}
-        
-        <script src="https://fullcalendar.io/releases/core/4.0.1/main.min.js"></script>
-        <script src="https://fullcalendar.io/releases/interaction/4.0.1/main.min.js"></script>
-        <script src="https://fullcalendar.io/releases/daygrid/4.0.1/main.min.js"></script>
-        <script src="https://fullcalendar.io/releases/timegrid/4.0.1/main.min.js"></script>
     
-    {% endblock %}
-        
+    {% endblock %}        
 
 {% endblock %}

@@ -12,6 +12,7 @@ use App\Repository\user\UserRepository;
 use App\Repository\media\PhotoRepository;
 use App\Repository\rating\RatingRepository;
 use App\Repository\booking\BookingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +24,14 @@ class RatingController extends AbstractController
 { 
 
     /**
+     * User's ratings dashboard
+     * 
      * @Route("/rating/dashboard", name="rating.dashboard")
+     * 
+     * @param BookingRepository $bookingRepository
+     * @param PhotoRepository $photoRepository
      * @param RatingRepository $ratingRepository
+     * 
      * @return Response
      */
     public function dashbord(BookingRepository $bookingRepository, PhotoRepository $photoRepository, RatingRepository $ratingRepository): Response
@@ -32,23 +39,33 @@ class RatingController extends AbstractController
      
         $user = $this->getUser();
         $owner = $user->getOwner();
-        
-        $bookingsWithoutRating = $bookingRepository->findBookingsWithoutRating($user);
-        
-        $adverts = array();
 
-        if (count($bookingsWithoutRating) > 0) 
+        $bookingsWithoutRating = $bookingRepository->findBookingsWithoutRating($user);
+
+        $toRateTenantBookings = new ArrayCollection();
+        $toRateOwnerBookings = new ArrayCollection();        
+        $adverts = new ArrayCollection(); 
+
+        foreach($bookingsWithoutRating as $booking)
         {
-        
-            foreach ($bookingsWithoutRating as $booking) 
+            
+            if($booking->getUser() == $user)
             {
 
-                $adverts[] = $booking->getVehicle()->getAdvert();
+                $toRateTenantBookings->add($booking);                
+
+            }
+            else 
+            {
+
+                $toRateOwnerBookings->add($booking);
 
             }
 
-        }
+            $adverts->add($booking->getVehicle()->getAdvert());
 
+        }
+        
         $mainPhotos = array();
 
         if (count($adverts) > 0) 
@@ -72,15 +89,61 @@ class RatingController extends AbstractController
         }
 
         $givenOwnerRatings = $ratingRepository->findGivenOwnerRatings($user);
+
+        $approvedGivenOwnerRatings = new ArrayCollection();
+        $givenOwnerRatingsToApprove = new ArrayCollection();
+
+        foreach($givenOwnerRatings as $rating)
+        {
+
+            if ($rating->getApprovedRating()) 
+            {
+
+                $approvedGivenOwnerRatings->add($rating);
+
+            }
+            else 
+            {
+
+                $givenOwnerRatingsToApprove->add($rating);
+
+            }            
+
+        }
+
         $givenTenantRatings = $ratingRepository->findGivenTenantRatings($user);
+
+        $approvedGivenTenantRatings = new ArrayCollection();
+        $givenTenantRatingsToApprove = new ArrayCollection();
+
+        foreach($givenTenantRatings as $rating)
+        {
+
+            if ($rating->getApprovedRating()) 
+            {
+
+                $approvedGivenTenantRatings->add($rating);
+
+            }
+            else 
+            {
+
+                $givenTenantRatingsToApprove->add($rating);
+
+            }            
+
+        }
     
         return $this->render('rating/ratingsDashboard.html.twig',array(
-                                                                        'bookingsWithoutRating' => $bookingsWithoutRating,
+                                                                        'toRateTenantBookings' => $toRateTenantBookings,
+                                                                        'toRateOwnerBookings' => $toRateOwnerBookings,
                                                                         'receivedUserRatings' => $receivedUserRatings,
                                                                         'receivedOwnerRatings' => $receivedOwnerRatings,
                                                                         'givenUserRatings' => $givenUserRatings,
-                                                                        'givenOwnerRatings' => $givenOwnerRatings,
-                                                                        'givenTenantRatings' => $givenTenantRatings,
+                                                                        'approvedGivenOwnerRatings' => $approvedGivenOwnerRatings,
+                                                                        'givenOwnerRatingsToApprove' => $givenOwnerRatingsToApprove,
+                                                                        'approvedGivenTenantRatings' => $approvedGivenTenantRatings,
+                                                                        'givenTenantRatingsToApprove' => $givenTenantRatingsToApprove,
                                                                         'mainPhotos' => $mainPhotos,
                                                                         'bodyId' =>  'ratingsDashboard'
                                                                      )
@@ -288,6 +351,15 @@ class RatingController extends AbstractController
 
     }
 
+    /**
+     * 
+     *
+     * @param \Swift_Mailer $mailer
+     * @param UserRepository $userRepository
+     * @param String $message
+     * 
+     * @return Mail
+     */
     private function sendPendingApprovalRatingMail($mailer, $userRepository, $message)
     { 
 

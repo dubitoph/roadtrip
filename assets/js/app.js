@@ -43,29 +43,7 @@ jQuery( document ).ready( function( $ ){
         $('.topbar').removeClass('topbar-sticky');
      }
   });
-
-<<<<<<< HEAD
-  $('[data-slider]').slick({
-
-    dots: true,
-    arrows: true
-
-  });
-  $( function() {
-    $( "#slider-range" ).slider({
-      range: true,
-      min: 0,
-      max: 500,
-      values: [ 75, 300 ],
-      slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-      }
-    });
-    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-  } );
-=======
->>>>>>> 0844e279ac067b3b4796d3bf71ee20dc86ca5e9a
+  
   // Display the login modal form if there is an autentication error
   var $loginDiv = $('#loginModal');
 
@@ -217,15 +195,9 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
   var setSessionVariables = async function()
                                   {
 
-<<<<<<< HEAD
                           var response = await getAjax(Routing.generate(
                                                                                     'user.geolocation.session',
                                                                                     {
-=======
-                                      var response = await getAjax(Routing.generate(
-                                                                                      'user.geolocation.session', 
-                                                                                      {
->>>>>>> 0844e279ac067b3b4796d3bf71ee20dc86ca5e9a
                                                                                         userLatitude: latitude,
                                                                                         userLongitude: longitude,
                                                                                         userCity: city,
@@ -279,11 +251,7 @@ export function getAjax(url)
                           if (req.readyState === 4)
                           {
 
-<<<<<<< HEAD
                             if (req.status === 200)
-=======
-                            if (req.status === 200) 
->>>>>>> 0844e279ac067b3b4796d3bf71ee20dc86ca5e9a
                             {
 
                               resolve(req.responseText);
@@ -292,11 +260,6 @@ export function getAjax(url)
                             else
                             {
 
-<<<<<<< HEAD
-=======
-                              console.log('Error');
-                      
->>>>>>> 0844e279ac067b3b4796d3bf71ee20dc86ca5e9a
                               reject(req);
 
                             }

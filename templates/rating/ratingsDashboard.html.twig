@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} My ratings {% endblock %}
+{% block title %}
+
+    Roadtripr - My dashboard : ratings
+    
+{% endblock %}
 
 {% block body %}
 
@@ -10,9 +14,79 @@
 
         <h1>My ratings</h1>
 
-        {% if bookingsWithoutRating %}
+        {% if toRateTenantBookings is not empty or toRateOwnerBookings is not empty %}
 
             <h2>Pending ratings</h2>
+
+            {% if toRateTenantBookings is not empty %}
+
+                <h3>To owners</h3>
+
+                <table class="table striped">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Photo</th>
+                            <th>Vehicle</th>
+                            <th>Advert</th>
+                            <th>Location period</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% set i = 1 %}
+
+                        {% for booking in toRateTenantBookings %} 
+
+                            {% set vehicle = booking.vehicle %}
+                            {% set advert = vehicle.advert %}
+
+                            <tr>
+
+                                <td>
+
+                                    {% if mainPhotos[advert.id] is defined %}
+                                        
+                                        <img id="photo_{{ mainPhotos[advert.id].id }}" 
+                                             src="{{ vich_uploader_asset(mainPhotos[advert.id], 'file') | imagine_filter('tiny') }}" alt="card-img-top" 
+                                             style="width: 100%; height:auto;">
+                                    
+                                    {% else %}
+                                    
+                                        <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('tiny') }}" alt="card-img-top" 
+                                             style="width: 100%; height:auto;"/>
+                                                    
+                                    {% endif %}
+                                    
+                                </td>
+                                <td>{{ vehicle.mark.mark }} - {{ vehicle.sort.sort }} ({{ vehicle.getFormattedManufactureDate }})</td>
+                                <td>{{ advert.title }}</td>
+                                <td>From {{ booking.getFormattedBeginAt }} to {{ booking.getFormattedEndAt }}</td>
+                                <td><a href="{{ path('rating.create', { 'id': booking.id }) }}" class="btn btn-secondary">Leave a rating</a></td>
+
+                            </tr>
+
+                            {% set i = i + 1 %}
+                            
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% endif %}
+
+        {% endif %}
+
+        {% if toRateOwnerBookings is not empty %}
+            
+            <h3>To tenants</h3>
 
             <table class="table striped">
 
@@ -20,11 +94,10 @@
 
                     <tr>
 
-                        <th>Photo</th>
+                        <th>Advert</th>
                         <th>Vehicle</th>
-                        <th>Title</th>
-                        <th>Location beginning</th>
-                        <th>Location end</th>
+                        <th>Tenant</th>
+                        <th>Location period</th>
                         <th>Action</th>
 
                     </tr>
@@ -35,27 +108,16 @@
 
                     {% set i = 1 %}
 
-                    {% for booking in bookingsWithoutRating %}
+                    {% for booking in toRateOwnerBookings %}  
+
+                        {% set vehicle = booking.vehicle %}                 
 
                         <tr>
-
-                            <td>
-
-                                {% if mainPhotos[booking.vehicle.advert.id] is defined %}
                                 
-                                    <img id="photo_{{ mainPhotos[booking.vehicle.advert.id].id }}"  src="{{ vich_uploader_asset(mainPhotos[booking.vehicle.advert.id], 'file') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;">
-                            
-                                {% else %}
-                            
-                                    <img id="no_photo_{{ i }}" src="{{ asset('images/no-photo.jpg') | imagine_filter('tiny') }}" alt="card-img-top" style="width: 100%; height:auto;"/>
-                                            
-                                {% endif %}
-                            
-                            </td>
-                            <td>{{ booking.vehicle.mark.mark }} - {{ booking.vehicle.sort.sort }} ({{ booking.vehicle.getFormattedManufactureDate }})</td>
-                           <td>{{ booking.vehicle.advert.title }}</td>
-                            <td>{{ booking.getFormattedBeginAt }}</td>
-                            <td>{{ booking.getFormattedEndAt }}</td>
+                            <td>{{ vehicle.advert.title }}</td>
+                            <td>{{ vehicle.mark.mark }} - {{ vehicle.sort.sort }} ({{ vehicle.getFormattedManufactureDate }})</td>
+                            <td>{{ booking.user.firstname }} {{ booking.user.name }}</td>
+                            <td>From {{ booking.getFormattedBeginAt }} to {{ booking.getFormattedEndAt }}</td>
                             <td><a href="{{ path('rating.create', { 'id': booking.id }) }}" class="btn btn-secondary">Leave a rating</a></td>
 
                         </tr>
@@ -70,285 +132,76 @@
             
         {% endif %}
 
-        {% if receivedUserRatings %}        
+        {% if receivedUserRatings is not empty or receivedOwnerRatings is not empty %}
 
-            <h2>Received ratings from owners</h2>
+            <h2>Received ratings</h2>
 
-            <table class="table striped">
+            {% if receivedUserRatings is not empty %}
+            
+                <h3>From owners</h3>
 
-                <thead>
+                {% include 'rating/_ratingsTable.html.twig' with {'ratings': receivedUserRatings, 'fromOwner': true, 'showResponse': true} %}
 
-                    <tr>
+            {% endif %}
 
-                        <th>Rating date</th>
-                        <th>Owner</th>
-                        <th>Advert</th>
-                        <th>Vehicle</th>
-                        <th>Location period</th>
-                        <th>Score</th>
-                        <th>Comment</th>
+            {% if receivedOwnerRatings is not empty %}
 
-                    </tr>
+                <h3>From tenants</h3>
 
-                </thead>
+                {% include 'rating/_ratingsTable.html.twig' with {'ratings': receivedOwnerRatings, 'fromOwner': false, 'showResponse': true} %}
 
-                <tbody>
-
-                    {% for userRating in receivedUserRatings %}
-
-                        <tr>
-
-                            <td>{{ userRating.getFormattedCreatedAt }}</td>
-                            <td>{{ userRating.booking.vehicle.advert.owner.user.firstname }} {{ userRating.booking.vehicle.advert.owner.user.name }}</td>
-                            <td>{{ userRating.booking.vehicle.advert.title }}</td>
-                            <td>{{ userRating.booking.vehicle.sort.sort }} {{ userRating.booking.vehicle.mark.mark }}</td>
-                            <td>{{ userRating.booking.getFormattedBeginAt }} - {{ userRating.booking.getFormattedEndAt }}</td>
-                            <td>{{ userRating.score }}</td>
-                            <td>{{ userRating.comment|nl2br }}</td>
-
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-
-                                {% if not userRating.responseToRating %}
-                        
-                                    <form action="{{ path('rating.create.response', { 'id': userRating.id }) }}" id="responseFrom_{{ userRating.id }}" method="POST">
-                        
-                                        <textarea name="response_{{ userRating.id }}" id="response_{{ userRating.id }}" cols="30" rows="10"></textarea>
-                        
-                                        <button type="submit">Answer</button>
-                        
-                                    </form>
-                        
-                                {% else %}
-                                        
-                                    {% if userRating.responseToRating.approved %}                                            
-                                
-                                        On {{ userRating.getFormattedCreatedAt }}, {{ userRating.responseToRating.user.firstname }} wrote :<br><br>
-                                
-                                        {{  userRating.responseToRating.response|nl2br }}
-
-                                    {% else %}
-
-                                        Response pending administrator approval.                                       
-                                        
-                                    {% endif %}
-                                        
-                                {% endif %}
-
-                            </td>
-                        </tr>
-                        
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            {% endif %}
 
         {% endif %}
 
-        {% if receivedOwnerRatings %}
+        {% if approvedGivenOwnerRatings is not empty or givenOwnerRatingsToApprove is not empty or 
+              approvedGivenTenantRatings is not empty or givenTenantRatingsToApprove is not empty %}
 
-            <h2>Received ratings from tenants</h2>
+            <h2>Given ratings</h2>
 
-            <table class="table striped">
+            {% if approvedGivenOwnerRatings is not empty or givenOwnerRatingsToApprove is not empty %}
 
-                <thead>
+                <h3>To owners</h3>
 
-                    <tr>
+                {% if givenOwnerRatingsToApprove is not empty %}
 
-                        <th>Rating date</th>
-                        <th>Tenant</th>
-                        <th>Advert</th>
-                        <th>Vehicle</th>
-                        <th>Location period</th>
-                        <th>Score</th>
-                        <th>Comment</th>
+                    <h4>Pending approbation</h4>
 
-                    </tr>
+                    {% include 'rating/_ratingsTable.html.twig' with {'ratings': givenOwnerRatingsToApprove, 'fromOwner': false, 'showResponse': false} %}
 
-                </thead>
+                {% endif %}
 
-                <tbody>
+                {% if approvedGivenOwnerRatings is not empty %}
 
-                    {% for ownerRating in receivedOwnerRatings %}
+                    <h4>Approved</h4>
 
-                        <tr>
+                    {% include 'rating/_ratingsTable.html.twig' with {'ratings': approvedGivenOwnerRatings, 'fromOwner': false, 'showResponse': true} %}
 
-                            <td>{{ ownerRating.getFormattedCreatedAt }}</td>
-                            <td>{{ ownerRating.booking.user.firstname }} {{ ownerRating.booking.user.name }}</td>
-                            <td>{{ ownerRating.booking.vehicle.advert.title }}</td>
-                            <td>{{ ownerRating.booking.vehicle.sort.sort }} {{ ownerRating.booking.vehicle.mark.mark }}</td>
-                            <td>{{ ownerRating.booking.getFormattedBeginAt }} - {{ ownerRating.booking.getFormattedEndAt }}</td>
-                            <td>{{ ownerRating.score }}</td>
-                            <td>{{ ownerRating.comment|nl2br }}</td>
+                {% endif %}
 
-                        </tr>
-                        <tr>
-                            <td colspan="7">
+            {% endif %}
 
-                                {% if not ownerRating.responseToRating %}
-                        
-                                    <form action="{{ path('rating.create.response', { 'id': ownerRating.id }) }}" id="responseFrom_{{ ownerRating.id }}" method="POST">
-                        
-                                        <textarea name="response_{{ ownerRating.id }}" id="response_{{ ownerRating.id }}" cols="30" rows="10"></textarea>
-                        
-                                        <button type="submit">Answer</button>
-                        
-                                    </form>
-                        
-                                {% else %}
-                                        
-                                    {% if ownerRating.responseToRating.approved %}                                            
-                                
-                                        On {{ ownerRating.getFormattedCreatedAt }}, {{ ownerRating.responseToRating.user.firstname }} wrote :<br><br>
-                                
-                                        {{  ownerRating.responseToRating.response|nl2br }}
+            {% if approvedGivenTenantRatings is not empty or givenTenantRatingsToApprove is not empty %}
 
-                                    {% else %}
+                <h3>To tenants</h3>
 
-                                        Response pending administrator approval.                                       
-                                        
-                                    {% endif %}
-                                        
-                                {% endif %}
+                {% if givenTenantRatingsToApprove is not empty %}
 
-                            </td>
-                        </tr>
-                        
-                    {% endfor %}
+                    <h4>Pending approbation</h4>
 
-                </tbody>
+                    {% include 'rating/_ratingsTable.html.twig' with {'ratings': givenTenantRatingsToApprove, 'fromOwner': true, 'showResponse': false} %}
 
-            </table>
+                {% endif %}
 
-        {% endif %}
+                {% if approvedGivenTenantRatings is not empty %}
 
-        {% if givenOwnerRatings %}
+                    <h4>Approved</h4>
 
-            <h2>Given ratings to owners</h2>
+                    {% include 'rating/_ratingsTable.html.twig' with {'ratings': approvedGivenTenantRatings, 'fromOwner': true, 'showResponse': true} %}
 
-            <table class="table striped">
+                {% endif %}
 
-                <thead>
-
-                    <tr>
-
-                        <th>Rating date</th>
-                        <th>Owner</th>
-                        <th>Advert</th>
-                        <th>Vehicle</th>
-                        <th>Location period</th>
-                        <th>Score</th>
-                        <th>Comment</th>
-
-                    </tr>
-
-                </thead>
-
-                    <tbody>
-
-                    {% for givenOwnerRating in givenOwnerRatings %}
-
-                        <tr>
-
-                            <td>{{ givenOwnerRating.getFormattedCreatedAt }}</td>
-                            <td>{{ givenOwnerRating.booking.vehicle.advert.owner.user.firstname }} {{ givenOwnerRating.booking.vehicle.advert.owner.user.name }}</td>
-                            <td>{{ givenOwnerRating.booking.vehicle.advert.title }}</td>
-                            <td>{{ givenOwnerRating.booking.vehicle.sort.sort }} {{ givenOwnerRating.booking.vehicle.mark.mark }}</td>
-                            <td>{{ givenOwnerRating.booking.getFormattedBeginAt }} - {{ givenOwnerRating.booking.getFormattedEndAt }}</td>
-                            <td>{{ givenOwnerRating.score }}</td>
-                            <td>{{ givenOwnerRating.comment|nl2br }}</td>
-
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-
-                                {% if givenOwnerRating.responseToRating %}
-                            
-                                    {% if givenOwnerRating.responseToRating.approved %}                                            
-                                    
-                                        On {{ givenOwnerRating.responseToRating.getFormattedCreatedAt }}, {{ givenOwnerRating.responseToRating.user.firstname }} wrote :<br><br>
-                                    
-                                        {{  givenOwnerRating.responseToRating.response|nl2br }}                           
-                                            
-                                    {% endif %}
-                                            
-                                {% endif %}
-
-                            </td>
-                        </tr>
-                            
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-
-        {% endif %}
-
-        {% if givenTenantRatings %}
-
-            <h2>Given ratings to tenants</h2>
-
-            <table class="table striped">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Rating date</th>
-                        <th>Tenant</th>
-                        <th>Advert</th>
-                        <th>Vehicle</th>
-                        <th>Location period</th>
-                        <th>Score</th>
-                        <th>Comment</th>
-
-                    </tr>
-
-                </thead>
-
-                    <tbody>
-
-                    {% for givenTenantRating in givenTenantRatings %}
-
-                        <tr>
-
-                            <td>{{ givenTenantRating.getFormattedCreatedAt }}</td>
-                            <td>{{ givenTenantRating.booking.vehicle.advert.owner.user.firstname }} {{ givenTenantRating.booking.vehicle.advert.owner.user.name }}</td>
-                            <td>{{ givenTenantRating.booking.vehicle.advert.title }}</td>
-                            <td>{{ givenTenantRating.booking.vehicle.sort.sort }} {{ givenTenantRating.booking.vehicle.mark.mark }}</td>
-                            <td>{{ givenTenantRating.booking.getFormattedBeginAt }} - {{ givenTenantRating.booking.getFormattedEndAt }}</td>
-                            <td>{{ givenTenantRating.score }}</td>
-                            <td>{{ givenTenantRating.comment|nl2br }}</td>
-
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-
-                                {% if givenTenantRating.responseToRating %}
-                            
-                                    {% if givenTenantRating.responseToRating.approved %}                                            
-                                    
-                                        On {{ givenTenantRating.responseToRating.getFormattedCreatedAt }}, {{ givenTenantRating.responseToRating.user.firstname }} wrote :<br><br>
-                                    
-                                        {{  givenTenantRating.responseToRating.response|nl2br }}                           
-                                            
-                                    {% endif %}
-                                            
-                                {% endif %}
-
-                            </td>
-                        </tr>
-                            
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            {% endif %}
 
         {% endif %}
         
