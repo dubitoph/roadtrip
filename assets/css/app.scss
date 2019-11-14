@@ -338,7 +338,36 @@ input[type="search"]::-ms-clear {
   font-size: 0.9rem;
   color: $gray-600;
 }
-
+.input-group{
+  #minimumPrice,
+  #beginAt{border-right: none;}
+}
+.dropdown-filter{
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: $gray-600;
+  text-transform: uppercase;
+  a{
+    color: $gray-600;
+    text-transform: uppercase;
+    font-weight: normal;
+    text-decoration: none;
+    &:hover{
+      color: darken($gray-600, 20);
+    }
+  }
+  .dropdown-menu{
+    font-size: 0.8rem;
+    .dropdown-item{
+      font-weight: 500;
+      color: $gray-600;
+      text-decoration: none;
+      &:hover{
+        color: darken($gray-600, 20);
+      }
+    }
+  }
+}
 /* hero */
 .hero {
   position: relative;

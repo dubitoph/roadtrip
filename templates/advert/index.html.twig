@@ -6,19 +6,19 @@
 
 {% block body %}
   <div class="container pb-5">
-    <h2>Results</h2>
+    <h2>Search results</h2>
     <div class="row">
       <div class="col-md-4">
         <section id="SearchForm">
           {{ form_start(form, {'attr': {'id': 'search_form'}}) }}
 
-          <label for="minimumBedsNumber">Beds number</label>
+          <label for="minimumBedsNumber">Number of Beds</label>
           <div class="select">
               {{ form_widget(form.minimumBedsNumber) }}
           </div>
 
           <label for="beginAt">Disponibility</label>
-          <div class="input-group">
+          <div class="input-group mb-4">
             <div class="input-group-prepend">
               <span class="input-group-text">From</span>
             </div>
@@ -30,7 +30,7 @@
           </div>
 
           <label for="minimumPrice">Price per day</label>
-          <div class="input-group">
+          <div class="input-group mb-4">
             <div class="input-group-prepend">
               <span class="input-group-text">From</span>
             </div>
@@ -40,23 +40,23 @@
             </div>
             {{ form_widget(form.maximumPrice) }}
           </div>
-          <div class="slider-range-wrap">
+          <div class="slider-range-wrap mb-4">
             <div id ="pricesSlider" data-minPriceParameter={{ minPriceParameter }} data-maxPriceParameter={{ maxPriceParameter }}></div>
           </div>
 
           <label for="cellEquipments">Cell options</label>
-          <div>
+          <div class="mb-4">
             {{ form_widget(form.cellEquipments) }}
           </div>
 
           <label for="carrierEquipments">Carrier options</label>
-          <div>
+          <div class="mb-4">
             {{ form_widget(form.carrierEquipments) }}
           </div>
 
           <label for="">Within</label>
             {{ form_widget(form.distance) }}
-          <div class="slider-range-wrap">
+          <div class="slider-range-wrap mb-4">
             <div id ="distanceSlider" data-minDistanceParameter={{ minDistanceParameter }} data-maxDistanceParameter={{ maxDistanceParameter }}></div>
           </div>
 
@@ -66,12 +66,22 @@
 
         </section>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-8">
+        <label class="float-left">4 results</label>
         <div class="text-right">
-          <label for="sorting">Sort by</label>
-          <div class="select">
-            {{ form_widget(form.sorting) }}
+          <div class="dropdown dropdown-filter">
+            Sort by
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Proximity
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="#">Proximity</a>
+              <a class="dropdown-item" href="#">Price</a>
+              <a class="dropdown-item" href="#">Proximity + Price</a>
+            </div>
           </div>
+
+          {{ form_widget(form.sorting) }}
         </div>
         <div>
           <section id="SearchResults">

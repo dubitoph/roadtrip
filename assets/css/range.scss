@@ -13,10 +13,26 @@
 }
 .ui-corner-all{
   border-radius: 50px !important;
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  &:visited,
+  &.visited {
+    outline: 0 !important;
+  }
 }
 .ui-slider-horizontal .ui-slider-handle {
     top: -0.5em !important;
     margin-left: -0.1em !important;
+    &:focus,
+    &.focus,
+    &:active,
+    &.active,
+    &:visited,
+    &.visited {
+      outline: 0 !important;
+    }
 }
 // custom
 .value {
