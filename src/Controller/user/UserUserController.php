@@ -215,36 +215,22 @@ class UserUserController extends AbstractController
     public function ajaxAction(Request $request): Response
     {
 
-        if($request->isXmlHttpRequest())
-        {
+        $userAddress = $request->query->get('userAddress');
+        $userLatitude = $request->query->get('userLatitude');
+        $userLongitude = $request->query->get('userLongitude');
+        $userCity = $request->query->get('userCity');
+        $userCountryCode = $request->query->get('userCountryCode'); 
 
-            $userLatitude = $request->request->get('userLatitude');
-            $userLongitude = $request->request->get('userLongitude');
-            $userCity = $request->request->get('userCity');
-            $userAddress = $request->request->get('userAddress');
-            $userCountryCode = $request->request->get('userCountryCode'); 
-
-            $this->container->get('session')->set('userLatitude', $userLatitude);
-            $this->container->get('session')->set('userLongitude', $userLongitude);
-            $this->container->get('session')->set('userCity', $userCity);
-            $this->container->get('session')->set('userAddress', $userAddress);
-            $this->container->get('session')->set('userCountryCode', $userCountryCode);
+        $this->container->get('session')->set('userAddress', $userAddress);
+        $this->container->get('session')->set('userLatitude', $userLatitude);
+        $this->container->get('session')->set('userLongitude', $userLongitude);
+        $this->container->get('session')->set('userCity', $userCity);
+        $this->container->get('session')->set('userCountryCode', $userCountryCode);
              
-            $response = new JsonResponse();
-            $response->setData(array('success'=> "Session user geolocation variables created")); 
+        $response = new JsonResponse();
+        $response->setData(array('success'=> "User's session variables created")); 
 
-            return $response;
-            
-        }
-        else
-        {
-
-            $response = new JsonResponse();
-            $response->setData(array('error'=> 'Not a xmlHttpRequest'));
-
-            return $response;
-         
-        }
+        return $response;
 
     }
 

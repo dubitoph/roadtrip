@@ -2,6 +2,8 @@ import { setSessionLocation } from '../app';
 import { getAjax } from '../app';
 import { getCurrentPosition } from '../app';
 
+localStorage.clear();
+
 //Setup the date format according to navigator locale
 var localData = moment.localeData();
 var localeDateFormat = localData['_longDateFormat']['L'];
@@ -21,6 +23,7 @@ jQuery( document ).ready( function( $ ) {
                           {
 
                             var position = await getCurrentPosition();
+
                             var latitude = position.coords.latitude;
                             var longitude = position.coords.longitude;
 
@@ -53,6 +56,8 @@ jQuery( document ).ready( function( $ ) {
                               var userCountryCode = dataLocation.results[0].components['ISO_3166-1_alpha-2'];
 
                               $('#address').val(userAddress);
+                              $('#latitude').val(userLatitude);
+                              $('#longitude').val(userLongitude);
                               $('#city').val(userCity);
 
                               setSessionLocation(userAddress, userLatitude, userLongitude, userCity, userCountryCode);

@@ -39,6 +39,8 @@
             {% else %}
               {% if distance %}
                 <span class="icon icon-pin"></span> {{ distance }} km from {{ userCity }}
+              {% else %}
+                Unknown distance
               {% endif %}
             {% endif %}
 

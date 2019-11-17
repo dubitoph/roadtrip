@@ -192,23 +192,25 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 export function setSessionLocation(address, latitude, longitude, city, countryCode)
 {
 
+  console.log('In setSession, latitude :' + latitude);
+  
   var setSessionVariables = async function()
                                   {
 
-                          var response = await getAjax(Routing.generate(
+                                    var response = await getAjax(Routing.generate(
                                                                                     'user.geolocation.session',
                                                                                     {
-                                                                                        userLatitude: latitude,
-                                                                                        userLongitude: longitude,
-                                                                                        userCity: city,
-                                                                                        userAddress: address,
-                                                                                        userCountryCode: countryCode
-                                                                                      }
+                                                                                      userAddress: address,
+                                                                                      userLatitude: latitude,
+                                                                                      userLongitude: longitude,
+                                                                                      userCity: city,
+                                                                                      userCountryCode: countryCode
+                                                                                    }
                                                                                   )
                                                                   )
-                                      ;
+                                    ;
 
-                                      return response;
+                                    return response;
 
                                   }
   ;
@@ -222,8 +224,6 @@ export function setSessionLocation(address, latitude, longitude, city, countryCo
                           localStorage.setItem('userAddress',  address);
                           localStorage.setItem('userCountryCode',  countryCode);
                           sessionStorage.setItem('phpSessionVariablesExist', '1');
-
-                          console.log(localStorage.getItem('userCountryCode'));
 
                         }
                             )
