@@ -7,13 +7,14 @@ export function checkActive(e, options, head, select,customSelect,count,openH, s
 /*
 	selHide.children.forEach( o => e.target.getAttribute('rel') === o.value ? o.setAttribute('selected', 'selected') : o.removeAttribute('selected') )
 */
-	
+
 	Array.prototype.forEach.call(selHide.children, child => {
 		o => e.target.getAttribute('rel') === o.value ? o.setAttribute('selected', 'selected') : o.removeAttribute('selected')
+		console.log('hello')
 	});
 
 	head.innerHTML = e.target.innerHTML
 	showHide(select,customSelect,count,openH)
-	
+
 
 }

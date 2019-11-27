@@ -1,13 +1,15 @@
 <div class="card">
 
   <div class="card-header">
-    <a href="" class="float-right"><span class="icon icon-favorite">add to favorite</span></a>
+    <a href="" class="float-right">
+      <span class="svg svg-dark">
+        <svg width="28" height="28" aria-hidden="true">
+          <use xlink:href="images/sprite.svg#favorite"></use>
+        </svg>
+      </span>
+    </a>
     <h3 class="card-title"><a href="{{ path('advert.show', { slug: advert.slug, id: advert.id } ) }}">{{ advert.title }}</a></h3>
-    <span class="svg svg-dark">
-      <svg width="28" height="28" aria-hidden="true">
-        <use xlink:href="images/sprite.svg#favorite"></use>
-      </svg>
-    </span>
+
   </div>
 
   <div class="card-body">
@@ -30,7 +32,12 @@
 
             {% endif %}
 
-            <p class="card-text"><span class="icon icon-pin"></span> {{ advert.vehicle.situation.city }} ({{ advert.vehicle.situation.zipCode }})</p>
+            <p class="card-text">
+            <span class="svg svg-dark">
+              <svg width="28" height="28" aria-hidden="true">
+                <use xlink:href="images/sprite.svg#pin"></use>
+              </svg>
+            </span> {{ advert.vehicle.situation.city }} ({{ advert.vehicle.situation.zipCode }})</p>
 
             {% if homepage is defined %}
 
