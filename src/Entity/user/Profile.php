@@ -5,6 +5,7 @@ namespace App\Entity\user;
 use App\Entity\user\User;
 use App\Entity\media\Photo;
 use App\Entity\address\Address;
+use App\Repository\rating\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -181,6 +182,32 @@ class Profile
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getAverageScore(): float
+    {
+        
+        $total = 0;
+        $ratings = $this->user->getReceivedRatings();
+        $ratingsNumber = count($ratings);
+        $scoreAverage = 0;
+
+        if ($ratingsNumber > 0) 
+        {
+
+            foreach ($ratings as $rating) 
+            {
+
+                $total += $rating->getScore();
+
+            }
+
+            $scoreAverage = $total / $ratingsNumber;
+
+        }
+        
+        return $scoreAverage;
+
     }
 
 

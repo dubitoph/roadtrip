@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User profile{% endblock %}
+
+{% block body %}
+
+    <div class="container mt4">
+
+        {{ include('_messages.html.twig') }}
+
+        {% set user = profile.user %}
+
+        <h1>{{ user.firstname }} {{ user.name }}'s profile</h1>
+
+        {% set photo = profile.photo %}
+            
+        {% if photo %}
+
+            <div>
+
+                <img src="{{ vich_uploader_asset(photo, 'file') | imagine_filter('thumb') }}">
+
+            </div>
+
+        {% endif %}
+
+        {% set ratings = user.receivedRatings %}
+
+        <div>
+
+            Received ratings number : {{ ratings|length }}
+            
+            {% if ratings is not empty %}
+                
+                <div>
+
+                    Average received score ratings : {{ profile.getAverageScore }}
+
+                </div>
+                
+                
+                <div>
+
+                    <table>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>Date</td>
+                                <td>Author</td>
+                                <td>Score</td>
+                                <td>Comment</td>
+                                <td>Answer</td>
+
+                            </tr>
+
+                        </tbody>
+
+                        {% for rating in ratings %}                  
+
+                            <tr>
+
+                                <td>{{ rating.getFormattedCreatedAt }}</td>
+                                <td>{{ rating.user.firstname }}</td>
+                                <td>{{ rating.score }}</td>
+                                <td>{{ rating.comment }}</td>
+                                <td>
+
+                                    {% set response = rating.responseToRating %}
+                                    
+                                    {% if response %}
+                                    
+                                        {{ response.response }}
+
+                                    {% endif %}
+                                    
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+
+            {% else %}
+                    
+                No received rating
+                
+            {% endif %}                
+
+        </div>
+
+        {% set sex = profile.sex %}
+            
+        {% if sex %}
+
+            <div>
+
+                {% if sex == 'M' %}
+                
+                    Male
+
+                {% else %}
+                    
+                    Female
+                
+                {% endif %}                
+
+            </div>
+
+        {% endif %}
+
+        {% set birthday = profile.birthday %}
+            
+        {% if birthday %}
+
+            <div>
+
+                Birthday : {{ birthday|date("m/d/Y") }}                
+
+            </div>
+
+        {% endif %}
+
+        {% set vehicle = profile.vehicle %}
+            
+        {% if vehicle %}
+
+            <div>
+
+                Vehicle : {{ vehicle }}                
+
+            </div>
+
+        {% endif %}
+
+        {% set aboutMe = profile.aboutMe %}
+            
+        {% if aboutMe %}
+
+            <div>
+
+                About me : {{ aboutMe }}                
+
+            </div>
+
+        {% endif %}
+
+        {% set address = profile.address %}
+            
+        {% if address %}
+
+            <div>
+
+                <div>
+
+                    City : {{ address.city }}   
+
+                </div>
+
+                <div>
+
+                    Country : {{ address.getFullCountry }}   
+
+                </div>             
+
+            </div>
+
+        {% endif %}
+
+        {% set website = profile.website %}
+            
+        {% if website %}
+
+            <div>
+
+                Website : <a href='{{ website }}'> {{ website }}<a>            
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

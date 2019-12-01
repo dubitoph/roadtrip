@@ -2,6 +2,7 @@
 
 namespace App\Controller\user;
 
+use App\Entity\user\User;
 use App\Entity\user\Profile;
 use App\Form\user\ProfileType;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +16,10 @@ class ProfileController extends AbstractController
 
     /**
      * @Route("/user/profile/update", name="user.profile.update")
+     * 
      * @param Request $request
      * @param ObjectManager $manager
+     * 
      * @return Response
      */
     public function update(Request $request, ObjectManager $manager): Response
@@ -74,6 +77,25 @@ class ProfileController extends AbstractController
                                                                    )
                             )
         ;        
+    }
+
+    /**
+     * @Route("/user/profile/show/{id}", name="user.profile.show")
+     * 
+     * @return Response
+     */
+    public function show(User $user): Response
+    {
+        
+        $profile = $user->getProfile();
+     
+        return $this->render('user/profile/show.html.twig', array(
+                                                                        'profile' => $profile,
+                                                                        'bodyId' =>  'profileShow'
+                                                                   )
+                            )
+        ;
+
     }
 
 }

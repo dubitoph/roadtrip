@@ -1041,7 +1041,7 @@ class User implements UserInterface
     public function getReceivedRatings(): Collection
     {
 
-        return $this->ratings;
+        return $this->receivedRatings;
 
     }
 

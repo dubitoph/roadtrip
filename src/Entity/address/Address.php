@@ -309,6 +309,18 @@ class Address
         return $this->country;
 
     }
+    
+    /**
+     * Get the full country
+     *
+     * @return string|null
+     */
+    public function getFullCountry(): ?string
+    {
+
+        return substr($this->street, strripos($this->street, ",") + 1);
+
+    }
 
     /**
      * Set the country

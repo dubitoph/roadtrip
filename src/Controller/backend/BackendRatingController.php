@@ -139,7 +139,7 @@ class BackendRatingController extends AbstractController
         
         $sender = $userRepository->findOneBy(array('username'=> 'administrator'));
         $advert = $rating->getBooking()->getVehicle()->getAdvert();
-        $subject = $this->getParameter('new_rating_subject');        
+        $subject = $this->getParameter('approved_rating_subject');        
 
         // Send an email to the user who created the rating       
         $mail = new Mail();
@@ -172,6 +172,7 @@ class BackendRatingController extends AbstractController
         // Send an email to the evaluated user        
         $mail = new Mail();
         $owner = $advert->getOwner()->getUser();
+        $subject = $this->getParameter('new_rating_subject');
 
         if($rating->getUser() === $owner)
         {
@@ -191,7 +192,7 @@ class BackendRatingController extends AbstractController
                    <br>
                    <br>
                    You can see it <a href=\"". $this->generateUrl('rating.dashboard', array(), UrlGeneratorInterface::ABSOLUTE_URL) .
-                   "\">here</a>";
+                   "\">here</a>.";
 
         $mail->setSender($sender)
              ->setReceiver($receiver)

@@ -284,7 +284,7 @@ class AdvertController extends AbstractController
     /**
      * Creating and updating periods
      *
-     *  @Route("/advert/periods/create/{id}/{onlyPeriodsCreation}", name="advert.periods.create")
+     * @Route("/advert/periods/create/{id}/{onlyPeriodsCreation}", name="advert.periods.create")
      * 
      * @param Advert $advert
      * @param Bool $onlyPeriodsCreation

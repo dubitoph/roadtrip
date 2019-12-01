@@ -192,8 +192,6 @@ export function autocompleteAddress(idInputAddress, idInputCity, idInputPostcode
 export function setSessionLocation(address, latitude, longitude, city, countryCode)
 {
 
-  console.log('In setSession, latitude :' + latitude);
-  
   var setSessionVariables = async function()
                                   {
 
