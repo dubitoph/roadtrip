@@ -340,7 +340,11 @@ input[type="search"]::-ms-clear {
 }
 .input-group{
   #minimumPrice,
-  #beginAt{border-right: none;}
+  #beginAt{
+    border-right: none;
+    border-left: none;
+    padding-left: 0;
+  }
 }
 .dropdown-filter{
   font-size: 0.8rem;
@@ -428,7 +432,10 @@ input[type="checkbox"].form-check-input + .form-check-label{
   margin-left: 10px;
   line-height: 1.0em;
 }
-
+#search_address{
+  background: url('~@images/sprite.svg#pin') no-repeat left center;
+  padding-left: 40px;
+}
 /* hero */
 .hero {
   position: relative;
