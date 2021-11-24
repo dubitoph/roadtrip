@@ -34,7 +34,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/property-access": "4.3.*",
         "symfony/security-bundle": "4.3.*",
-        "symfony/serializer": "4.3.*",
+        "symfony/serializer": "4.4.*",
         "symfony/swiftmailer-bundle": "^3.2",
         "symfony/translation": "4.3.*",
         "symfony/validator": "4.3.*",
